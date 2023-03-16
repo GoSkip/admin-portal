@@ -1,4 +1,5 @@
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
@@ -12,7 +13,6 @@ import {
   XMarkIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
-import { SessionContext } from "../contexts/SessionContext";
 
 const navigation = [
   { name: "Reports", href: "/reports", icon: ChartBarIcon },
@@ -27,7 +27,7 @@ const navigation = [
   },
 ];
 
-const Sidebar = (): JSX.Element => {
+const Layout = (): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div>
@@ -231,21 +231,19 @@ const Sidebar = (): JSX.Element => {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <main className="flex-1 bg-slate-50">
+        <div className="flex-1 bg-indigo-50 border-b-[1px]">
           <div className="py-6">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-2xl font-semibold text-gray-900">
-                Dashboard
-              </h1>
-            </div>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 bg-slate-50">
-              {/* Your content */}
+              <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
             </div>
           </div>
+        </div>
+        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 bg-slate-50">
+          <Outlet />
         </main>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default Layout;

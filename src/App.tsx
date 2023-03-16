@@ -1,6 +1,6 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/layout";
 
 function App() {
   const [count, setCount] = useState(0);

@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import KioskSingle from "./routes/kiosks/single";
+import Reports from "./routes/reports";
 import Root from "./routes/root";
 import Page404 from "./routes/404";
 import Login from "./routes/login";
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <Page404 />,
     children: [
+      {
+        path: "reports",
+        element: <Reports />,
+      },
       {
         path: "kiosks/:kioskId",
         element: <KioskSingle />,
