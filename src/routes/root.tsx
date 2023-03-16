@@ -6,6 +6,7 @@ import SessionProvider from "../providers/SessionProvider";
 
 const Root = (): JSX.Element => {
   const session = useContext(SessionContext);
+  console.log("session", session);
 
   return (
     <SessionProvider session={null}>

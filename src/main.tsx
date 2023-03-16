@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import KioskSingle from "./routes/kiosks/single";
 import Root from "./routes/root";
 import Page404 from "./routes/404";
+import Login from "./routes/login";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
         element: <KioskSingle />,
       },
     ],
+  },
+  {
+    path: "login",
+    element: <Login />,
   },
 ]);
 
