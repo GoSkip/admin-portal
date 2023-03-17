@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SessionContext } from "../contexts/SessionContext";
 import { Session, emptySession } from "../types/session";
 import { isPast } from "date-fns";
+import { Retailer } from "../types/retailer";
 
 type SessionContextProps = {
   children: any;
@@ -22,8 +23,12 @@ const SessionProvider = ({
   const invalidSession = !session.token_info.token && !prevSession;
 
   const _setSession = (session: Session) => {
-    sessionStorage.setItem("session", JSON.stringify(session));
     setSession(session);
+    sessionStorage.setItem("session", JSON.stringify(session));
+  };
+
+  const setActiveRetailer = (retailer: Retailer) => {
+    _setSession({ ...session, active_retailer: retailer });
   };
 
   useEffect(() => {
@@ -45,7 +50,11 @@ const SessionProvider = ({
 
   return (
     <SessionContext.Provider
-      value={{ session: session || prevSession, setSession: _setSession }}
+      value={{
+        session: session || prevSession,
+        setSession: _setSession,
+        setActiveRetailer,
+      }}
     >
       {!invalidSession || renderException ? children : null}
     </SessionContext.Provider>

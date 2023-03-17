@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { login, LoginProps } from "../../api/login";
 import { ClipLoader } from "react-spinners";
 import classNames from "classnames";
+import { emptyRetailer } from "../../types/retailer";
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 const Login = (): JSX.Element => {
@@ -36,7 +37,7 @@ const Login = (): JSX.Element => {
       }
     },
     onSuccess: (data: any) => {
-      setSession(data.data);
+      setSession({ ...data.data, active_retailer: emptyRetailer });
 
       const pathRedirect = sessionStorage.getItem("pathRedirect");
       if (pathRedirect) {
