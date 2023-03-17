@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRetailers } from "../api/retailer";
 import { Outlet } from "react-router-dom";
@@ -12,7 +12,6 @@ import {
   ComputerDesktopIcon,
   CircleStackIcon,
   CheckIcon,
-  ChevronUpDownIcon,
   TagIcon,
   UserCircleIcon,
   BuildingLibraryIcon,
@@ -39,7 +38,7 @@ const Layout = (): JSX.Element => {
   const [sortedRetailers, setSortedRetailers] = useState([]);
   const { session, setActiveRetailer } = useContext(SessionContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isLoading, isError, data, error } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["retailers"],
     queryFn: () =>
       getRetailers({
@@ -48,6 +47,10 @@ const Layout = (): JSX.Element => {
         retailerIds: session.retailer_ids,
       }),
     enabled: !!session.token_info.token,
+    onError: (error) => {
+      console.error(error);
+      toast.error("Could not load retailers!");
+    },
     onSuccess: (data) => {
       const sortedRetailers = data.data.retailers.sort(
         (a: Retailer, b: Retailer) => a.name.localeCompare(b.name)
@@ -59,13 +62,6 @@ const Layout = (): JSX.Element => {
       }
     },
   });
-
-  useEffect(() => {
-    if (isError) {
-      console.error(error);
-      toast.error("Could not load retailers!");
-    }
-  }, [isError]);
 
   const active_retailer = session.active_retailer;
   return (
@@ -234,19 +230,82 @@ const Layout = (): JSX.Element => {
                 >
                   {({ open }) => (
                     <>
-                      <div className="relative mt-2">
+                      <div className="relative mt-2 w-full">
                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm sm:leading-6">
                           <span className="flex items-center">
                             <img
                               src={session.active_retailer.image_url}
                               alt=""
-                              className="h-5 w-5 flex-shrink-0 rounded-full"
+                              className="h-10 w-10 rounded-full"
                             />
                             <span className="ml-3 block truncate">
                               {session.active_retailer.name}
                             </span>
                           </span>
                         </Listbox.Button>
+
+                        <Transition
+                          show={open}
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            {sortedRetailers.map((retailer: Retailer) => (
+                              <Listbox.Option
+                                key={retailer.name}
+                                className={({ active }) =>
+                                  classNames(
+                                    active
+                                      ? "bg-blue-600 text-white"
+                                      : "text-gray-900",
+                                    "relative cursor-default select-none py-2 pl-3 pr-9"
+                                  )
+                                }
+                                value={retailer}
+                              >
+                                {({ selected, active }) => (
+                                  <>
+                                    <div className="flex items-center">
+                                      <img
+                                        src={retailer.image_url}
+                                        alt=""
+                                        className="h-5 w-5 flex-shrink-0 rounded-full"
+                                      />
+                                      <span
+                                        className={classNames(
+                                          selected
+                                            ? "font-semibold"
+                                            : "font-normal",
+                                          "ml-3 block truncate"
+                                        )}
+                                      >
+                                        {retailer.name}
+                                      </span>
+                                    </div>
+
+                                    {selected ? (
+                                      <span
+                                        className={classNames(
+                                          active
+                                            ? "text-white"
+                                            : "text-blue-600",
+                                          "absolute inset-y-0 right-0 flex items-center pr-4"
+                                        )}
+                                      >
+                                        <CheckIcon
+                                          className="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    ) : null}
+                                  </>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                          </Listbox.Options>
+                        </Transition>
                       </div>
                     </>
                   )}
