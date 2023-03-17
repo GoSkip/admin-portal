@@ -50,7 +50,7 @@ const Layout = (): JSX.Element => {
     enabled: !!session.token_info.token,
     onError: (error) => {
       console.error(error);
-      toast.error("Could not load retailers!");
+      toast.error("Problem loading retailers.");
     },
     onSuccess: (data) => {
       const sortedRetailers = data.data.retailers.sort(

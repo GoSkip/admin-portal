@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SessionContext } from "../contexts/SessionContext";
 import { Session, emptySession } from "../types/session";
+// @ts-ignore
+import advancedStoreSort from "../utils/advancedStoreSort";
 import { isPast } from "date-fns";
 import { Retailer } from "../types/retailer";
 
@@ -28,7 +30,8 @@ const SessionProvider = ({
   };
 
   const setActiveRetailer = (retailer: Retailer) => {
-    _setSession({ ...session, active_retailer: retailer });
+    const selectable_stores = retailer.stores.flat().sort(advancedStoreSort);
+    _setSession({ ...session, active_retailer: retailer, selectable_stores });
   };
 
   useEffect(() => {

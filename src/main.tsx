@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import KiosksList from "./routes/kiosks/list";
 import KioskSingle from "./routes/kiosks/single";
 import Reports from "./routes/reports";
 import Root from "./routes/root";
@@ -23,8 +24,8 @@ const router = createBrowserRouter([
         element: <Reports />,
       },
       {
-        path: "kiosks/:kioskId",
-        element: <KioskSingle />,
+        path: "kiosks",
+        element: <KiosksList />,
       },
     ],
   },
