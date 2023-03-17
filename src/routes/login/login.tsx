@@ -62,6 +62,8 @@ const Login = (): JSX.Element => {
   };
 
   const isLoading = mutation.isLoading;
+  const isNotReady =
+    isLoading || emailIsInvalid || username === "" || password === "";
 
   return (
     <>
@@ -174,12 +176,12 @@ const Login = (): JSX.Element => {
                 <div className="flex-row items-center justify-center">
                   <button
                     type="submit"
-                    disabled={isLoading || emailIsInvalid}
+                    disabled={isNotReady}
                     className={classNames(
-                      isLoading
+                      isNotReady
                         ? "bg-sky-600 cursor-not-allowed"
                         : "bg-sky-500 cursor-pointer hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
-                      "inline-flex items-center shadow w-full justify-center rounded-md py-2 px-3 text-sm font-semibold text-white shadow-sm transition ease-in-out duration-150 cursor-pointer"
+                      "inline-flex items-center shadow w-full justify-center rounded-md py-2 px-3 text-sm font-semibold text-white shadow-sm transition ease-in-out duration-150"
                     )}
                   >
                     <div className="mr-2 flex items-center text-white font-light">
