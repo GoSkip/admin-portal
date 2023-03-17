@@ -1,5 +1,3 @@
-import { Retailer } from "./retailer";
-
 export type Session = {
   retailer_ids: number[];
   store_ids: number[];
@@ -8,4 +6,14 @@ export type Session = {
     expiration: string;
     token: string;
   };
+};
+
+export const emptySession = {
+  retailer_ids: [],
+  store_ids: [],
+  store_names: [],
+  token_info: {
+    expiration: "",
+    token: "",
+  },
 };

@@ -1,4 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getRetailers } from "../api/retailer";
 import { Outlet } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
@@ -13,6 +15,7 @@ import {
   XMarkIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
+import { SessionContext } from "../contexts/SessionContext";
 
 const navigation = [
   { name: "Reports", href: "/reports", icon: ChartBarIcon },
@@ -28,7 +31,19 @@ const navigation = [
 ];
 
 const Layout = (): JSX.Element => {
+  const { session } = useContext(SessionContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["retailers"],
+    queryFn: () =>
+      getRetailers({
+        jwt: session.token_info.token,
+        storeIds: session.store_ids,
+        retailerIds: session.retailer_ids,
+      }),
+  });
+  
+  console.log(data);
   return (
     <div>
       <Transition.Root show={sidebarOpen} as={Fragment}>
