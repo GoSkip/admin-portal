@@ -1,6 +1,11 @@
-import { useContext, useLayoutEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Kiosk } from "../../types/kiosk";
-import { Store } from "../../types/store";
 import {
   BarsArrowUpIcon,
   MagnifyingGlassIcon,
@@ -11,7 +16,6 @@ import formatMinsHours from "../../utils/formatMinsHours";
 import { differenceInMinutes } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchKiosksByRetailer } from "../../api/kiosk";
-import BeatLoader from "react-spinners/BeatLoader";
 import classNames from "classnames";
 import {
   SessionContext,
@@ -20,18 +24,19 @@ import {
 // @ts-ignore
 import { set } from "lodash";
 import { toast } from "react-toastify";
+import {
+  LoadingContext,
+  LoadingContextType,
+} from "../../contexts/LoadingContext";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
-const calcKioskLastTxnColor = (last_txn: string) => {
+const calcKioskLastTxnColor = (last_txn: Date | undefined | null) => {
   if (!last_txn) {
     return "bg-gray-100 text-gray-800";
   }
 
-  if (
-    differenceInMinutes(new Date(), new Date(last_txn)) >
-    MAX_MINUTES_BEFORE_WARNING
-  ) {
+  if (differenceInMinutes(new Date(), last_txn) > MAX_MINUTES_BEFORE_WARNING) {
     return "bg-red-100 text-red-800";
   }
 
@@ -84,6 +89,7 @@ const calculateKioskDescriptrion = ({
 
 const KioskList = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
+  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const checkbox = useRef<HTMLInputElement | null>();
   const [checked, setChecked] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -91,18 +97,24 @@ const KioskList = (): JSX.Element => {
   const [indeterminate, setIndeterminate] = useState<boolean>(false);
   const [totalResults, setTotalResults] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [filteredKiosks, setFilteredKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
   const limit = 10;
   const {
     active_retailer: { id: activeRetailerId },
     selectable_stores: stores,
+    token_info: { token },
   } = session;
 
   const { isLoading } = useQuery(
     ["kiosks", activeRetailerId],
-    () => fetchKiosksByRetailer({ retailerId: activeRetailerId, page, limit }),
+    () =>
+      fetchKiosksByRetailer({
+        retailerId: activeRetailerId,
+        page,
+        limit,
+        jwt: token,
+      }),
     {
       refetchInterval: REFETCH_INTERVAL,
       enabled: !!activeRetailerId,
@@ -114,6 +126,8 @@ const KioskList = (): JSX.Element => {
         const filteredKiosks = kiosks
           .map((kiosk: any) => ({
             ...kiosk,
+            inserted_at: new Date(kiosk.inserted_at),
+            last_txn: kiosk.last_txn ? new Date(kiosk.last_txn) : null,
             store: stores.find((store) => store.id === kiosk.store_id),
           }))
           .filter(
@@ -123,13 +137,16 @@ const KioskList = (): JSX.Element => {
           .sort((a: Kiosk, b: Kiosk) =>
             a.store.name.localeCompare(b.store.name)
           );
-        setKiosks(kiosks);
         setFilteredKiosks(filteredKiosks);
         setTotalResults(total_results);
         setTotalPages(calcTotalPages({ limit, totalResults: total_results }));
       },
     }
   );
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const onPrevPage = () => {
     if (page > 1) {
@@ -165,9 +182,8 @@ const KioskList = (): JSX.Element => {
     setIndeterminate(false);
   }
 
-  console.log(filteredKiosks);
   return (
-    <div className="pt-4 px-4 sm:px-6 lg:px-8">
+    <div className="w-full pt-4 px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center mb-4">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">Kiosks</h1>
@@ -219,14 +235,6 @@ const KioskList = (): JSX.Element => {
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg flex justify-center items-center">
-              <div className="absolute z-40">
-                <BeatLoader
-                  color="#000"
-                  loading={isLoading}
-                  size={15}
-                  margin={2}
-                />
-              </div>
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
@@ -235,6 +243,7 @@ const KioskList = (): JSX.Element => {
                       className="relative w-12 px-6 sm:w-16 sm:px-8"
                     >
                       <input
+                        disabled={!totalResults}
                         type="checkbox"
                         className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
                         ref={checkbox}
@@ -315,7 +324,7 @@ const KioskList = (): JSX.Element => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <span
                           className={`${calcKioskLastTxnColor(
-                            kiosk.last_txn.toString()
+                            kiosk.last_txn
                           )} inline-flex rounded-full px-2 text-xs font-semibold leading-5`}
                         >
                           {kiosk.last_txn
@@ -355,13 +364,22 @@ const KioskList = (): JSX.Element => {
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-medium">{calcFrom({ page, limit })}</span>{" "}
-                to{" "}
-                <span className="font-medium">
-                  {calcTo({ page, limit, totalResults })}
-                </span>{" "}
-                of <span className="font-medium">{totalResults}</span> results
+                {totalResults > 0 ? (
+                  <>
+                    Showing{" "}
+                    <span className="font-medium">
+                      {calcFrom({ page, limit })}
+                    </span>{" "}
+                    to{" "}
+                    <span className="font-medium">
+                      {calcTo({ page, limit, totalResults })}
+                    </span>{" "}
+                    of <span className="font-medium">{totalResults}</span>{" "}
+                    results
+                  </>
+                ) : (
+                  <>No results.</>
+                )}
               </p>
             </div>
             <div>

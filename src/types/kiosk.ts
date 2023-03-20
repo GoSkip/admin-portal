@@ -1,10 +1,10 @@
 export type Kiosk = {
   id: number;
-  created_at: Date;
+  inserted_at: Date;
   kiosk_number: number;
   kiosk_descriptor: string;
-  last_txn: Date;
   store: Store;
+  last_txn?: Date;
   ipad?: Ipad;
   actions?: Action[];
   mount?: string;
