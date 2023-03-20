@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from "react";
+import { toastError } from "../../toasts";
 import { SessionContext } from "../../contexts/SessionContext";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Transition } from "@headlessui/react";
-import { toast } from "react-toastify";
 import { login, LoginProps } from "../../api/login";
 import { ClipLoader } from "react-spinners";
 import classNames from "classnames";
@@ -32,9 +32,9 @@ const Login = (): JSX.Element => {
     mutationFn: (props: LoginProps) => login(props),
     onError: (error: any) => {
       if (error.response.status === 401) {
-        toast.error("Incorrect username or password.");
+        toastError("Incorrect username or password.");
       } else {
-        toast.error("Something went wrong! Please try again later.");
+        toastError("Something went wrong! Please try again later.");
       }
     },
     onSuccess: (data: any) => {

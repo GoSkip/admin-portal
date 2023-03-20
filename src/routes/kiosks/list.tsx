@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { toastError } from "../../toasts";
 import { Kiosk } from "../../types/kiosk";
 import {
   BarsArrowUpIcon,
@@ -123,7 +124,7 @@ const KioskList = (): JSX.Element => {
       enabled: !!activeRetailerId,
       onError: (error) => {
         console.error(error);
-        toast.error("Problem loading kiosks.");
+        toastError("Problem loading kiosks.");
       },
       onSuccess: ({ data: { kiosks, total_results } }) => {
         const filteredKiosks = kiosks

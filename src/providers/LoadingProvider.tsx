@@ -6,9 +6,13 @@ import classNames from "classnames";
 
 type LoadingContextProps = {
   children: any;
+  noBlur: boolean;
 };
 
-const LoadingProvider = ({ children }: LoadingContextProps): JSX.Element => {
+const LoadingProvider = ({
+  children,
+  noBlur,
+}: LoadingContextProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
@@ -22,7 +26,7 @@ const LoadingProvider = ({ children }: LoadingContextProps): JSX.Element => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="fixed h-full w-full flex items-center justify-center bg-opacity-50 bg-gray-50">
+        <div className="z-10 mx-auto left-0 right-0 top-0 bottom-0 fixed h-full w-full flex items-center justify-center bg-opacity-50 bg-gray-50">
           <div className="z-10">
             <ClipLoader size={100} color={"#36d7b7"} />
           </div>
@@ -30,7 +34,7 @@ const LoadingProvider = ({ children }: LoadingContextProps): JSX.Element => {
       </Transition>
       <div
         className={classNames(
-          isLoading ? "blur-sm" : "",
+          isLoading && !noBlur ? "blur-sm" : "",
           "transition ease-in-out delay-150 duration-500 h-full"
         )}
       >

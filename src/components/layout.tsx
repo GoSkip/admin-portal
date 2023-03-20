@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRetailers } from "../api/retailer";
 import { Outlet } from "react-router-dom";
 import { Dialog, Transition, Listbox } from "@headlessui/react";
+import { toastError } from "../toasts";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
 import { Retailer } from "../types/retailer";
@@ -52,7 +53,7 @@ const Layout = (): JSX.Element => {
     enabled: !!session.token_info.token,
     onError: (error) => {
       console.error(error);
-      toast.error("Problem loading retailers.");
+      toastError("Problem loading retailers.");
     },
     onSuccess: (data) => {
       const sortedRetailers = data.data.retailers.sort(
@@ -447,7 +448,7 @@ const Layout = (): JSX.Element => {
           </div>
         </div>
         <main className="h-full px-4 sm:px-6 lg:px-8 bg-slate-50">
-          <LoadingProvider>
+          <LoadingProvider noBlur={false}>
             <Outlet />
           </LoadingProvider>
         </main>
