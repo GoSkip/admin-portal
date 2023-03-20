@@ -69,7 +69,7 @@ const Login = (): JSX.Element => {
     <>
       <div
         className={
-          "grid grid-col-1 lg:grid-cols-2 lg:ml-20 min-h-screen content-center ease-in duration-300"
+          "grid grid-col-1 lg:grid-cols-2 lg:ml-20 min-h-screen content-center ease-in duration-100"
         }
       >
         <div className="w-96 self-center justify-self-center">
@@ -191,10 +191,10 @@ const Login = (): JSX.Element => {
                   <div className="flex items-center justify-center mt-2">
                     <Transition show={isLoading}>
                       <Transition.Child
-                        enter="transition-opacity ease-linear duration-300"
+                        enter="transition-opacity ease-linear duration-100"
                         enterFrom="opacity-0"
                         enterTo="opacity-100"
-                        leave="transition-opacity ease-linear duration-300"
+                        leave="transition-opacity ease-linear duration-100"
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                       >
