@@ -38,7 +38,11 @@ const Login = (): JSX.Element => {
       }
     },
     onSuccess: (data: any) => {
-      setSession({ ...data.data, active_retailer: emptyRetailer });
+      setSession({
+        ...data.data,
+        permissions: [],
+        active_retailer: emptyRetailer,
+      });
 
       const pathRedirect = sessionStorage.getItem("pathRedirect");
       if (pathRedirect) {

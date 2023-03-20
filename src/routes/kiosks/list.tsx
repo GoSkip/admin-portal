@@ -16,6 +16,7 @@ import formatMinsHours from "../../utils/formatMinsHours";
 import { differenceInMinutes } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchKiosksByRetailer } from "../../api/kiosk";
+import requirePermissions from "../../hooks/requirePermissions";
 import classNames from "classnames";
 import {
   SessionContext,
@@ -88,6 +89,8 @@ const calculateKioskDescriptrion = ({
 };
 
 const KioskList = (): JSX.Element => {
+  requirePermissions(["kiosk.view"]);
+
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const checkbox = useRef<HTMLInputElement | null>();
