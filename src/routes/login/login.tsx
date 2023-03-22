@@ -1,6 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { toastError } from "../../toasts";
-import { SessionContext } from "../../contexts/SessionContext";
+import {
+  SessionContext,
+  SessionContextType,
+} from "../../contexts/SessionContext";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -14,11 +17,20 @@ import store_logo from "../../assets/images/image@2x.webp";
 import standard_logo from "../../assets/images/standard-logo.webp";
 
 const Login = (): JSX.Element => {
-  const { setSession } = useContext(SessionContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailIsInvalid, setEmailIsInvalid] = useState(false);
+  const { setSession } = useContext<SessionContextType>(SessionContext);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [emailIsInvalid, setEmailIsInvalid] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const toggleRMe = () => {
+    if (rememberMe) {
+      setRememberMe(false);
+    } else {
+      setRememberMe(true);
+    }
+  };
 
   useEffect(() => {
     if (username !== "" && !username.match(emailRegex)) {
@@ -41,6 +53,7 @@ const Login = (): JSX.Element => {
       setSession({
         ...data.data,
         permissions: [],
+        rememberMe,
         active_retailer: emptyRetailer,
       });
 
@@ -157,6 +170,8 @@ const Login = (): JSX.Element => {
                       id="remember-me"
                       name="remember-me"
                       type="checkbox"
+                      checked={rememberMe}
+                      onChange={toggleRMe}
                       className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-600"
                     />
                     <label

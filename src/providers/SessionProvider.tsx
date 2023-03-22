@@ -19,14 +19,26 @@ const SessionProvider = ({
   const [session, setSession] = useState<Session>(emptySession);
   const navigate = useNavigate();
   const location = useLocation();
-  const prevSession = JSON.parse(String(sessionStorage.getItem("session")));
   const pathname = location.pathname;
+
+  let prevSession: Session | null = null;
+
+  if (localStorage.getItem("session")) {
+    prevSession = JSON.parse(String(localStorage.getItem("session")));
+  } else if (sessionStorage.getItem("session")) {
+    prevSession = JSON.parse(String(sessionStorage.getItem("session")));
+  }
 
   const invalidSession = !session.token_info.token && !prevSession;
 
   const _setSession = (session: Session) => {
     setSession(session);
+
     sessionStorage.setItem("session", JSON.stringify(session));
+
+    if (session.rememberMe) {
+      localStorage.setItem("session", JSON.stringify(session));
+    }
   };
 
   const setActiveRetailer = (retailer: Retailer) => {
@@ -37,9 +49,10 @@ const SessionProvider = ({
   useEffect(() => {
     if (prevSession) {
       if (isPast(new Date(prevSession.token_info.expiration))) {
+        localStorage.removeItem("session");
         sessionStorage.removeItem("session");
       } else {
-        setSession(prevSession);
+        _setSession(prevSession);
       }
     }
   }, []);

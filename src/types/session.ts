@@ -8,6 +8,7 @@ export type Session = {
   store_ids: number[];
   store_names: string[];
   permissions: string[];
+  rememberMe: boolean;
   token_info: {
     expiration: string;
     token: string;
@@ -21,6 +22,7 @@ export const emptySession: Session = {
   store_ids: [],
   store_names: [],
   permissions: [],
+  rememberMe: false,
   token_info: {
     expiration: "",
     token: "",
