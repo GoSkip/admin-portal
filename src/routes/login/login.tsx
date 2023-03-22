@@ -199,7 +199,7 @@ const Login = (): JSX.Element => {
                     className={classNames(
                       isNotReady
                         ? "bg-sky-600 cursor-not-allowed"
-                        : "bg-sky-500 cursor-pointer hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
+                        : "bg-sky-500 cursor-pointer hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
                       "inline-flex items-center shadow w-full justify-center rounded-md py-2 px-3 text-sm font-semibold text-white shadow-sm transition ease-in-out duration-150"
                     )}
                   >
