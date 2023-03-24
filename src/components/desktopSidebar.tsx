@@ -54,7 +54,7 @@ const Desktop = ({ retailers, navigation }: DesktopProps): JSX.Element => {
                               active
                                 ? "bg-blue-400 text-gray-50"
                                 : "bg-white",
-                              "relative cursor-pointer select-none py-2 pl-3 pr-9"
+                              "relative cursor-pointer select-none py-4 pl-3 pr-9"
                             )
                           }
                           value={retailer}

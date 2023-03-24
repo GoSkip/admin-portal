@@ -1,21 +1,21 @@
 import { Fragment, useEffect, useState, useContext } from "react";
-import { Dialog, Menu, Transition, Listbox } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
+import {
+  GlobalStateContext,
+  GlobalStateContextType,
+} from "../contexts/GlobalStateContext";
 import {
   ChartBarIcon,
   ComputerDesktopIcon,
   CircleStackIcon,
-  CheckIcon,
   TagIcon,
   UserCircleIcon,
   BuildingLibraryIcon,
-  XMarkIcon,
   BellIcon,
-  Bars3Icon,
 } from "@heroicons/react/24/outline";
 import {
   Bars3BottomLeftIcon,
   MagnifyingGlassIcon,
-  ChevronUpDownIcon,
 } from "@heroicons/react/20/solid";
 import MobileSidebar from "./mobileSidebar";
 import DesktopSidebar from "./desktopSidebar";
@@ -46,6 +46,8 @@ const userNavigation: NavElement[] = [
 
 const Layout = (): JSX.Element => {
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
+  const { filter, setFilter } =
+    useContext<GlobalStateContextType>(GlobalStateContext);
   const { session, setActiveRetailer } = useContext(SessionContext);
   const [sortedRetailers, setSortedRetailers] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -103,7 +105,7 @@ const Layout = (): JSX.Element => {
             <div className="flex flex-1">
               <form className="flex w-full lg:ml-0" action="#" method="GET">
                 <label htmlFor="search-field" className="sr-only">
-                  Search
+                  Filter results
                 </label>
                 <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
@@ -115,7 +117,9 @@ const Layout = (): JSX.Element => {
                   <input
                     id="search-field"
                     className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm"
-                    placeholder="Search"
+                    placeholder="Filter results"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
                     type="search"
                     name="search"
                   />

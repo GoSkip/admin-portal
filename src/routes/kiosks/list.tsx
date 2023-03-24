@@ -7,12 +7,7 @@ import {
 } from "react";
 import { toastError } from "../../toasts";
 import { Kiosk } from "../../types/kiosk";
-import {
-  BarsArrowUpIcon,
-  MagnifyingGlassIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import formatMinsHours from "../../utils/formatMinsHours";
 import { differenceInMinutes } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
@@ -25,11 +20,14 @@ import {
 } from "../../contexts/SessionContext";
 // @ts-ignore
 import { set } from "lodash";
-import { toast } from "react-toastify";
 import {
   LoadingContext,
   LoadingContextType,
 } from "../../contexts/LoadingContext";
+import {
+  GlobalStateContext,
+  GlobalStateContextType,
+} from "../../contexts/GlobalStateContext";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
@@ -94,14 +92,14 @@ const KioskList = (): JSX.Element => {
 
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
+  const { filter } = useContext<GlobalStateContextType>(GlobalStateContext);
   const checkbox = useRef<HTMLInputElement | null>();
   const [checked, setChecked] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState<string>("");
   const [indeterminate, setIndeterminate] = useState<boolean>(false);
   const [totalResults, setTotalResults] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [filteredKiosks, setFilteredKiosks] = useState<Kiosk[]>([]);
+  const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
   const limit = 10;
   const {
@@ -127,25 +125,28 @@ const KioskList = (): JSX.Element => {
         toastError("Problem loading kiosks.");
       },
       onSuccess: ({ data: { kiosks, total_results } }) => {
-        const filteredKiosks = kiosks
+        const sortedKiosks = kiosks
           .map((kiosk: any) => ({
             ...kiosk,
             inserted_at: new Date(kiosk.inserted_at),
             last_txn: kiosk.last_txn ? new Date(kiosk.last_txn) : null,
             store: stores.find((store) => store.id === kiosk.store_id),
           }))
-          .filter(
-            (k: Kiosk) =>
-              k.store.name === "" || k.store.name.toLowerCase().includes(filter)
-          )
           .sort((a: Kiosk, b: Kiosk) =>
             a.store.name.localeCompare(b.store.name)
           );
-        setFilteredKiosks(filteredKiosks);
+
+        setKiosks(sortedKiosks);
         setTotalResults(total_results);
         setTotalPages(calcTotalPages({ limit, totalResults: total_results }));
       },
     }
+  );
+
+  const filteredKiosks = kiosks.filter(
+    (kiosk: Kiosk) =>
+      filter === "" ||
+      kiosk.store.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   useEffect(() => {
@@ -203,37 +204,6 @@ const KioskList = (): JSX.Element => {
       </div>
       <div>
         <hr />
-      </div>
-      <div className="mt-4 flex w-full">
-        <div className="mt-1 flex-1 flex rounded-md shadow-sm">
-          <div className="relative flex flex-grow items-stretch focus-within:z-10">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </div>
-            <input
-              type="text"
-              name="text-search"
-              id="text-search"
-              className="block w-full rounded-none rounded-l-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Filter results"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-          </div>
-          <button
-            type="button"
-            className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          >
-            <BarsArrowUpIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-            <span>Sort</span>
-          </button>
-        </div>
       </div>
       <div className="mt-8 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
