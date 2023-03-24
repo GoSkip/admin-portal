@@ -9,6 +9,7 @@ import Reports from "./routes/reports";
 import Root from "./routes/root";
 import Page404 from "./routes/404";
 import Login from "./routes/login";
+import Logout from "./routes/logout";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     element: <Login />,
+  },
+  {
+    path: "logout",
+    element: <Logout />,
   },
 ]);
 

@@ -41,7 +41,7 @@ const navigation: NavElement[] = [
 const userNavigation: NavElement[] = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign Out", href: "#" },
+  { name: "Sign Out", href: "/logout" },
 ];
 
 const Layout = (): JSX.Element => {
