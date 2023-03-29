@@ -29,3 +29,30 @@ export const fetchKiosksByRetailer: any = async ({
     }
   );
 };
+
+export type FetchKioskQueryParams = {
+  jwt: string;
+  storeId: number;
+  kioskId: number;
+};
+
+export const fetchKiosk = async ({
+  jwt,
+  storeId,
+  kioskId,
+}: FetchKioskQueryParams) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.get(
+    `${domain}/v1/kiosk/show?query=${JSON.stringify({
+      store_id: storeId,
+      kiosk_id: kioskId,
+    })}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};

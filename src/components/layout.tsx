@@ -82,7 +82,7 @@ const Layout = (): JSX.Element => {
   }, [isLoading]);
 
   return (
-    <div>
+    <div className="h-full">
       <MobileSidebar
         retailers={sortedRetailers}
         sidebarOpen={sidebarOpen}
@@ -91,7 +91,7 @@ const Layout = (): JSX.Element => {
       />
       {/* Static sidebar for desktop */}
       <DesktopSidebar retailers={sortedRetailers} navigation={navigation} />
-      <div className="flex flex-1 flex-col lg:pl-64">
+      <div className="flex flex-1 flex-col lg:pl-64 h-full">
         <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
           <button
             type="button"
@@ -179,9 +179,9 @@ const Layout = (): JSX.Element => {
           </div>
         </div>
 
-        <main>
-          <div className="py-6">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="h-full">
+          <div className="py-6 h-full">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full">
               <LoadingProvider noBlur={false}>
                 <Outlet />
               </LoadingProvider>

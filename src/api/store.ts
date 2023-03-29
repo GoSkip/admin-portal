@@ -4,20 +4,17 @@ export type GetStoresProps = {
   storeIds: number[];
 };
 
-export const getStores = async ({ jwt, storeIds }: GetStoresProps) => {
+export const fetchStores = async ({ jwt, storeIds }: GetStoresProps) => {
   const domain = import.meta.env.VITE_API_DOMAIN;
   const query = {
     store_id: storeIds,
     product: "sco",
   };
 
-  return await axios.get(
-    `${domain}/v1/store?query=${JSON.stringify(query)}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await axios.get(`${domain}/v1/store?query=${JSON.stringify(query)}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  });
 };

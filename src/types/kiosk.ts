@@ -3,7 +3,7 @@ export type Kiosk = {
   inserted_at: Date;
   kiosk_number: number;
   kiosk_descriptor: string;
-  store: Store;
+  store?: Store;
   last_txn?: Date;
   ipad?: Ipad;
   actions?: Action[];
@@ -39,8 +39,10 @@ export type Action = {
 export type Store = {
   id: number;
   name: string;
+  dayClose?: string;
   pos_site_id?: string;
   address?: string;
   address2?: string;
   phone?: string;
+  timezone?: string;
 };
