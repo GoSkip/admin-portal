@@ -1,17 +1,10 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
-import {
-  CheckIcon,
-  ChevronUpDownIcon,
-  ChevronRightIcon,
-  HomeIcon,
-} from "@heroicons/react/20/solid";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { format } from "date-fns";
 import { fetchKiosk } from "../../api/kiosk";
 import { fetchStores } from "../../api/store";
-import { Listbox, Transition } from "@headlessui/react";
 import { mounts, networks, pinpads, printers } from "../../utils/enums";
 import { toastError } from "../../toasts";
 import { Action, Kiosk } from "../../types/kiosk";
@@ -61,13 +54,14 @@ const terminals = [
     value: "325",
   },
 ];
-const actorColorMap = {
-  device: "green",
-  admin: "gray",
-  "admin portal": "gray",
-  "kiosk app": "gray",
-  error: "red",
-};
+
+const actorColors = new Map([
+  ["device", "green"],
+  ["admin", "gray"],
+  ["admin portal", "gray"],
+  ["kiosk app", "gray"],
+  ["error", "red"],
+]);
 
 const sampleActions: Action[] = [
   {
@@ -145,16 +139,6 @@ const Kiosk = (): JSX.Element => {
   const [selectedNetwork, setSelectedNetwork] = useState(networks[0]);
   const [selectedPinpad, setSelectedPinpad] = useState(pinpads[0]);
   const [selectedPrinter, setSelectedPrinter] = useState(printers[0]);
-  const [ipadDeviceName, setIpadDeviceName] = useState("");
-  const [ipadMdmName, setIpadMdmName] = useState("");
-  const [ipadAppVersion, setIpadAppVersion] = useState("");
-  const [ipadIosVersion, setIpadIosVersion] = useState("");
-  const [ipadModelVersion, setIpadModelVersion] = useState("");
-  const [ipadSerialNumberVersion, setIpadSerialNumberVersion] = useState("");
-  const [ipadBatteryLevel, setIpadBatteryLevel] = useState("");
-  const [ipadGroup, setIpadGroup] = useState("");
-  const [ipadLastSeen, setIpadLastSeen] = useState("");
-  const [ipadLastTxn, setIpadLastTxn] = useState("");
 
   const setValue = (key: string) => (value: any) => {
     if (kiosk === null) {
@@ -338,62 +322,62 @@ const Kiosk = (): JSX.Element => {
                   <InputSection
                     htmlId="device-name"
                     label="Device Name"
-                    value={ipadDeviceName}
-                    onChange={setIpadDeviceName}
+                    value={"Kwik-E-Mart 306-319"}
+                    disabled
                   />
                   <InputSection
                     htmlId="mdm-name"
                     label="MDM Name"
-                    value={ipadMdmName}
-                    onChange={setIpadMdmName}
+                    value={"Kwik-E-Mart 306-319"}
+                    disabled
                   />
                   <InputSection
                     htmlId="app-version"
                     label="App Version"
-                    value={ipadAppVersion}
-                    onChange={setIpadAppVersion}
+                    value={"1.7.2 (2314)"}
+                    disabled
                   />
                   <InputSection
                     htmlId="ios-version"
                     label="iOS Version"
-                    value={ipadIosVersion}
-                    onChange={setIpadIosVersion}
+                    value={"14.4 (Build 18D52)"}
+                    disabled
                   />
                   <InputSection
                     htmlId="model-version"
                     label="Model"
-                    value={ipadModelVersion}
-                    onChange={setIpadModelVersion}
+                    value={"iPad Pro 12.9-inch (4th Generation)"}
+                    disabled
                   />
                   <InputSection
                     htmlId="serial-number"
                     label="Serial Number"
-                    value={ipadSerialNumberVersion}
-                    onChange={setIpadSerialNumberVersion}
+                    value={"DMPFC2WTPV03"}
+                    disabled
                   />
                   <InputSection
                     htmlId="battery-level"
                     label="Battery Level"
-                    value={ipadBatteryLevel}
-                    onChange={setIpadBatteryLevel}
+                    value={"100%"}
+                    disabled
                   />
                   <InputSection
                     htmlId="ipad-group"
                     label="Group"
-                    value={ipadGroup}
-                    onChange={setIpadGroup}
+                    value={"SCO Production"}
+                    disabled
                   />
                   <InputSection
                     htmlId="ipad-last-seen"
                     label="Last Seen"
-                    value={ipadLastSeen}
-                    onChange={setIpadLastSeen}
+                    value={"25 min ago"}
+                    disabled
                   />
                   <InputSection
                     htmlId="ipad-last-txn"
                     label="Last Transaction"
-                    value={ipadLastTxn}
-                    onChange={setIpadLastTxn}
+                    value={"6 min ago"}
+                    disabled
                   />
                 </div>
               </div>
@@ -403,17 +387,49 @@ const Kiosk = (): JSX.Element => {
       </div>
       <div className="space-y-10 divide-y divide-gray-900/10 mt-8">
         {!!store && !!kiosk && (
-          <div className="text-gray-600 bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl grid grid-cols-4 gap-y-8">
-            <div className="col-span-1 text-center bg-gray-100 rounded-tl-xl">
+          <div className="text-gray-600 bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl grid grid-cols-4">
+            <div className="col-span-1 text-left bg-gray-100 rounded-tl-xl pl-6 py-2">
               ACTOR
             </div>
-            <div className="col-span-1 text-center bg-gray-100">
+            <div className="col-span-1 text-left bg-gray-100 pl-3 py-2">
               ACTION TYPE
             </div>
-            <div className="col-span-1 text-center bg-gray-100">TIMESTAMP</div>
-            <div className="col-span-1 text-center bg-gray-100 rounded-tr-xl">
+            <div className="col-span-1 text-left bg-gray-100 pl-3 py-2">
+              TIMESTAMP
+            </div>
+            <div className="col-span-1 text-left bg-gray-100 rounded-tr-xl pl-3 py-2">
               METADATA
             </div>
+            {sampleActions.map((action: Action) => (
+              <Fragment key={action.timestamp.toString()}>
+                <div className="col-span-1 bg-white border border-gray-50 py-3 pl-6 flex justify-start items-center">
+                  <button
+                    type="button"
+                    className={classNames(
+                      `bg-${actorColors.get(
+                        action.actor
+                      )}-100 text-${actorColors.get(action.actor)}-400`,
+                      "rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm capitalize"
+                    )}
+                  >
+                    {action.actor}
+                  </button>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
+                  <div className="pl-3 capitalize font-medium">
+                    {action.type}
+                  </div>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
+                  <div className="pl-3">
+                    {action.timestamp.toLocaleString()}
+                  </div>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
+                  <div className="pl-3">{action.metadata}</div>
+                </div>
+              </Fragment>
+            ))}
           </div>
         )}
       </div>
