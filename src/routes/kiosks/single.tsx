@@ -14,7 +14,7 @@ import { fetchStores } from "../../api/store";
 import { Listbox, Transition } from "@headlessui/react";
 import { mounts, networks, pinpads, printers } from "../../utils/enums";
 import { toastError } from "../../toasts";
-import { Kiosk } from "../../types/kiosk";
+import { Action, Kiosk } from "../../types/kiosk";
 import classNames from "classnames";
 import {
   SessionContext,
@@ -28,10 +28,39 @@ import { Retailer } from "../../types/retailer";
 import { Store } from "../../types/store";
 import transformKiosk from "../../utils/transformKiosk";
 import { BeatLoader } from "react-spinners";
+import SelectSection from "./selectSection";
+import InputSection from "./inputSection";
 
-const terminalIdsList = [319, 320, 321, 322, 323, 324, 325];
-const textInputClasses =
-  "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm";
+const terminals = [
+  {
+    key: "319",
+    value: "319",
+  },
+  {
+    key: "320",
+    value: "320",
+  },
+  {
+    key: "321",
+    value: "321",
+  },
+  {
+    key: "322",
+    value: "322",
+  },
+  {
+    key: "323",
+    value: "323",
+  },
+  {
+    key: "324",
+    value: "324",
+  },
+  {
+    key: "325",
+    value: "325",
+  },
+];
 const actorColorMap = {
   device: "green",
   admin: "gray",
@@ -39,6 +68,63 @@ const actorColorMap = {
   "kiosk app": "gray",
   error: "red",
 };
+
+const sampleActions: Action[] = [
+  {
+    actor: "device",
+    type: "restarted",
+    timestamp: new Date(),
+    metadata: "N/A",
+  },
+  {
+    actor: "admin portal",
+    type: "request restart",
+    timestamp: new Date(),
+    metadata: "N/A",
+  },
+  {
+    actor: "device",
+    type: "restarted",
+    timestamp: new Date(),
+    metadata: "N/A",
+  },
+  {
+    actor: "kiosk app",
+    type: "request restart",
+    timestamp: new Date(),
+    metadata: "N/A",
+  },
+  {
+    actor: "device",
+    type: "updated app",
+    timestamp: new Date(),
+    metadata: '{"name": "self-checkout"}',
+  },
+  {
+    actor: "device",
+    type: "installed profile",
+    timestamp: new Date(),
+    metadata: '{"profile_name":"Home screen..."}',
+  },
+  {
+    actor: "device",
+    type: "installed profile",
+    timestamp: new Date(),
+    metadata: '{"profile_name":"Home screen..."}',
+  },
+  {
+    actor: "device",
+    type: "removed profile",
+    timestamp: new Date(),
+    metadata: '{"profile_name":"App Lock: SCO..."}',
+  },
+  {
+    actor: "error",
+    type: "removed profile",
+    timestamp: new Date(),
+    metadata: '{"errors":["Device responded..."]}',
+  },
+];
 
 const Kiosk = (): JSX.Element => {
   const [store, setStore] = useState<Store | null>(null);
@@ -52,15 +138,34 @@ const Kiosk = (): JSX.Element => {
     storeId: string;
     kioskId: string;
   }>();
-  const [selectedTerminalId, setSelectedTerminalId] = useState(
-    terminalIdsList[0]
-  );
   const [kiosk, setKiosk] = useState<Kiosk | null>(null);
 
+  const [selectedTerminal, setSelectedTerminal] = useState(terminals[0]);
   const [selectedMount, setSelectedMount] = useState(mounts[0]);
   const [selectedNetwork, setSelectedNetwork] = useState(networks[0]);
   const [selectedPinpad, setSelectedPinpad] = useState(pinpads[0]);
   const [selectedPrinter, setSelectedPrinter] = useState(printers[0]);
+  const [ipadDeviceName, setIpadDeviceName] = useState("");
+  const [ipadMdmName, setIpadMdmName] = useState("");
+  const [ipadAppVersion, setIpadAppVersion] = useState("");
+  const [ipadIosVersion, setIpadIosVersion] = useState("");
+  const [ipadModelVersion, setIpadModelVersion] = useState("");
+  const [ipadSerialNumberVersion, setIpadSerialNumberVersion] = useState("");
+  const [ipadBatteryLevel, setIpadBatteryLevel] = useState("");
+  const [ipadGroup, setIpadGroup] = useState("");
+  const [ipadLastSeen, setIpadLastSeen] = useState("");
+  const [ipadLastTxn, setIpadLastTxn] = useState("");
+
+  const setValue = (key: string) => (value: any) => {
+    if (kiosk === null) {
+      return;
+    }
+
+    setKiosk({
+      ...kiosk,
+      [key]: value,
+    });
+  };
 
   const { isLoading: storeIsLoading } = useQuery(
     ["store", storeId],
@@ -148,229 +253,169 @@ const Kiosk = (): JSX.Element => {
         <div className="grid grid-cols-1 gap-y-8 gap-x-8 md:grid-cols-1">
           {!!store && !!kiosk && (
             <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl md:col-span-2">
-              <div className="px-4 py-6 sm:p-8">
+              <div className="px-4 pt-2 text-xl font-normal">Kiosk Details</div>
+              <div className="px-4 pb-2 text-sm text-gray-500">
+                Identifiers, accessories, and connection details
+              </div>
+              <hr />
+              <div className="px-4 py-6">
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <div className="sm:col-span-1">
-                    <label
-                      htmlFor="kiosk-id"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Kiosk ID
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="kiosk-id"
-                        id="kiosk-id"
-                        value={format(kiosk?.inserted_at, "M/d/yyyy")}
-                        disabled
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-4"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-1">
-                    <label
-                      htmlFor="kiosk-description"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Kiosk Description
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="kiosk-description"
-                        id="kiosk-description"
-                        value={kiosk.kiosk_descriptor}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-4"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-1">
-                    <label
-                      htmlFor="kiosk-inserted-at"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Kiosk Created
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        disabled
-                        type="text"
-                        name="kiosk-inserted-at"
-                        id="kiosk-inserted-at"
-                        value={kiosk.inserted_at.toLocaleString()}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-gray-500 py-2 px-4"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-1">
-                    <Listbox
-                      value={selectedTerminalId}
-                      onChange={setSelectedTerminalId}
-                    >
-                      {({ open }) => (
-                        <>
-                          <Listbox.Label className="block text-sm font-medium text-gray-700">
-                            Terminal ID
-                          </Listbox.Label>
-                          <div className="relative mt-1">
-                            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
-                              <span className="block truncate">
-                                {selectedTerminalId}
-                              </span>
-                              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                <ChevronUpDownIcon
-                                  className="h-5 w-5 text-gray-400"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            </Listbox.Button>
-
-                            <Transition
-                              show={open}
-                              as={Fragment}
-                              leave="transition ease-in duration-100"
-                              leaveFrom="opacity-100"
-                              leaveTo="opacity-0"
-                            >
-                              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                {terminalIdsList.map((id) => (
-                                  <Listbox.Option
-                                    key={id}
-                                    className={({ active }) =>
-                                      classNames(
-                                        active
-                                          ? "text-white bg-blue-600"
-                                          : "text-gray-900",
-                                        "relative cursor-default select-none py-2 pl-3 pr-9"
-                                      )
-                                    }
-                                    value={id}
-                                  >
-                                    {({ selected, active }) => (
-                                      <>
-                                        <span
-                                          className={classNames(
-                                            selected
-                                              ? "font-semibold"
-                                              : "font-normal",
-                                            "block truncate"
-                                          )}
-                                        >
-                                          {id}
-                                        </span>
-
-                                        {selected ? (
-                                          <span
-                                            className={classNames(
-                                              active
-                                                ? "text-white"
-                                                : "text-blue-600",
-                                              "absolute inset-y-0 right-0 flex items-center pr-4"
-                                            )}
-                                          >
-                                            <CheckIcon
-                                              className="h-5 w-5"
-                                              aria-hidden="true"
-                                            />
-                                          </span>
-                                        ) : null}
-                                      </>
-                                    )}
-                                  </Listbox.Option>
-                                ))}
-                              </Listbox.Options>
-                            </Transition>
-                          </div>
-                        </>
-                      )}
-                    </Listbox>
-                  </div>
-                  <div className="sm:col-span-1">
-                    <Listbox value={selectedMount} onChange={setSelectedMount}>
-                      {({ open }) => (
-                        <>
-                          <Listbox.Label className="block text-sm font-medium text-gray-700">
-                            Mount
-                          </Listbox.Label>
-                          <div className="relative mt-1">
-                            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
-                              <span className="block truncate capitalize">
-                                {selectedMount.value}
-                              </span>
-                              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                <ChevronUpDownIcon
-                                  className="h-5 w-5 text-gray-400"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            </Listbox.Button>
-
-                            <Transition
-                              show={open}
-                              as={Fragment}
-                              leave="transition ease-in duration-100"
-                              leaveFrom="opacity-100"
-                              leaveTo="opacity-0"
-                            >
-                              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                {mounts.map((mount) => (
-                                  <Listbox.Option
-                                    key={mount.key}
-                                    className={({ active }) =>
-                                      classNames(
-                                        active
-                                          ? "text-white bg-blue-600"
-                                          : "text-gray-900",
-                                        "relative cursor-default select-none py-2 pl-3 pr-9 capitalize"
-                                      )
-                                    }
-                                    value={mount}
-                                  >
-                                    {({ selected, active }) => (
-                                      <>
-                                        <span
-                                          className={classNames(
-                                            selected
-                                              ? "font-semibold"
-                                              : "font-normal",
-                                            "block truncate capitalize"
-                                          )}
-                                        >
-                                          {mount.value}
-                                        </span>
-
-                                        {selected ? (
-                                          <span
-                                            className={classNames(
-                                              active
-                                                ? "text-white"
-                                                : "bg-blue-600",
-                                              "absolute inset-y-0 right-0 flex items-center pr-4"
-                                            )}
-                                          >
-                                            <CheckIcon
-                                              className="h-5 w-5"
-                                              aria-hidden="true"
-                                            />
-                                          </span>
-                                        ) : null}
-                                      </>
-                                    )}
-                                  </Listbox.Option>
-                                ))}
-                              </Listbox.Options>
-                            </Transition>
-                          </div>
-                        </>
-                      )}
-                    </Listbox>
-                  </div>
+                  <InputSection
+                    htmlId="kiosk-id"
+                    label="Kiosk ID"
+                    value={format(kiosk.inserted_at, "M/d/yyyy")}
+                    disabled
+                  />
+                  <InputSection
+                    htmlId="kiosk-description"
+                    label="Kiosk Description"
+                    value={kiosk.kiosk_descriptor}
+                    onChange={setValue("kiosk_descriptor")}
+                  />
+                  <InputSection
+                    htmlId="kiosk-inserted-at"
+                    label="Kiosk Created"
+                    value={kiosk.inserted_at.toLocaleString()}
+                    disabled
+                  />
+                  <SelectSection
+                    selectedItem={selectedTerminal}
+                    setSelectedItem={setSelectedTerminal}
+                    label="Terminal ID"
+                    items={terminals}
+                  />
+                  <SelectSection
+                    selectedItem={selectedMount}
+                    setSelectedItem={setSelectedMount}
+                    label="Mount"
+                    items={mounts}
+                  />
+                  <SelectSection
+                    selectedItem={selectedNetwork}
+                    setSelectedItem={setSelectedNetwork}
+                    label="Network"
+                    items={networks}
+                  />
+                  <SelectSection
+                    selectedItem={selectedPinpad}
+                    setSelectedItem={setSelectedPinpad}
+                    label="Pinpad"
+                    items={pinpads}
+                  />
+                  <InputSection
+                    htmlId="pinpad-serial"
+                    label="Pinpad Serial #"
+                    value={"pinpad serial no"}
+                  />
+                  <SelectSection
+                    selectedItem={selectedPrinter}
+                    setSelectedItem={setSelectedPrinter}
+                    label="Printer"
+                    items={printers}
+                  />
+                  <InputSection
+                    htmlId="printer-serial"
+                    label="Printer Serial #"
+                    value={"printer serial no"}
+                  />
                 </div>
               </div>
             </form>
           )}
         </div>
+      </div>
+      <div className="space-y-10 divide-y divide-gray-900/10 mt-8">
+        <div className="grid grid-cols-1 gap-y-8 gap-x-8 md:grid-cols-1">
+          {!!store && !!kiosk && (
+            <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl md:col-span-2">
+              <div className="px-4 pt-2 text-xl font-normal">iPad Details</div>
+              <div className="px-4 pb-2 text-sm text-gray-500">
+                Hardware and software details last reported to the MDM service
+              </div>
+              <hr />
+              <div className="px-4 py-6">
+                <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                  <InputSection
+                    htmlId="device-name"
+                    label="Device Name"
+                    value={ipadDeviceName}
+                    onChange={setIpadDeviceName}
+                  />
+                  <InputSection
+                    htmlId="mdm-name"
+                    label="MDM Name"
+                    value={ipadMdmName}
+                    onChange={setIpadMdmName}
+                  />
+                  <InputSection
+                    htmlId="app-version"
+                    label="App Version"
+                    value={ipadAppVersion}
+                    onChange={setIpadAppVersion}
+                  />
+                  <InputSection
+                    htmlId="ios-version"
+                    label="iOS Version"
+                    value={ipadIosVersion}
+                    onChange={setIpadIosVersion}
+                  />
+                  <InputSection
+                    htmlId="model-version"
+                    label="Model"
+                    value={ipadModelVersion}
+                    onChange={setIpadModelVersion}
+                  />
+                  <InputSection
+                    htmlId="serial-number"
+                    label="Serial Number"
+                    value={ipadSerialNumberVersion}
+                    onChange={setIpadSerialNumberVersion}
+                  />
+                  <InputSection
+                    htmlId="battery-level"
+                    label="Battery Level"
+                    value={ipadBatteryLevel}
+                    onChange={setIpadBatteryLevel}
+                  />
+                  <InputSection
+                    htmlId="ipad-group"
+                    label="Group"
+                    value={ipadGroup}
+                    onChange={setIpadGroup}
+                  />
+                  <InputSection
+                    htmlId="ipad-last-seen"
+                    label="Last Seen"
+                    value={ipadLastSeen}
+                    onChange={setIpadLastSeen}
+                  />
+                  <InputSection
+                    htmlId="ipad-last-txn"
+                    label="Last Transaction"
+                    value={ipadLastTxn}
+                    onChange={setIpadLastTxn}
+                  />
+                </div>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+      <div className="space-y-10 divide-y divide-gray-900/10 mt-8">
+        {!!store && !!kiosk && (
+          <div className="text-gray-600 bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl grid grid-cols-4 gap-y-8">
+            <div className="col-span-1 text-center bg-gray-100 rounded-tl-xl">
+              ACTOR
+            </div>
+            <div className="col-span-1 text-center bg-gray-100">
+              ACTION TYPE
+            </div>
+            <div className="col-span-1 text-center bg-gray-100">TIMESTAMP</div>
+            <div className="col-span-1 text-center bg-gray-100 rounded-tr-xl">
+              METADATA
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
