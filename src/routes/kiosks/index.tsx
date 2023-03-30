@@ -101,6 +101,7 @@ const KioskList = (): JSX.Element => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
+
   const limit = 10;
   const {
     active_retailer: { id: activeRetailerId },
@@ -133,7 +134,7 @@ const KioskList = (): JSX.Element => {
             store: stores.find((store) => store.id === kiosk.store_id),
           }))
           .sort((a: Kiosk, b: Kiosk) =>
-            a.store.name.localeCompare(b.store.name)
+            a.store?.name.localeCompare(b.store?.name ?? "")
           );
 
         setKiosks(sortedKiosks);
