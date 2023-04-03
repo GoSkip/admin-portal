@@ -13,7 +13,7 @@ import { ClipLoader } from "react-spinners";
 import classNames from "classnames";
 import { emptyRetailer } from "../../types/retailer";
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-import store_logo from "../../assets/images/image@2x.webp";
+import store_logo from "../../assets/images/Image@2x.webp";
 import standard_logo from "../../assets/images/standard-logo.webp";
 
 const Login = (): JSX.Element => {

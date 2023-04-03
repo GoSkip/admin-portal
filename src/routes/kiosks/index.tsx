@@ -147,7 +147,7 @@ const KioskList = (): JSX.Element => {
   const filteredKiosks = kiosks.filter(
     (kiosk: Kiosk) =>
       filter === "" ||
-      kiosk.store.name.toLowerCase().includes(filter.toLowerCase())
+      kiosk.store?.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   useEffect(() => {
@@ -221,7 +221,7 @@ const KioskList = (): JSX.Element => {
                         disabled={!totalResults}
                         type="checkbox"
                         className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
-                        ref={checkbox}
+                        ref={checkbox as any}
                         checked={checked}
                         onChange={toggleAll}
                       />
@@ -288,7 +288,7 @@ const KioskList = (): JSX.Element => {
                             : "text-gray-900"
                         )}
                       >
-                        {kiosk.store.name}
+                        {kiosk.store?.name ?? "N/A"}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
                         {calculateKioskDescriptrion({

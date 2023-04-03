@@ -1,0 +1,7 @@
+version: "3.4"
+services:
+  portal:
+    build: .
+    restart: always
+    ports:
+      - 8080:80 
