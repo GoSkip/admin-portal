@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [react(), splitVendorChunkPlugin()],
   server: {
     host: true,
-    port: 8000,
+    port: 5173,
   },
 });
