@@ -17,7 +17,7 @@ steps:
         "builds",
         "submit",
         "--tag",
-        "gcr.io/skip-sandbox/${_IMAGE_NAME}:$COMMIT_SHA",
+        "gcr.io/skip-sandbox/${_IMAGE_NAME}",
       ]
   - name: "gcr.io/$PROJECT_ID/envsubst"
     dir: .
