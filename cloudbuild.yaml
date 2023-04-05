@@ -22,19 +22,7 @@ steps:
   - name: "gcr.io/$PROJECT_ID/envsubst"
     dir: .
     entrypoint: /bin/bash
-    args:
-      ["-c", "envsubst < ./deployment.yaml.template > portal-deployment.yaml"]
-    env:
-      [
-        "PROJECT_ID=$PROJECT_ID",
-        "COMMIT_SHA=$COMMIT_SHA",
-        "IMAGE_NAME=${_IMAGE_NAME}",
-      ]
-  - name: "gcr.io/$PROJECT_ID/envsubst"
-    dir: .
-    entrypoint: /bin/bash
-    args:
-      ["-c", "cat service.yaml portal-deployment.yaml > app-deployment.yaml"]
+    args: ["-c", "envsubst < ./deployment.yaml.template > app-deployment.yaml"]
     env:
       [
         "PROJECT_ID=$PROJECT_ID",
@@ -137,6 +125,14 @@ steps:
       ]
   - name: "gcr.io/cloud-builders/kubectl"
     args: ["apply", "-f", "./ingress.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./service.yaml"]
     dir: .
     env:
       [

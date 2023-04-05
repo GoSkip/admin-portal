@@ -6,7 +6,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels:
+    matchLabels: 
       app: portal
   template:
     metadata:
@@ -15,4 +15,5 @@ spec:
     spec:
       containers:
         - name: portal
-	  image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}:$COMMIT_SHA"
+          tty: true
+          image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}:$COMMIT_SHA"
