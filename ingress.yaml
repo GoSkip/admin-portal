@@ -18,9 +18,9 @@ spec:
   tls:
     - secretName: portal-ingress-staging
       hosts:
-        - admin-test.skipapi.io
+        - admin-test.getskip.com
   rules:
-    - host: admin-test.skipapi.io
+    - host: admin-test.getskip.com
       http:
         paths:
           - path: /
