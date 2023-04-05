@@ -13,20 +13,20 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
-  spec:
-    ingressClassName: "nginx"
-    tls:
-      - secretName: portal-ingress-staging
-        hosts:
-          - admin-test.skipapi.io
-    rules:
-      - host: admin-test.skipapi.io
-        http:
-          paths:
-            - path: /
-              pathType: Prefix
-              backend:
-                service:
-                  name: portal
-                  port:
-                    number: 8080
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - secretName: portal-ingress-staging
+      hosts:
+        - admin-test.skipapi.io
+  rules:
+    - host: admin-test.skipapi.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: portal
+                port:
+                  number: 8080
