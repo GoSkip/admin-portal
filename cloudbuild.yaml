@@ -1,5 +1,19 @@
 ---
 steps:
-  - name: gcr.io/cloud-builders/docker
-    args: ["build", "-f", "./Dockerfile", "."]
-timeout: 25m
+  - name: gcr.io/cloud-builders/gcloud
+    dir: .
+    args: ["builds", "submit", "--tag", "gcr.io/skip-sandbox/admin-portal"]
+  - name: gcr.io/cloud-builders/gcloud
+    dir: .
+    args:
+      [
+        "run",
+        "deploy",
+        "admin-portal-test",
+        "--image",
+        "gcr.io/skip-sandbox/admin-portal",
+        "--platform",
+        "managed",
+        "--region",
+        "us-central1",
+      ]

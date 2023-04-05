@@ -1,17 +1,20 @@
+FROM node:lts-alpine as builder
+
+COPY package.json ./
+RUN yarn
+RUN mkdir /app-ui
+RUN mv ./node_modules ./app-ui
+WORKDIR /app-ui
+COPY . .
+
+RUN yarn build
+
 FROM nginx:alpine
 
-COPY . /code/
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-WORKDIR /code
-
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /app-ui/dist /usr/share/nginx/html
 EXPOSE 80
 
-RUN set -eux \
-  & apk add \
-  --no-cache \
-  nodejs \
-  yarn
-
-RUN yarn && \
-  yarn build && \
-  mv dist/* /usr/share/nginx/html/
+CMD ["nginx", "-g", "daemon off;"]
