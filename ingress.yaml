@@ -6,7 +6,7 @@ metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
     acme.cert-manager.io/http01-edit-in-place: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-portal-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-portal-production"
     nginx.org/client-max-body-size: 50m
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
