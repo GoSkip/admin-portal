@@ -12,7 +12,7 @@ steps:
       ]
   - name: gcr.io/cloud-builders/gcloud
     dir: .
-    args: ["builds", "submit", "--tag", "gcr.io/skip-sandbox/${_IMAGE_NAME}"]
+    args: ["builds", "submit", "--tag", "gcr.io/skip-sandbox/${_IMAGE_NAME}:$COMMIT_SHA"]
   - name: "gcr.io/$PROJECT_ID/envsubst"
     dir: .
     entrypoint: /bin/bash

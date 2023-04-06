@@ -16,6 +16,6 @@ spec:
       containers:
         - name: portal
           tty: true
-          image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}"
+          image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}:$COMMIT_SHA"
           ports:
             - containerPort: 8080
