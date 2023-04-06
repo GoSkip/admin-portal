@@ -9,7 +9,7 @@ spec:
   selector:
     app: portal
   ports:
-    - name: portal-http
+    - name: portal
       protocol: TCP
       port: 5173
       targetPort: 5173
