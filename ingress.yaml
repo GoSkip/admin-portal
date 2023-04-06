@@ -29,4 +29,4 @@ spec:
               service:
                 name: portal
                 port:
-                  number: 5173
+                  number: 8080

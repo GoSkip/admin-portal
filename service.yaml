@@ -11,5 +11,5 @@ spec:
   ports:
     - name: portal
       protocol: TCP
-      port: 5173
-      targetPort: 5173
+      port: 8080
+      targetPort: 8080
