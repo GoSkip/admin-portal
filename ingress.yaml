@@ -16,7 +16,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   tls:
-    - secretName: portal-ingress-staging
+    - secretName: portal-ingress
       hosts:
         - admin-test.getskip.com
   rules:
