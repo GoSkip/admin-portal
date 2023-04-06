@@ -17,3 +17,5 @@ spec:
         - name: portal
           tty: true
           image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}"
+          ports:
+            - containerPort: 8080
