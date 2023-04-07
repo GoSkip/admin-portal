@@ -1,19 +1,146 @@
 ---
 steps:
-  - name: gcr.io/cloud-builders/gcloud
-    dir: .
-    args: ["builds", "submit", "--tag", "gcr.io/skip-sandbox/admin-portal"]
-  - name: gcr.io/cloud-builders/gcloud
-    dir: .
+  - name: gcr.io/cloud-builders/docker
     args:
       [
-        "run",
-        "deploy",
-        "admin-portal-test",
-        "--image",
-        "gcr.io/skip-sandbox/admin-portal",
-        "--platform",
-        "managed",
-        "--region",
-        "us-central1",
+        "build",
+        "-f",
+        "./Dockerfile.envsubst",
+        "-t",
+        "gcr.io/$PROJECT_ID/envsubst",
+        ".",
       ]
+  - name: gcr.io/cloud-builders/gcloud
+    dir: .
+    args: ["builds", "submit", "--tag", "gcr.io/skip-sandbox/${_IMAGE_NAME}:$COMMIT_SHA"]
+  - name: "gcr.io/$PROJECT_ID/envsubst"
+    dir: .
+    entrypoint: /bin/bash
+    args: ["-c", "envsubst < ./deployment.yaml.template > app-deployment.yaml"]
+    env:
+      [
+        "PROJECT_ID=$PROJECT_ID",
+        "COMMIT_SHA=$COMMIT_SHA",
+        "IMAGE_NAME=${_IMAGE_NAME}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "delete",
+        "clusterrolebinding",
+        "cluster-admin-binding",
+        "--ignore-not-found=true",
+      ]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "create",
+        "clusterrolebinding",
+        "cluster-admin-binding",
+        "--clusterrole",
+        "cluster-admin",
+        "--user",
+        "$(gcloud config get-value account)",
+      ]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "apply",
+        "-f",
+        "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.5.1/deploy/static/provider/cloud/deploy.yaml",
+      ]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "apply",
+        "-f",
+        "https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml",
+      ]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "apply",
+        "-f",
+        "https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml",
+      ]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./kube-dns-configmap.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./cluster-issuer-portal-staging.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./cluster-issuer-portal-prod.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./ingress.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./service.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "./app-deployment.yaml"]
+    dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
+options:
+  machineType: "N1_HIGHCPU_8"
+timeout: 25m

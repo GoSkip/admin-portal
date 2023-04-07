@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: portal
+  template:
+    metadata:
+      labels:
+        app: portal
+    spec:
+      containers:
+        - name: portal
+          tty: true
+          image: "gcr.io/$PROJECT_ID/${IMAGE_NAME}:$COMMIT_SHA"
+          ports:
+            - containerPort: 8080
