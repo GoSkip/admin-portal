@@ -11,6 +11,7 @@ import {
 } from "../../contexts/LoadingContext";
 import { Store } from "../../types/store";
 import Select from "../../components/select";
+import SecondaryButton from "../../components/buttons/secondary";
 import { BeatLoader } from "react-spinners";
 
 type SelectableStore = {
@@ -32,17 +33,19 @@ const NewKiosk = (): JSX.Element => {
   );
 
   useEffect(() => {
-    const store: SelectableStore = {
-      key: selectable_stores[0].name,
-      value: String(selectable_stores[0].id),
-    };
+    if (selectable_stores.length > 0) {
+      const store: SelectableStore = {
+        key: String(selectable_stores[0].id),
+        value: selectable_stores[0].name,
+      };
 
-    setSelectedStore(store);
+      setSelectedStore(store);
+    }
   }, [selectable_stores]);
 
   const stores: SelectableStore[] = selectable_stores.map((store: Store) => ({
-    key: store.name,
-    value: String(store.id),
+    key: String(store.id),
+    value: store.name,
   }));
 
   return (
@@ -75,10 +78,14 @@ const NewKiosk = (): JSX.Element => {
       <div>
         <hr />
       </div>
-      <div className="space-y-10 divide-y divide-gray-900/10 mt-8">
-        <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl md:col-span-2">
+      <div className="space-y-10 divide-y divide-gray-900/10 mt-8 grid grid-cols-2">
+        <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl col-span-2 md:col-span-1">
+          <div className="px-4 pt-2 text-xl font-normal">Select store</div>
+          <div className="px-4 pb-2 text-sm text-gray-500">
+            Kiosks are assigned to a specific store
+          </div>
           <div className="px-4 py-6">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 mb-4 sm:grid-cols-1">
               {!!selectedStore ? (
                 <Select
                   selectedItem={selectedStore}
@@ -89,6 +96,11 @@ const NewKiosk = (): JSX.Element => {
               ) : (
                 <BeatLoader size={15} margin={2} />
               )}
+            </div>
+            <hr />
+            <div className="flex justify-end mt-4">
+              <SecondaryButton label="Cancel" additionalClasses="mr-2" />
+              <SecondaryButton label="Create" disabled />
             </div>
           </div>
         </form>
