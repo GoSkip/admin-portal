@@ -12,6 +12,7 @@ import formatMinsHours from "../../utils/formatMinsHours";
 import { differenceInMinutes } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchKiosksByRetailer } from "../../api/kiosk";
+import { useNavigate } from "react-router-dom";
 import requirePermissions from "../../hooks/requirePermissions";
 import classNames from "classnames";
 import {
@@ -102,6 +103,11 @@ const KioskList = (): JSX.Element => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
+  const navigate = useNavigate();
+
+  const onClickNewKiosk = () => {
+    navigate("/kiosks/new");
+  };
 
   const limit = 10;
   const {
@@ -196,7 +202,7 @@ const KioskList = (): JSX.Element => {
           <h1 className="text-xl font-semibold text-gray-900">Kiosks</h1>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <PrimaryButton label="Add Kiosk" />
+          <PrimaryButton label="Add Kiosk" onClick={onClickNewKiosk} />
         </div>
       </div>
       <div>
