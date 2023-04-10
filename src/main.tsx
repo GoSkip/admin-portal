@@ -10,6 +10,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Admin from "./routes/admin";
 import Kiosks from "./routes/kiosks";
+import NewKiosk from "./routes/kiosks/new";
 import KioskSingle from "./routes/kiosks/single";
 import People from "./routes/people";
 import Products from "./routes/products";
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<Root />} errorElement={<Page404 />}>
       <Route path="/admin" element={<Admin />} />
       <Route path="/kiosks" element={<Kiosks />} />
+      <Route path="/kiosks/new" element={<NewKiosk />} />
       <Route path="/kiosks/:storeId/:kioskId" element={<KioskSingle />} />
       <Route path="/people" element={<People />} />
       <Route path="/products" element={<Products />} />

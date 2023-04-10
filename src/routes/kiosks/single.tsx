@@ -21,8 +21,8 @@ import { Retailer } from "../../types/retailer";
 import { Store } from "../../types/store";
 import transformKiosk from "../../utils/transformKiosk";
 import { BeatLoader } from "react-spinners";
-import SelectSection from "./selectSection";
-import InputSection from "./inputSection";
+import Select from "../../components/select";
+import Input from "../../components/input";
 
 const terminals = [
   {
@@ -244,60 +244,60 @@ const Kiosk = (): JSX.Element => {
               <hr />
               <div className="px-4 py-6">
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <InputSection
+                  <Input
                     htmlId="kiosk-id"
                     label="Kiosk ID"
                     value={format(kiosk.inserted_at, "M/d/yyyy")}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="kiosk-description"
                     label="Kiosk Description"
                     value={kiosk.kiosk_descriptor}
                     onChange={setValue("kiosk_descriptor")}
                   />
-                  <InputSection
+                  <Input
                     htmlId="kiosk-inserted-at"
                     label="Kiosk Created"
                     value={kiosk.inserted_at.toLocaleString()}
                     disabled
                   />
-                  <SelectSection
+                  <Select
                     selectedItem={selectedTerminal}
                     setSelectedItem={setSelectedTerminal}
                     label="Terminal ID"
                     items={terminals}
                   />
-                  <SelectSection
+                  <Select
                     selectedItem={selectedMount}
                     setSelectedItem={setSelectedMount}
                     label="Mount"
                     items={mounts}
                   />
-                  <SelectSection
+                  <Select
                     selectedItem={selectedNetwork}
                     setSelectedItem={setSelectedNetwork}
                     label="Network"
                     items={networks}
                   />
-                  <SelectSection
+                  <Select
                     selectedItem={selectedPinpad}
                     setSelectedItem={setSelectedPinpad}
                     label="Pinpad"
                     items={pinpads}
                   />
-                  <InputSection
+                  <Input
                     htmlId="pinpad-serial"
                     label="Pinpad Serial #"
                     value={"pinpad serial no"}
                   />
-                  <SelectSection
+                  <Select
                     selectedItem={selectedPrinter}
                     setSelectedItem={setSelectedPrinter}
                     label="Printer"
                     items={printers}
                   />
-                  <InputSection
+                  <Input
                     htmlId="printer-serial"
                     label="Printer Serial #"
                     value={"printer serial no"}
@@ -319,61 +319,61 @@ const Kiosk = (): JSX.Element => {
               <hr />
               <div className="px-4 py-6">
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <InputSection
+                  <Input
                     htmlId="device-name"
                     label="Device Name"
                     value={"Kwik-E-Mart 306-319"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="mdm-name"
                     label="MDM Name"
                     value={"Kwik-E-Mart 306-319"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="app-version"
                     label="App Version"
                     value={"1.7.2 (2314)"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="ios-version"
                     label="iOS Version"
                     value={"14.4 (Build 18D52)"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="model-version"
                     label="Model"
                     value={"iPad Pro 12.9-inch (4th Generation)"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="serial-number"
                     label="Serial Number"
                     value={"DMPFC2WTPV03"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="battery-level"
                     label="Battery Level"
                     value={"100%"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="ipad-group"
                     label="Group"
                     value={"SCO Production"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="ipad-last-seen"
                     label="Last Seen"
                     value={"25 min ago"}
                     disabled
                   />
-                  <InputSection
+                  <Input
                     htmlId="ipad-last-txn"
                     label="Last Transaction"
                     value={"6 min ago"}
