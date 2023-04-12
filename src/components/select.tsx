@@ -3,7 +3,7 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import { Fragment } from "react";
 
-type SelectSectionProps = {
+type SelectProps = {
   selectedItem: {
     key: string;
     value: string;
@@ -16,12 +16,12 @@ type SelectSectionProps = {
   }[];
 };
 
-const SelectSection = ({
+const Select = ({
   selectedItem,
   setSelectedItem,
   label,
   items,
-}: SelectSectionProps): JSX.Element => {
+}: SelectProps): JSX.Element => {
   return (
     <div className="sm:col-span-1">
       <Listbox value={selectedItem} onChange={setSelectedItem}>
@@ -99,4 +99,4 @@ const SelectSection = ({
   );
 };
 
-export default SelectSection;
+export default Select;

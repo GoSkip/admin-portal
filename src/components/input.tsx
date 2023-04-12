@@ -1,4 +1,4 @@
-type InputSectionProps = {
+type InputProps = {
   label: string;
   value: string;
   htmlId: string;
@@ -6,13 +6,13 @@ type InputSectionProps = {
   onChange?: (value: any) => any;
 };
 
-const InputSection = ({
+const Input = ({
   htmlId,
   label,
   value,
   disabled,
   onChange,
-}: InputSectionProps): JSX.Element => {
+}: InputProps): JSX.Element => {
   const change = onChange ? onChange : () => {};
 
   return (
@@ -38,4 +38,4 @@ const InputSection = ({
   );
 };
 
-export default InputSection;
+export default Input;
