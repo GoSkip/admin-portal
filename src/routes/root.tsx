@@ -20,14 +20,17 @@ const Root = (): JSX.Element => {
   const [sortedRetailers, setSortedRetailers] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { active_retailer } = session;
+  console.log(session);
   const { isLoading } = useQuery({
     queryKey: ["retailers"],
-    queryFn: () =>
+    queryFn: () => {
+      console.log("taco bell")
       getRetailers({
         jwt: session.token_info.token,
         storeIds: session.store_ids,
         retailerIds: session.retailer_ids,
-      }),
+      });
+    },
     enabled: !!session.token_info.token,
     onError: (error) => {
       console.error(error);
@@ -48,6 +51,8 @@ const Root = (): JSX.Element => {
   useEffect(() => {
     setIsLoading(isLoading);
   }, [isLoading]);
+  
+  console.log("--- sorted retailers ---", sortedRetailers)
 
   return (
     <SessionProvider renderException={false}>

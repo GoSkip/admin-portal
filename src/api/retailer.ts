@@ -12,6 +12,7 @@ export const getRetailers = async ({ jwt, retailerIds }: GetRetailersProps) => {
     product: "sco",
   };
 
+  console.log("calling")
   return await axios.get(
     `${domain}/v1/store/retailer?query=${JSON.stringify(retailerQuery)}`,
     {
