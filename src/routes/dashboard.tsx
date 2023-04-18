@@ -75,7 +75,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
         <Layout setSidebarOpen={setSidebarOpen} />
         <main className="h-full">
           <div className="py-6 h-full">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full">
+            <div className="max-w-7xl px-4 sm:px-6 lg:px-8 h-full">
               <LoadingProvider noBlur={false}>
                 <Outlet />
               </LoadingProvider>
