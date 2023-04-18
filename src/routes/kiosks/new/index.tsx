@@ -1,58 +1,55 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   SessionContext,
   SessionContextType,
-} from "../../contexts/SessionContext";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../contexts/LoadingContext";
-import { Store } from "../../types/store";
-import Select from "../../components/select";
-import SecondaryButton from "../../components/buttons/secondary";
+} from "../../../contexts/SessionContext";
+import { Store, emptyStore } from "../../../types/store";
+import Select from "../../../components/select";
+import SecondaryButton from "../../../components/buttons/secondary";
+import PrimaryButton from "../../../components/buttons/primary";
 import { BeatLoader } from "react-spinners";
 
-interface SelectableStore {
-  id: string;
-  name: string;
-  addressLineOne?: string;
-  addressLineTwo?: string;
+interface SelectStore {
+  key: string;
+  value: string;
 }
 
 const NewKiosk = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
-  const {
-    active_retailer: { id: activeRetailerId },
-    selectable_stores,
-    token_info: { token },
-  } = session;
+  const navigate = useNavigate();
+  const { selectable_stores } = session;
 
-  const [selectedStore, setSelectedStore] = useState<SelectableStore | null>(
-    null
+  const [store, setStore] = useState<Store>(emptyStore);
+
+  const selectStore: SelectStore = {
+    key: String(store.id),
+    value: store.name,
+  };
+
+  const selectStores: SelectStore[] = selectable_stores.map(
+    (sStore: Store) => ({
+      key: String(sStore.id),
+      value: sStore.name,
+    })
   );
+
+  const goToDetails = () => {
+    navigate(`/kiosks/new/${store.id}`);
+  };
 
   useEffect(() => {
     if (selectable_stores.length > 0) {
-      const store: SelectableStore = {
-        id: String(selectable_stores[0].id),
-        name: selectable_stores[0].name,
-        addressLineOne: selectable_stores[0].address,
-        addressLineTwo: selectable_stores[0].address2,
-      };
-
-      setSelectedStore(store);
+      setStore(selectable_stores[0]);
     }
   }, [selectable_stores]);
 
-  const stores: SelectableStore[] = selectable_stores.map((store: Store) => ({
-    id: String(store.id),
-    name: store.name,
-    addressLineOne: store.address,
-    addressLineTwo: store.address2,
-  }));
+  const setSelectStore = (sStore: SelectStore) => {
+    const newStore =
+      selectable_stores.find((s) => String(s.id) === sStore.key) || store;
+    setStore(newStore);
+  };
 
   return (
     <div className="w-full h-full">
@@ -92,59 +89,51 @@ const NewKiosk = (): JSX.Element => {
           </div>
           <div className="px-4 py-6">
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 mb-4 sm:grid-cols-2">
-              {!!selectedStore ? (
+              {!!store ? (
                 <>
-                  {!!selectedStore.addressLineOne ? (
+                  {!!store.address ? (
                     <>
                       <div className="col-span-1">
                         <Select
-                          selectedItem={{
-                            key: selectedStore.id,
-                            value: selectedStore.name,
-                          }}
-                          setSelectedItem={setSelectedStore}
+                          selectedItem={selectStore}
+                          setSelectedItem={setSelectStore}
                           label="Store"
-                          items={stores.map((store) => ({
-                            key: store.id,
-                            value: store.name,
-                          }))}
+                          items={selectStores}
                         />
                       </div>
                       <div className="col-span-1">
                         <div className="text-gray-800 text-sm">Address</div>
                         <div className="text-sm text-gray-400">
-                          {selectedStore.addressLineOne}
+                          {store.address}
                         </div>
                         <div className="text-sm text-gray-400">
-                          {selectedStore.addressLineTwo}
+                          {store.address2}
                         </div>
                       </div>
                     </>
                   ) : (
                     <div className="col-span-2">
                       <Select
-                        selectedItem={{
-                          key: selectedStore.id,
-                          value: selectedStore.name,
-                        }}
-                        setSelectedItem={setSelectedStore}
+                        selectedItem={selectStore}
+                        setSelectedItem={setSelectStore}
                         label="Store"
-                        items={stores.map((store) => ({
-                          key: store.id,
-                          value: store.name,
-                        }))}
+                        items={selectStores}
                       />
                     </div>
                   )}
                 </>
               ) : (
-                <BeatLoader size={15} margin={2} />
+                <BeatLoader size={16} margin={2} />
               )}
             </div>
             <hr />
             <div className="flex justify-end mt-4">
               <SecondaryButton label="Cancel" additionalClasses="mr-2" />
-              <SecondaryButton label="Create" disabled />
+              <PrimaryButton
+                label="Create"
+                disabled={!store.id}
+                onClick={goToDetails}
+              />
             </div>
           </div>
         </form>

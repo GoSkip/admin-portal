@@ -8,3 +8,10 @@ export type Store = {
   address2?: string;
   phone?: string;
 };
+
+export const emptyStore = {
+  id: 0,
+  dayClose: "",
+  name: "",
+  timezone: "",
+};
