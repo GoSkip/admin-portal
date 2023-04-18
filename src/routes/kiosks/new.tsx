@@ -14,10 +14,12 @@ import Select from "../../components/select";
 import SecondaryButton from "../../components/buttons/secondary";
 import { BeatLoader } from "react-spinners";
 
-type SelectableStore = {
-  key: string;
-  value: string;
-};
+interface SelectableStore {
+  id: string;
+  name: string;
+  addressLineOne?: string;
+  addressLineTwo?: string;
+}
 
 const NewKiosk = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
@@ -35,8 +37,10 @@ const NewKiosk = (): JSX.Element => {
   useEffect(() => {
     if (selectable_stores.length > 0) {
       const store: SelectableStore = {
-        key: String(selectable_stores[0].id),
-        value: selectable_stores[0].name,
+        id: String(selectable_stores[0].id),
+        name: selectable_stores[0].name,
+        addressLineOne: selectable_stores[0].address,
+        addressLineTwo: selectable_stores[0].address2,
       };
 
       setSelectedStore(store);
@@ -44,8 +48,10 @@ const NewKiosk = (): JSX.Element => {
   }, [selectable_stores]);
 
   const stores: SelectableStore[] = selectable_stores.map((store: Store) => ({
-    key: String(store.id),
-    value: store.name,
+    id: String(store.id),
+    name: store.name,
+    addressLineOne: store.address,
+    addressLineTwo: store.address2,
   }));
 
   return (
@@ -85,14 +91,52 @@ const NewKiosk = (): JSX.Element => {
             Kiosks are assigned to a specific store
           </div>
           <div className="px-4 py-6">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 mb-4 sm:grid-cols-1">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 mb-4 sm:grid-cols-2">
               {!!selectedStore ? (
-                <Select
-                  selectedItem={selectedStore}
-                  setSelectedItem={setSelectedStore}
-                  label="Store"
-                  items={stores}
-                />
+                <>
+                  {!!selectedStore.addressLineOne ? (
+                    <>
+                      <div className="col-span-1">
+                        <Select
+                          selectedItem={{
+                            key: selectedStore.id,
+                            value: selectedStore.name,
+                          }}
+                          setSelectedItem={setSelectedStore}
+                          label="Store"
+                          items={stores.map((store) => ({
+                            key: store.id,
+                            value: store.name,
+                          }))}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <div className="text-gray-800 text-sm">Address</div>
+                        <div className="text-sm text-gray-400">
+                          {selectedStore.addressLineOne}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {selectedStore.addressLineTwo}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="col-span-2">
+                      <Select
+                        selectedItem={{
+                          key: selectedStore.id,
+                          value: selectedStore.name,
+                        }}
+                        setSelectedItem={setSelectedStore}
+                        label="Store"
+                        items={stores.map((store) => ({
+                          key: store.id,
+                          value: store.name,
+                        }))}
+                      />
+                    </div>
+                  )}
+                </>
               ) : (
                 <BeatLoader size={15} margin={2} />
               )}
