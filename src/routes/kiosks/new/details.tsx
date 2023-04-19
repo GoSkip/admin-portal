@@ -12,6 +12,7 @@ import TextInput from "../../../components/inputs/textInput";
 import { mounts, networks, pinpads, printers } from "../../../utils/enums";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import SecondaryButton from "../../../components/buttons/secondary";
+import PrimaryButton from "../../../components/buttons/primary";
 import StoreDetailsCard from "./storeDetailsCard";
 import MetadataCard from "./metadataCard";
 
@@ -25,9 +26,11 @@ type NewKioskDetailsForm = {
   printer: Option | null;
   pinpadSerial: string;
   printerSerial: string;
+  ipadSerial: string;
 };
 
 const NewKioskDetails = (): JSX.Element => {
+  const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
   const { session } = useContext<SessionContextType>(SessionContext);
   const [formState, setFormState] = useState<NewKioskDetailsForm>({
     kioskId: "",
@@ -39,6 +42,7 @@ const NewKioskDetails = (): JSX.Element => {
     printer: null,
     pinpadSerial: "",
     printerSerial: "",
+    ipadSerial: "",
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,7 +254,7 @@ const NewKioskDetails = (): JSX.Element => {
         <StoreDetailsCard />
       </div>
       <div className="mt-8 grid grid-cols-4">
-        <div className="bg-white rounded-lg shadow-sm p-6 col-span-3">
+        <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">
           <h2 className="text-xl font-medium text-gray-900">iPad Details</h2>
           <p className="mt-1 text-gray-500">
             Hardware and software details last reported to the MDM service
@@ -264,8 +268,29 @@ const NewKioskDetails = (): JSX.Element => {
             <p className="text-sm text-gray-500 mt-2">
               Get started by entering the iPad serial number
             </p>
-            <div className="mt-4">
-              <SecondaryButton label="Enter serial number" disabled={true} />
+            <div className="mt-4 w-1/2 grid grid-cols-4">
+              {enterSerialNoMode ? (
+                <>
+                  <div className="col-span-4 sm:col-span-3">
+                    <TextInput
+                      label="Serial number"
+                      value={formState.ipadSerial}
+                      htmlId={"ipadSerial"}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-span-1 mt-1 ml-2">
+                    <PrimaryButton label="Submit" onClick={() => {}} />
+                  </div>
+                </>
+              ) : (
+                <div className="col-span-4 flex justify-center">
+                  <SecondaryButton
+                    label="Enter serial number"
+                    onClick={() => setEnterSerialNoMode(true)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
