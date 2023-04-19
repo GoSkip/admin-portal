@@ -21,8 +21,8 @@ import { Retailer } from "../../types/retailer";
 import { Store } from "../../types/store";
 import transformKiosk from "../../utils/transformKiosk";
 import { BeatLoader } from "react-spinners";
-import Select from "../../components/select";
-import Input from "../../components/input";
+import Select from "../../components/inputs/select";
+import TextInput from "../../components/inputs/textInput";
 
 const terminals = [
   {
@@ -244,19 +244,19 @@ const Kiosk = (): JSX.Element => {
               <hr />
               <div className="px-4 py-6">
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <Input
+                  <TextInput
                     htmlId="kiosk-id"
                     label="Kiosk ID"
                     value={format(kiosk.inserted_at, "M/d/yyyy")}
                     disabled
                   />
-                  <Input
+                  <TextInput
                     htmlId="kiosk-description"
                     label="Kiosk Description"
                     value={kiosk.kiosk_descriptor}
                     onChange={setValue("kiosk_descriptor")}
                   />
-                  <Input
+                  <TextInput
                     htmlId="kiosk-inserted-at"
                     label="Kiosk Created"
                     value={kiosk.inserted_at.toLocaleString()}
@@ -286,7 +286,7 @@ const Kiosk = (): JSX.Element => {
                     label="Pinpad"
                     items={pinpads}
                   />
-                  <Input
+                  <TextInput
                     htmlId="pinpad-serial"
                     label="Pinpad Serial #"
                     value={"pinpad serial no"}
@@ -297,7 +297,7 @@ const Kiosk = (): JSX.Element => {
                     label="Printer"
                     items={printers}
                   />
-                  <Input
+                  <TextInput
                     htmlId="printer-serial"
                     label="Printer Serial #"
                     value={"printer serial no"}

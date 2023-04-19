@@ -6,7 +6,7 @@ import {
   SessionContextType,
 } from "../../../contexts/SessionContext";
 import { Store, emptyStore } from "../../../types/store";
-import Select from "../../../components/select";
+import Select from "../../../components/inputs/select";
 import SecondaryButton from "../../../components/buttons/secondary";
 import PrimaryButton from "../../../components/buttons/primary";
 import { BeatLoader } from "react-spinners";
