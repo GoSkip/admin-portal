@@ -89,7 +89,7 @@ const NewKioskDetails = (): JSX.Element => {
               />
               <Link
                 to="/kiosks/new"
-                className="text-gray-400 hover:text-gray-500 text-xl"
+                className="text-gray-400 hover:text-gray-500 text-xl ml-4"
               >
                 New Kiosk
               </Link>
@@ -111,8 +111,8 @@ const NewKioskDetails = (): JSX.Element => {
       <div>
         <hr />
       </div>
-      <div className="mt-8 grid grid-cols-4">
-        <div className="bg-white rounded-lg shadow-md p-6 col-span-4 sm:col-span-3">
+      <div className="mt-6 grid grid-cols-4">
+        <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">
           <h2 className="text-xl font-medium text-gray-900">Kiosk details</h2>
           <p className="mt-1 text-gray-500">
             Identifiers, accessories, and connection details
@@ -250,7 +250,7 @@ const NewKioskDetails = (): JSX.Element => {
         <StoreDetailsCard />
       </div>
       <div className="mt-8 grid grid-cols-4">
-        <div className="bg-white rounded-lg shadow-md p-6 col-span-3">
+        <div className="bg-white rounded-lg shadow-sm p-6 col-span-3">
           <h2 className="text-xl font-medium text-gray-900">iPad Details</h2>
           <p className="mt-1 text-gray-500">
             Hardware and software details last reported to the MDM service

@@ -200,7 +200,7 @@ const KioskList = (): JSX.Element => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <div className="sm:flex sm:items-center mb-4">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">Kiosks</h1>
@@ -215,7 +215,7 @@ const KioskList = (): JSX.Element => {
       <div className="mt-8 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg flex justify-center items-center">
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-tl-lg md:rounded-tr-lg flex justify-center items-center">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
@@ -332,7 +332,7 @@ const KioskList = (): JSX.Element => {
         </div>
       </div>
       {!isLoading && (
-        <div className="flex items-center justify-between bg-white px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between md:rounded-bl-lg md:rounded-br-lg bg-white px-4 py-3 sm:px-6">
           <div className="flex flex-1 justify-between sm:hidden">
             <a
               href="#"
