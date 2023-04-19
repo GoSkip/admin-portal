@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { SessionContext } from "../contexts/SessionContext";
 import { Session, emptySession } from "../types/session";
 // @ts-ignore
@@ -9,27 +8,18 @@ import { Retailer } from "../types/retailer";
 
 type SessionContextProps = {
   children: any;
-  renderException: boolean;
 };
 
-const SessionProvider = ({
-  children,
-  renderException,
-}: SessionContextProps): JSX.Element => {
+const SessionProvider = ({ children }: SessionContextProps): JSX.Element => {
   const [session, setSession] = useState<Session>(emptySession);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const pathname = location.pathname;
 
   let prevSession: Session | null = null;
 
-  if (localStorage.getItem("session")) {
+  if (localStorage.getItem("token")) {
     prevSession = JSON.parse(String(localStorage.getItem("session")));
   } else if (sessionStorage.getItem("session")) {
     prevSession = JSON.parse(String(sessionStorage.getItem("session")));
   }
-
-  const invalidSession = !session.token_info.token && !prevSession;
 
   const _setSession = (session: Session) => {
     setSession(session);
@@ -57,13 +47,6 @@ const SessionProvider = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (invalidSession && pathname !== "/login") {
-      sessionStorage.setItem("pathRedirect", location.pathname);
-      navigate("/login");
-    }
-  }, [invalidSession]);
-
   return (
     <SessionContext.Provider
       value={{
@@ -72,7 +55,7 @@ const SessionProvider = ({
         setActiveRetailer,
       }}
     >
-      {!invalidSession || renderException ? children : null}
+      {children}
     </SessionContext.Provider>
   );
 };
