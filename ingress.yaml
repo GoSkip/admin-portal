@@ -18,9 +18,9 @@ spec:
   tls:
     - secretName: portal-ingress
       hosts:
-        - admin-test.getskip.com
+        - sandbox-admin.getskip.com
   rules:
-    - host: admin-test.getskip.com
+    - host: sandbox-admin.getskip.com
       http:
         paths:
           - path: /
