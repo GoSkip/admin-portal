@@ -32,7 +32,7 @@ const Router = (): JSX.Element => {
           <Route path="/admin" element={<Admin />} />
           <Route path="/kiosks" element={<Kiosks />} />
           <Route path="/kiosks/new" element={<KioskNew />} />
-          <Route path="/kiosks/new/:storeId" element={<KioskNewDetails />} />
+          <Route path="/kiosks/new/:kioskId" element={<KioskNewDetails />} />
           <Route path="/kiosks/:storeId/:kioskId" element={<KioskSingle />} />
           <Route path="/people" element={<People />} />
           <Route path="/products" element={<Products />} />
