@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -10,13 +11,22 @@ import { Store, emptyStore } from "../../../types/store";
 import Select, { Option } from "../../../components/inputs/select";
 import TextInput from "../../../components/inputs/textInput";
 import { mounts, networks, pinpads, printers } from "../../../utils/enums";
+import { fetchKiosk } from "../../../api/kiosk";
+import { fetchStores } from "../../../api/store";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import SecondaryButton from "../../../components/buttons/secondary";
 import PrimaryButton from "../../../components/buttons/primary";
 import StoreDetailsCard from "./storeDetailsCard";
 import MetadataCard from "./metadataCard";
+import { toastError } from "../../../toasts";
+import { Retailer } from "../../../types/retailer";
+import transformKiosk from "../../../utils/transformKiosk";
+import {
+  LoadingContext,
+  LoadingContextType,
+} from "../../../contexts/LoadingContext";
 
-type NewKioskDetailsForm = {
+type KioskDetailsForm = {
   kioskId: string;
   kioskDescription: string;
   terminalId: Option | null;
@@ -29,10 +39,17 @@ type NewKioskDetailsForm = {
   ipadSerial: string;
 };
 
-const NewKioskDetails = (): JSX.Element => {
+const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
+  const { storeId, kioskId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
-  const [formState, setFormState] = useState<NewKioskDetailsForm>({
+  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
+  const {
+    active_retailer,
+    token_info: { token },
+  } = session;
+  const [store, setStore] = useState<Store | null>(null);
+  const [formState, setFormState] = useState<KioskDetailsForm>({
     kioskId: "",
     kioskDescription: "",
     terminalId: null,
@@ -44,6 +61,82 @@ const NewKioskDetails = (): JSX.Element => {
     printerSerial: "",
     ipadSerial: "",
   });
+
+  const { isLoading: storeIsLoading } = useQuery(
+    ["store", storeId],
+    () =>
+      fetchStores({
+        jwt: token,
+        storeIds: [Number(storeId)],
+      }),
+    {
+      enabled: !!kioskId && !!storeId && !!token,
+      onError: (error) => {
+        console.error(error);
+        toastError(`Problem loading store: ${storeId}`);
+      },
+      onSuccess: (data) => {
+        const store = data.data.retailers
+          .find((retailer: Retailer) => retailer.id === active_retailer.id)
+          .stores.find((store: Store) => store.id === Number(storeId));
+
+        setStore(store);
+      },
+    }
+  );
+
+  const { isLoading: kioskIsLoading } = useQuery(
+    ["kiosk", storeId, kioskId],
+    () =>
+      fetchKiosk({
+        jwt: token,
+        storeId: Number(storeId),
+        kioskId: Number(kioskId),
+      }),
+    {
+      enabled: !!kioskId && !!storeId && !!token,
+      onError: (error) => {
+        console.error(error);
+        toastError(`Problem loading kiosk: ${kioskId}.`);
+      },
+      onSuccess: (data) => {
+        const transformedData = transformKiosk(data.data);
+
+        setFormState((prevState) => ({
+          ...prevState,
+          kioskId: String(transformedData.id),
+          kioskDescription: transformedData.kiosk_descriptor,
+          terminalId: transformedData.terminal_id
+            ? {
+                key: String(transformedData.terminal_id),
+                value: String(transformedData.terminal_id),
+              }
+            : null,
+          mount: transformedData.mount
+            ? mounts.find((mount) => mount.value === transformedData.mount) ||
+              null
+            : null,
+          network: transformedData.network
+            ? networks.find(
+                (network) => network.value === transformedData.network
+              ) || null
+            : null,
+          pinpad: transformedData.pinpad
+            ? pinpads.find(
+                (pinpad) => pinpad.value === transformedData.pinpad
+              ) || null
+            : null,
+          printer: transformedData.printer
+            ? printers.find(
+                (printer) => printer.value === transformedData.printer
+              ) || null
+            : null,
+          pinpadSerial: transformedData?.pinpad_serial ?? "",
+          printerSerial: transformedData?.printer_serial ?? "",
+        }));
+      },
+    }
+  );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -62,15 +155,16 @@ const NewKioskDetails = (): JSX.Element => {
     }
   };
 
-  const { selectable_stores } = session;
-  const params = useParams();
-
-  const store =
-    selectable_stores.find(
-      (store: Store) => String(store.id) === params.storeId
-    ) || emptyStore;
-
+  useEffect(() => {
+    if (kioskIsLoading || storeIsLoading) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [kioskIsLoading, storeIsLoading]);
+  
   console.log(formState);
+
   return (
     <div className="w-full h-full">
       <nav className="flex" aria-label="Breadcrumb">
@@ -91,22 +185,8 @@ const NewKioskDetails = (): JSX.Element => {
                 className="h-5 w-5 flex-shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              <Link
-                to="/kiosks/new"
-                className="text-gray-400 hover:text-gray-500 text-xl ml-4"
-              >
-                New Kiosk
-              </Link>
-            </div>
-          </li>
-          <li>
-            <div className="flex items-center">
-              <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
               <Link to="#" className="ml-4 text-xl">
-                {store.name}
+                {store?.name ?? "N/A"}
               </Link>
             </div>
           </li>
@@ -300,4 +380,4 @@ const NewKioskDetails = (): JSX.Element => {
   );
 };
 
-export default NewKioskDetails;
+export default KioskDetails;

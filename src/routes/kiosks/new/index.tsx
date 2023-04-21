@@ -52,7 +52,10 @@ const NewKiosk = (): JSX.Element => {
       const {
         data: { id },
       } = data;
-      navigate(`/kiosks/new/${id}`);
+
+      if (formState.store?.key) {
+        navigate(`/kiosks/${formState.store.key}/${id}`);
+      }
     },
   });
 

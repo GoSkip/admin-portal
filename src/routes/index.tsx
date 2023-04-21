@@ -5,8 +5,7 @@ import Page404 from "./404";
 import Admin from "./admin";
 import Kiosks from "./kiosks";
 import KioskNew from "./kiosks/new";
-import KioskNewDetails from "./kiosks/new/details";
-import KioskSingle from "./kiosks/single";
+import KioskDetail from "./kiosks/detail";
 import People from "./people";
 import Products from "./products";
 import Promotions from "./promotions";
@@ -32,8 +31,7 @@ const Router = (): JSX.Element => {
           <Route path="/admin" element={<Admin />} />
           <Route path="/kiosks" element={<Kiosks />} />
           <Route path="/kiosks/new" element={<KioskNew />} />
-          <Route path="/kiosks/new/:kioskId" element={<KioskNewDetails />} />
-          <Route path="/kiosks/:storeId/:kioskId" element={<KioskSingle />} />
+          <Route path="/kiosks/:storeId/:kioskId" element={<KioskDetail />} />
           <Route path="/people" element={<People />} />
           <Route path="/products" element={<Products />} />
           <Route path="/promotions" element={<Promotions />} />
