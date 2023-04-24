@@ -12,14 +12,48 @@ import {
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { userNavigation } from "../utils/navigation";
+import PrimaryButton from "./buttons/primary";
+import SecondaryButton from "./buttons/secondary";
 
 type LayoutProps = {
   setSidebarOpen: (open: boolean) => any;
 };
 
 const Layout = ({ setSidebarOpen }: LayoutProps): JSX.Element => {
-  const { filter, setFilter } =
-    useContext<GlobalStateContextType>(GlobalStateContext);
+  const {
+    filter,
+    setFilter,
+    pendingChangesMode,
+    setPendingChangesMode,
+    onDiscardPendingChangesFn,
+    onSavePendingChangesFn,
+  } = useContext<GlobalStateContextType>(GlobalStateContext);
+
+  if (pendingChangesMode) {
+    return (
+      <div className="sticky top-0 z-10 flex justify-between items-center h-16 flex-shrink-0 bg-black shadow text-white">
+        <div></div>
+        <div>Unsaved Changes</div>
+        <div>
+          <SecondaryButton
+            label="Discard"
+            additionalClasses="mr-4"
+            onClick={() => {
+              onDiscardPendingChangesFn();
+              setPendingChangesMode(false);
+            }}
+          />
+          <PrimaryButton
+            label="Save"
+            additionalClasses="mr-4"
+            onClick={() => {
+              onSavePendingChangesFn();
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">

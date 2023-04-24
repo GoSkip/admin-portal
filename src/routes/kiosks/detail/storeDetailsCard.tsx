@@ -1,6 +1,6 @@
 const StoreDetailsCard = (): JSX.Element => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 col-span-1 m-none ml-4">
+    <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-1 mt-4 sm:mt-0 sm:ml-4">
       <h2 className="text-xl font-medium text-gray-900">Store details</h2>
       <div className="mt-4 text-md text-gray-500">Name</div>
       <p className="mt-1 text-gray-400">#306 Leominster</p>

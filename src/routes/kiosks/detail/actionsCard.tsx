@@ -69,7 +69,7 @@ const sampleActions: Action[] = [
 
 const ActionsCard = (): JSX.Element => {
   return (
-    <div className="space-y-10 divide-y divide-gray-900/10 mt-8 col-span-4">
+    <div className="space-y-10 divide-y divide-gray-900/10 mt-4 col-span-4">
       <div className="text-gray-600 bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl grid grid-cols-4">
         <div className="col-span-1 text-left bg-gray-100 rounded-tl-xl pl-6 py-2">
           ACTOR

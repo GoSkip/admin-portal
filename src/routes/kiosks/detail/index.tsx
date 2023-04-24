@@ -7,6 +7,10 @@ import {
   SessionContext,
   SessionContextType,
 } from "../../../contexts/SessionContext";
+import {
+  GlobalStateContext,
+  GlobalStateContextType,
+} from "../../../contexts/GlobalStateContext";
 import { Store, emptyStore } from "../../../types/store";
 import Select, { Option } from "../../../components/inputs/select";
 import TextInput from "../../../components/inputs/textInput";
@@ -47,10 +51,28 @@ const KioskDetails = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const {
+    setPendingChangesMode,
+    pendingChangesMode,
+    setOnDiscardPendingChangesFn,
+    onDiscardPendingChangesFn,
+  } = useContext<GlobalStateContextType>(GlobalStateContext);
+  const {
     active_retailer,
     token_info: { token },
   } = session;
   const [store, setStore] = useState<Store | null>(null);
+  const [defaultFormState, setDefaultFormState] = useState<KioskDetailsForm>({
+    kioskId: "",
+    kioskDescription: "",
+    terminalId: null,
+    mount: null,
+    network: null,
+    pinpad: null,
+    printer: null,
+    pinpadSerial: "",
+    printerSerial: "",
+    ipadSerial: "",
+  });
   const [formState, setFormState] = useState<KioskDetailsForm>({
     kioskId: "",
     kioskDescription: "",
@@ -104,8 +126,8 @@ const KioskDetails = (): JSX.Element => {
       onSuccess: (data) => {
         const transformedData = transformKiosk(data.data);
 
-        setFormState((prevState) => ({
-          ...prevState,
+        const newFormState: KioskDetailsForm = {
+          ...defaultFormState,
           kioskId: String(transformedData.id),
           kioskDescription: transformedData.kiosk_descriptor,
           terminalId: transformedData.terminal_id
@@ -135,13 +157,20 @@ const KioskDetails = (): JSX.Element => {
             : null,
           pinpadSerial: transformedData?.pinpad_serial ?? "",
           printerSerial: transformedData?.printer_serial ?? "",
-        }));
+        };
+
+        setDefaultFormState(newFormState);
+        setFormState(newFormState);
       },
     }
   );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (!pendingChangesMode) {
+      setPendingChangesMode(true);
+    }
     setFormState((prevState) => ({
       ...prevState,
       [name]: value,
@@ -150,6 +179,9 @@ const KioskDetails = (): JSX.Element => {
 
   const handleSelectChange = (name: string) => (option: Option | null) => {
     if (option) {
+      if (!pendingChangesMode) {
+        setPendingChangesMode(true);
+      }
       setFormState((prevState) => ({
         ...prevState,
         [name]: option,
@@ -164,6 +196,12 @@ const KioskDetails = (): JSX.Element => {
       setIsLoading(false);
     }
   }, [kioskIsLoading, storeIsLoading]);
+
+  useEffect(() => {
+    setOnDiscardPendingChangesFn(() => () => {
+      setFormState(defaultFormState);
+    });
+  }, [defaultFormState]);
 
   return (
     <div className="w-full h-max">
@@ -333,7 +371,7 @@ const KioskDetails = (): JSX.Element => {
         </div>
         <StoreDetailsCard />
       </div>
-      <div className="mt-8 grid grid-cols-4">
+      <div className="mt-4 grid grid-cols-4">
         <IpadCard
           enterSerialNoMode={enterSerialNoMode}
           setEnterSerialNoMode={setEnterSerialNoMode}
