@@ -223,7 +223,7 @@ const Login = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="hidden lg:inline-block max-h-full my-3">
+        <div className="hidden lg:inline-block max-h-max my-3">
           <img src={store_logo} alt="Store image" />
         </div>
       </div>

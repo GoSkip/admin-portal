@@ -104,7 +104,7 @@ const NewKiosk = (): JSX.Element => {
   }, [isLoading]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-max">
       <nav className="flex" aria-label="Breadcrumb">
         <ol role="list" className="flex items-center space-x-4 pb-6">
           <li>

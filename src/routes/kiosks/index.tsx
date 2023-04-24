@@ -200,7 +200,7 @@ const KioskList = (): JSX.Element => {
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-max">
       <div className="sm:flex sm:items-center mb-4">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">Kiosks</h1>

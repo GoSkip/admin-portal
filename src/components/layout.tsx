@@ -43,7 +43,7 @@ const Layout = ({ setSidebarOpen }: LayoutProps): JSX.Element => {
               </div>
               <input
                 id="search-field"
-                className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm"
+                className="block h-max w-full border-transparent py-2 pl-8 pr-3 text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm"
                 placeholder="Filter results"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
