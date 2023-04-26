@@ -71,7 +71,7 @@ const KioskDetails = (): JSX.Element => {
   } = session;
   const [store, setStore] = useState<Store | null>(null);
   const [defaultFormState, setDefaultFormState] = useState<KioskDetailsForm>({
-    kioskNumber: "",
+    kioskNumber: "1",
     kioskDescription: "",
     terminalId: null,
     mount: null,
@@ -83,7 +83,7 @@ const KioskDetails = (): JSX.Element => {
     ipadSerial: "",
   });
   const [formState, setFormState] = useState<KioskDetailsForm>({
-    kioskNumber: "",
+    kioskNumber: "1",
     kioskDescription: "",
     terminalId: null,
     mount: null,
@@ -94,8 +94,6 @@ const KioskDetails = (): JSX.Element => {
     printerSerial: "",
     ipadSerial: "",
   });
-
-  console.log("taco bell", kioskId, storeId, token);
 
   const { isLoading: storeIsLoading } = useQuery(
     ["store", storeId],
@@ -115,7 +113,6 @@ const KioskDetails = (): JSX.Element => {
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
 
-        console.log("store data", data);
         setStore(store);
       },
     }
@@ -126,6 +123,8 @@ const KioskDetails = (): JSX.Element => {
     () =>
       fetchTerminals({
         jwt: token,
+        page: 1,
+        limit: 100,
         storeId: Number(storeId),
       }),
     {
@@ -135,7 +134,14 @@ const KioskDetails = (): JSX.Element => {
         toastError(`Problem loading terminals: ${storeId}`);
       },
       onSuccess: (data) => {
-        console.log("--- data ---", data);
+        const terminalOptions: Option[] = data.data.terminals.map(
+          (terminal: { id: number; store_id: number }) => ({
+            key: String(terminal.id),
+            value: String(terminal.id),
+          })
+        );
+
+        setTerminalOptions(terminalOptions);
       },
     }
   );
@@ -205,6 +211,7 @@ const KioskDetails = (): JSX.Element => {
     },
     onSuccess: () => {
       setPendingChangesMode(false);
+      setDefaultFormState(formState);
       toastSuccess("Successfully updated kiosk!");
     },
   });
@@ -234,12 +241,17 @@ const KioskDetails = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (kioskIsLoading || storeIsLoading || mutationIsLoading) {
+    if (
+      kioskIsLoading ||
+      storeIsLoading ||
+      terminalsIsLoading ||
+      mutationIsLoading
+    ) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [kioskIsLoading, storeIsLoading, mutationIsLoading]);
+  }, [kioskIsLoading, storeIsLoading, terminalsIsLoading, mutationIsLoading]);
 
   useEffect(() => {
     setOnDiscardPendingChangesFn(() => () => {
@@ -289,6 +301,15 @@ const KioskDetails = (): JSX.Element => {
     }
 
     setOnSavePendingChangesFn(() => () => {
+      if (
+        formState.kioskNumber === "" ||
+        isNaN(Number(formState.kioskNumber)) ||
+        Number(formState.kioskNumber) === 0
+      ) {
+        toastError("Kiosk number must be an integer greater than 0.");
+        return;
+      }
+
       mutate({
         queryParams: {
           jwt: session.token_info.token,
@@ -346,9 +367,7 @@ const KioskDetails = (): JSX.Element => {
               </label>
               <TextInput
                 htmlId="kioskNumber"
-                value={
-                  formState.kioskNumber ? String(formState.kioskNumber) : "N/A"
-                }
+                value={String(formState.kioskNumber)}
                 onChange={handleInputChange}
               />
             </div>
@@ -373,11 +392,7 @@ const KioskDetails = (): JSX.Element => {
                 Terminal ID
               </label>
               <Select
-                items={[
-                  { key: "123", value: "123" },
-                  { key: "234", value: "234" },
-                  { key: "345", value: "345" },
-                ]}
+                items={terminalOptions}
                 label="Terminal ID"
                 selectedItem={formState.terminalId}
                 setSelectedItem={handleSelectChange("terminalId")}
