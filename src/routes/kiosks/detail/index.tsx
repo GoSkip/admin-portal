@@ -109,9 +109,12 @@ const KioskDetails = (): JSX.Element => {
         toastError(`Problem loading store: ${storeId}`);
       },
       onSuccess: (data) => {
-        const store = data.data.retailers
+        let store = data.data.retailers
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
+
+        store.dayClose = store.day_close;
+        delete store.day_close;
 
         setStore(store);
       },
@@ -482,7 +485,7 @@ const KioskDetails = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <StoreDetailsCard />
+        <StoreDetailsCard store={store} />
       </div>
       <div className="mt-4 grid grid-cols-4">
         <IpadCard
