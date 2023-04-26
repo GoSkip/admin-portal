@@ -117,7 +117,7 @@ const KioskList = (): JSX.Element => {
   } = session;
 
   const { isLoading } = useQuery(
-    ["kiosks", activeRetailerId],
+    ["kiosks", page, activeRetailerId],
     () =>
       fetchKiosksByRetailer({
         retailerId: activeRetailerId,
@@ -126,6 +126,7 @@ const KioskList = (): JSX.Element => {
         jwt: token,
       }),
     {
+      notifyOnChangeProps: "all",
       refetchInterval: REFETCH_INTERVAL,
       enabled: !!activeRetailerId,
       onError: (error) => {
