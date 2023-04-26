@@ -324,7 +324,7 @@ const KioskDetails = (): JSX.Element => {
   }, [formState]);
 
   return (
-    <div className="w-full h-max">
+    <div className="w-full h-auto">
       <nav className="flex" aria-label="Breadcrumb">
         <ol role="list" className="flex items-center space-x-4 pb-6">
           <li>

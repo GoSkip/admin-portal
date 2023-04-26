@@ -55,14 +55,14 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
 
   if (renderExceptions.includes(location.pathname)) {
     return (
-      <div className="h-max">
+      <div className="h-auto">
         <Outlet />
       </div>
     );
   }
 
   return (
-    <div className="h-max bg-gray-100">
+    <div className="h-auto bg-gray-100">
       <MobileSidebar
         retailers={sortedRetailers}
         sidebarOpen={sidebarOpen}
@@ -71,11 +71,11 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
       />
       {/* Static sidebar for desktop */}
       <DesktopSidebar retailers={sortedRetailers} navigation={navigation} />
-      <div className="flex flex-1 flex-col lg:pl-64 h-max">
+      <div className="flex flex-1 flex-col lg:pl-64 h-auto">
         <Layout setSidebarOpen={setSidebarOpen} />
-        <main className="h-max">
-          <div className="py-6 h-max">
-            <div className="max-w-7xl px-4 sm:px-6 lg:px-8 h-max">
+        <main className="h-auto">
+          <div className="py-6 h-auto">
+            <div className="max-w-7xl px-4 sm:px-6 lg:px-8 h-auto">
               <LoadingProvider noBlur={false}>
                 <Outlet />
               </LoadingProvider>

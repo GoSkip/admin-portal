@@ -4,7 +4,7 @@ const Page404 = (): JSX.Element => {
   console.error(useRouteError());
 
   return (
-    <main className="grid min-h-max place-items-center bg-white py-24 px-6 sm:py-32 lg:px-8">
+    <main className="grid min-h-auto place-items-center bg-white py-24 px-6 sm:py-32 lg:px-8">
       <div className="text-center">
         <p className="text-base font-semibold text-indigo-600">404</p>
         <h1 className="mt-4 text-3xl font-bold tracking-light text-gray-900 sm:text-5xl">
