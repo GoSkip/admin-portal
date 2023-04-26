@@ -33,8 +33,12 @@ const StoreDetailsCard = ({ store }: StoreDetailsCardProps): JSX.Element => {
               <p className="mt-1 text-gray-400">{store.phone}</p>
             </>
           ) : null}
-          <div className="mt-4 text-md text-gray-500">Day close</div>
-          <p className="mt-1 text-gray-400">{store.dayClose}</p>
+          {store.dayClose ? (
+            <>
+              <div className="mt-4 text-md text-gray-500">Day close</div>
+              <p className="mt-1 text-gray-400">{store.dayClose}</p>
+            </>
+          ) : null}
           <div className="mt-4 text-md text-gray-500">Timezone</div>
           <p className="mt-1 text-gray-400">
             {store.timezone.replace("_", " ")}

@@ -344,7 +344,7 @@ const KioskDetails = (): JSX.Element => {
                 aria-hidden="true"
               />
               <Link to="#" className="ml-4 text-xl">
-                {store?.name ?? "N/A"}
+                {store?.name ?? "N/A"} - {defaultFormState.kioskNumber}
               </Link>
             </div>
           </li>
