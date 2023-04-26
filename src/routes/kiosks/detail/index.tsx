@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -11,18 +11,20 @@ import {
   GlobalStateContext,
   GlobalStateContextType,
 } from "../../../contexts/GlobalStateContext";
-import { Store, emptyStore } from "../../../types/store";
+import { Store } from "../../../types/store";
 import Select, { Option } from "../../../components/inputs/select";
 import TextInput from "../../../components/inputs/textInput";
 import { mounts, networks, pinpads, printers } from "../../../utils/enums";
-import { fetchKiosk } from "../../../api/kiosk";
+import {
+  UpdateKioskPayloadParams,
+  UpdateKioskQueryParams,
+  fetchKiosk,
+  updateKiosk,
+} from "../../../api/kiosk";
 import { fetchStores } from "../../../api/store";
-import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
-import SecondaryButton from "../../../components/buttons/secondary";
-import PrimaryButton from "../../../components/buttons/primary";
 import StoreDetailsCard from "./storeDetailsCard";
 import MetadataCard from "./metadataCard";
-import { toastError } from "../../../toasts";
+import { toastError, toastSuccess } from "../../../toasts";
 import { Retailer } from "../../../types/retailer";
 import transformKiosk from "../../../utils/transformKiosk";
 import {
@@ -31,9 +33,10 @@ import {
 } from "../../../contexts/LoadingContext";
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
+import { fetchTerminals } from "../../../api/terminal";
 
 export type KioskDetailsForm = {
-  kioskId: string;
+  kioskNumber: string;
   kioskDescription: string;
   terminalId: Option | null;
   mount: Option | null;
@@ -45,8 +48,14 @@ export type KioskDetailsForm = {
   ipadSerial: string;
 };
 
+export type KioskUpdateFormProps = {
+  queryParams: UpdateKioskQueryParams;
+  payloadParams: UpdateKioskPayloadParams;
+};
+
 const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
+  const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
   const { storeId, kioskId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
@@ -54,7 +63,7 @@ const KioskDetails = (): JSX.Element => {
     setPendingChangesMode,
     pendingChangesMode,
     setOnDiscardPendingChangesFn,
-    onDiscardPendingChangesFn,
+    setOnSavePendingChangesFn,
   } = useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
@@ -62,7 +71,7 @@ const KioskDetails = (): JSX.Element => {
   } = session;
   const [store, setStore] = useState<Store | null>(null);
   const [defaultFormState, setDefaultFormState] = useState<KioskDetailsForm>({
-    kioskId: "",
+    kioskNumber: "",
     kioskDescription: "",
     terminalId: null,
     mount: null,
@@ -74,7 +83,7 @@ const KioskDetails = (): JSX.Element => {
     ipadSerial: "",
   });
   const [formState, setFormState] = useState<KioskDetailsForm>({
-    kioskId: "",
+    kioskNumber: "",
     kioskDescription: "",
     terminalId: null,
     mount: null,
@@ -85,6 +94,8 @@ const KioskDetails = (): JSX.Element => {
     printerSerial: "",
     ipadSerial: "",
   });
+
+  console.log("taco bell", kioskId, storeId, token);
 
   const { isLoading: storeIsLoading } = useQuery(
     ["store", storeId],
@@ -104,7 +115,27 @@ const KioskDetails = (): JSX.Element => {
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
 
+        console.log("store data", data);
         setStore(store);
+      },
+    }
+  );
+
+  const { isLoading: terminalsIsLoading } = useQuery(
+    ["terminals", storeId],
+    () =>
+      fetchTerminals({
+        jwt: token,
+        storeId: Number(storeId),
+      }),
+    {
+      enabled: !!kioskId && !!storeId && !!token,
+      onError: (error) => {
+        console.error(error);
+        toastError(`Problem loading terminals: ${storeId}`);
+      },
+      onSuccess: (data) => {
+        console.log("--- data ---", data);
       },
     }
   );
@@ -128,7 +159,7 @@ const KioskDetails = (): JSX.Element => {
 
         const newFormState: KioskDetailsForm = {
           ...defaultFormState,
-          kioskId: String(transformedData.id),
+          kioskNumber: String(transformedData.kiosk_number),
           kioskDescription: transformedData.kiosk_descriptor,
           terminalId: transformedData.terminal_id
             ? {
@@ -165,6 +196,19 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
+  const { mutate, isLoading: mutationIsLoading } = useMutation({
+    mutationFn: (props: KioskUpdateFormProps) =>
+      updateKiosk(props.queryParams, props.payloadParams),
+    onError: (error: any) => {
+      console.error(error);
+      toastError("Problem updating kiosk.");
+    },
+    onSuccess: () => {
+      setPendingChangesMode(false);
+      toastSuccess("Successfully updated kiosk!");
+    },
+  });
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
@@ -190,18 +234,70 @@ const KioskDetails = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (kioskIsLoading || storeIsLoading) {
+    if (kioskIsLoading || storeIsLoading || mutationIsLoading) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [kioskIsLoading, storeIsLoading]);
+  }, [kioskIsLoading, storeIsLoading, mutationIsLoading]);
 
   useEffect(() => {
     setOnDiscardPendingChangesFn(() => () => {
       setFormState(defaultFormState);
     });
   }, [defaultFormState]);
+
+  useEffect(() => {
+    let payload: UpdateKioskPayloadParams = {
+      kiosk_id: Number(kioskId),
+    };
+
+    if (formState.kioskNumber) {
+      payload = { ...payload, kiosk_number: Number(formState.kioskNumber) };
+    }
+
+    if (formState.kioskDescription) {
+      payload = { ...payload, kiosk_descriptor: formState.kioskDescription };
+    }
+
+    if (formState.terminalId) {
+      payload = { ...payload, terminal_id: Number(formState.terminalId.value) };
+    }
+
+    if (formState.mount) {
+      payload = { ...payload, mount: formState.mount.value };
+    }
+
+    if (formState.network) {
+      payload = { ...payload, network: formState.network.value };
+    }
+
+    if (formState.pinpad) {
+      payload = { ...payload, pinpad: formState.pinpad.value };
+    }
+
+    if (formState.printer) {
+      payload = { ...payload, printer: formState.printer.value };
+    }
+
+    if (formState.pinpadSerial) {
+      payload = { ...payload, pinpad_serial: formState.pinpadSerial };
+    }
+
+    if (formState.printerSerial) {
+      payload = { ...payload, printer_serial: formState.printerSerial };
+    }
+
+    setOnSavePendingChangesFn(() => () => {
+      mutate({
+        queryParams: {
+          jwt: session.token_info.token,
+          storeId: Number(storeId),
+        },
+        payloadParams: payload,
+      });
+    });
+  }, [formState]);
 
   return (
     <div className="w-full h-max">
@@ -243,14 +339,16 @@ const KioskDetails = (): JSX.Element => {
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
               <label
-                htmlFor="kioskId"
+                htmlFor="kioskNumber"
                 className="block text-sm font-medium text-gray-700"
               >
-                Kiosk ID
+                Kiosk Number
               </label>
               <TextInput
-                htmlId="kioskId"
-                value={formState.kioskId}
+                htmlId="kioskNumber"
+                value={
+                  formState.kioskNumber ? String(formState.kioskNumber) : "N/A"
+                }
                 onChange={handleInputChange}
               />
             </div>

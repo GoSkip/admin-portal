@@ -6,8 +6,15 @@ const transformKiosk = (kiosk: any): Kiosk => {
     inserted_at: new Date(kiosk.inserted_at),
     kiosk_number: Number(kiosk.kiosk_number),
     kiosk_descriptor: kiosk.kiosk_descriptor,
+    terminal_id: kiosk.terminal_id,
+    mount: kiosk.mount,
+    network: kiosk.network,
+    pinpad: kiosk.pinpad,
+    printer: kiosk.printer,
+    pinpad_serial: kiosk.pinpad_serial,
+    printer_serial: kiosk.printer_serial,
   };
-  
+
   if (kiosk.store) {
     result.store = kiosk.store;
   }
