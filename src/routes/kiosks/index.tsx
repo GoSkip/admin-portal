@@ -177,6 +177,10 @@ const KioskList = (): JSX.Element => {
     setPage(page);
   };
 
+  const onGotoKioskDetails = (storeId: number, kioskId: number) => {
+    navigate(`/kiosks/${storeId}/${kioskId}`);
+  };
+
   useLayoutEffect(() => {
     const isIndeterminate =
       selectedKiosks.length > 0 &&
@@ -284,11 +288,16 @@ const KioskList = (): JSX.Element => {
                       </td>
                       <td
                         className={classNames(
-                          "whitespace-nowrap py-4 pr-3 text-sm font-medium",
+                          "whitespace-nowrap py-4 pr-3 text-sm font-medium cursor-pointer",
                           selectedKiosks.includes(kiosk)
                             ? "text-indigo-600"
                             : "text-gray-900"
                         )}
+                        onClick={() => {
+                          if (kiosk.store?.id) {
+                            onGotoKioskDetails(kiosk.store?.id, kiosk.id);
+                          }
+                        }}
                       >
                         {kiosk.store?.name ?? "N/A"}
                       </td>
