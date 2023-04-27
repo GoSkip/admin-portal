@@ -180,7 +180,11 @@ const NewKiosk = (): JSX.Element => {
             </div>
             <hr />
             <div className="flex justify-end mt-4">
-              <SecondaryButton label="Cancel" additionalClasses="mr-2" />
+              <SecondaryButton
+                label="Cancel"
+                additionalClasses="mr-2"
+                onClick={() => navigate("/kiosks")}
+              />
               <PrimaryButton
                 label="Create"
                 disabled={!formState.store}

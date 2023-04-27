@@ -62,7 +62,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
   }
 
   return (
-    <div className="h-auto bg-gray-100">
+    <div className="h-full bg-gray-100">
       <MobileSidebar
         retailers={sortedRetailers}
         sidebarOpen={sidebarOpen}
