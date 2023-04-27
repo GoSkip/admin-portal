@@ -26,7 +26,7 @@ const LoadingProvider = ({
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="z-10 mx-auto left-0 right-0 top-0 bottom-0 fixed h-full w-full flex items-center justify-center bg-opacity-50 bg-gray-50">
+        <div className="z-10 mx-auto left-0 right-0 top-0 bottom-0 fixed h-auto w-full flex items-center justify-center bg-opacity-50 bg-gray-50">
           <div className="z-10">
             <ClipLoader size={100} color={"#36d7b7"} />
           </div>
@@ -35,7 +35,7 @@ const LoadingProvider = ({
       <div
         className={classNames(
           isLoading && !noBlur ? "blur-sm" : "",
-          "transition ease-in-out delay-150 duration-500 h-full"
+          "transition ease-in-out delay-150 duration-500 h-auto"
         )}
       >
         {children}

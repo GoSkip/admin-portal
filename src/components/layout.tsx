@@ -12,14 +12,48 @@ import {
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { userNavigation } from "../utils/navigation";
+import PrimaryButton from "./buttons/primary";
+import SecondaryButton from "./buttons/secondary";
 
 type LayoutProps = {
   setSidebarOpen: (open: boolean) => any;
 };
 
 const Layout = ({ setSidebarOpen }: LayoutProps): JSX.Element => {
-  const { filter, setFilter } =
-    useContext<GlobalStateContextType>(GlobalStateContext);
+  const {
+    filter,
+    setFilter,
+    pendingChangesMode,
+    setPendingChangesMode,
+    onDiscardPendingChangesFn,
+    onSavePendingChangesFn,
+  } = useContext<GlobalStateContextType>(GlobalStateContext);
+
+  if (pendingChangesMode) {
+    return (
+      <div className="sticky top-0 z-10 flex justify-between items-center h-16 flex-shrink-0 bg-black shadow text-white">
+        <div></div>
+        <div>Unsaved Changes</div>
+        <div>
+          <SecondaryButton
+            label="Discard"
+            additionalClasses="mr-4"
+            onClick={() => {
+              onDiscardPendingChangesFn();
+              setPendingChangesMode(false);
+            }}
+          />
+          <PrimaryButton
+            label="Save"
+            additionalClasses="mr-4"
+            onClick={() => {
+              onSavePendingChangesFn();
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
@@ -33,25 +67,6 @@ const Layout = ({ setSidebarOpen }: LayoutProps): JSX.Element => {
       </button>
       <div className="flex flex-1 justify-between px-4">
         <div className="flex flex-1">
-          <form className="flex w-full lg:ml-0" action="#" method="GET">
-            <label htmlFor="search-field" className="sr-only">
-              Filter results
-            </label>
-            <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <input
-                id="search-field"
-                className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm"
-                placeholder="Filter results"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                type="search"
-                name="search"
-              />
-            </div>
-          </form>
         </div>
         <div className="ml-4 flex items-center lg:ml-6">
           <button

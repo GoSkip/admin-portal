@@ -7,6 +7,49 @@ export type FetchKiosksByRetailerQueryParams = {
   limit: number;
 };
 
+export type FetchKioskQueryParams = {
+  jwt: string;
+  storeId: number;
+  kioskId: number;
+};
+
+export type CreateKioskQueryParams = {
+  jwt: string;
+  storeId: number;
+};
+
+export type UpdateKioskQueryParams = {
+  jwt: string;
+  storeId: number;
+};
+
+export type UpdateKioskPayloadParams = {
+  kiosk_id: number;
+  terminal_id?: number;
+  kiosk_number?: number;
+  kiosk_descriptor?: string;
+  mount?: string;
+  network?: string;
+  pinpad?: string;
+  printer?: string;
+  ipad_serial?: string;
+  printer_serial?: string;
+  pinpad_serial?: string;
+};
+
+export type CreateKioskPayloadParams = {
+  terminal_id?: number;
+  kiosk_number?: number;
+  kiosk_descriptor?: string;
+  mount?: string;
+  network?: string;
+  pinpad?: string;
+  printer?: string;
+  ipad_serial?: string;
+  pinpad_serial?: string;
+  printer_serial?: string;
+};
+
 export const fetchKiosksByRetailer: any = async ({
   retailerId,
   page,
@@ -30,12 +73,6 @@ export const fetchKiosksByRetailer: any = async ({
   );
 };
 
-export type FetchKioskQueryParams = {
-  jwt: string;
-  storeId: number;
-  kioskId: number;
-};
-
 export const fetchKiosk = async ({
   jwt,
   storeId,
@@ -48,6 +85,46 @@ export const fetchKiosk = async ({
       store_id: storeId,
       kiosk_id: kioskId,
     })}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const createKiosk = async (
+  { jwt, storeId }: CreateKioskQueryParams,
+  payload: CreateKioskPayloadParams
+) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.post(
+    `${domain}/v1/kiosk?query=${JSON.stringify({
+      store_id: storeId,
+    })}`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const updateKiosk = async (
+  { jwt, storeId }: UpdateKioskQueryParams,
+  payload: UpdateKioskPayloadParams
+) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.put(
+    `${domain}/v1/kiosk_update?query=${JSON.stringify({
+      store_id: storeId,
+    })}`,
+    payload,
     {
       headers: {
         "Content-Type": "application/json",

@@ -83,7 +83,7 @@ const Login = (): JSX.Element => {
     <>
       <div
         className={
-          "grid grid-col-1 lg:grid-cols-2 lg:ml-20 min-h-screen content-center ease-in duration-100"
+          "grid grid-col-1 lg:grid-cols-2 lg:ml-20 min-h-auto content-center ease-in duration-100"
         }
       >
         <div className="w-96 self-center justify-self-center">
@@ -223,7 +223,7 @@ const Login = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="hidden lg:inline-block max-h-full my-3">
+        <div className="hidden lg:inline-block max-h-auto my-3">
           <img src={store_logo} alt="Store image" />
         </div>
       </div>
