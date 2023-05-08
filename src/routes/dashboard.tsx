@@ -1,6 +1,3 @@
-// import MobileSidebar from "../components/mobileSidebar";
-// import DesktopSidebar from "../components/desktopSidebar";
-// import Layout from "../components/layout";
 import { useContext, useEffect, useState } from "react";
 import { LoadingContext, LoadingContextType } from "../contexts/LoadingContext";
 import { SessionContext, SessionContextType } from "../contexts/SessionContext";
@@ -9,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Outlet, useLocation } from "react-router-dom";
 import { getRetailers } from "../api/retailer";
 import { toastError } from "../toasts";
-// import { navigation } from "../utils/navigation";
 import NavBar from "../components/navBar";
 import Sidebar from "../components/sideBar";
 import LoadingProvider from "../providers/LoadingProvider";
