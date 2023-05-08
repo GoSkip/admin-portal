@@ -14,6 +14,7 @@ export type Kiosk = {
   pinpad?: string;
   pinpad_serial?: string;
   printer_serial?: string;
+  ipad_serial?: string;
 };
 
 export type Ipad = {
@@ -22,11 +23,11 @@ export type Ipad = {
   app_version: string;
   ios_version: string;
   model: string;
-  serial_number: string;
-  battery_level: number;
+  serial: string;
+  battery_level: string;
   group: string;
-  last_seen: Date;
-  last_txn: Date;
+  last_seen?: Date;
+  last_txn?: Date;
 };
 
 export type Action = {
