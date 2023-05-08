@@ -13,6 +13,11 @@ export type FetchKioskQueryParams = {
   kioskId: number;
 };
 
+export type FetchKioskIpadQueryParams = {
+  jwt: string;
+  serialNumber: string;
+};
+
 export type CreateKioskQueryParams = {
   jwt: string;
   storeId: number;
@@ -84,6 +89,25 @@ export const fetchKiosk = async ({
     `${domain}/v1/kiosk/show?query=${JSON.stringify({
       store_id: storeId,
       kiosk_id: kioskId,
+    })}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const fetchKioskIpad = async ({
+  jwt,
+  serialNumber,
+}: FetchKioskIpadQueryParams) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.get(
+    `${domain}/v1/kiosk/show_ipad?query=${JSON.stringify({
+      serial_number: serialNumber,
     })}`,
     {
       headers: {

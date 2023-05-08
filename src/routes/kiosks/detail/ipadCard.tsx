@@ -1,23 +1,31 @@
+import { useState } from "react";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
-import { KioskDetailsForm } from "./index";
 import TextInput from "../../../components/inputs/textInput";
 import PrimaryButton from "../../../components/buttons/primary";
 import SecondaryButton from "../../../components/buttons/secondary";
+import { Ipad } from "../../../types/kiosk";
+import { KioskDetailsForm } from ".";
+import { differenceInMinutes } from "date-fns";
+import formatMinsHours from "../../../utils/formatMinsHours";
 
 type IpadCardProps = {
   enterSerialNoMode: boolean;
   setEnterSerialNoMode: (value: boolean) => void;
+  onSubmitSerialNo: (serialNo: string) => void;
   formState: KioskDetailsForm;
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  ipad: Ipad;
 };
 
 const IpadCard = ({
   enterSerialNoMode,
   setEnterSerialNoMode,
+  onSubmitSerialNo,
   formState,
-  handleInputChange,
+  ipad,
 }: IpadCardProps): JSX.Element => {
-  if (!formState.ipadSerial) {
+  const [serialNo, setSerialNo] = useState<string>("");
+
+  if (formState.ipadSerial) {
     return (
       <form className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">
         <h2 className="text-xl font-medium text-gray-900">iPad Details</h2>
@@ -35,7 +43,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Device Name"
-              value="Kwik-E-Mart 306-319"
+              value={ipad.device_name}
               htmlId="deviceName"
               onChange={() => {}}
               disabled
@@ -50,7 +58,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="MDM Name"
-              value="Kwik-E-Mart 306-319"
+              value={ipad.mdm_name}
               htmlId="mdmName"
               onChange={() => {}}
               disabled
@@ -65,7 +73,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="App Version"
-              value="1.7.2 (2314)"
+              value={ipad.app_version}
               htmlId="appVersion"
               onChange={() => {}}
               disabled
@@ -80,7 +88,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="iOS Version"
-              value="14.4 (Build 18D52)"
+              value={ipad.ios_version}
               htmlId="iosVersion"
               onChange={() => {}}
               disabled
@@ -95,7 +103,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Model Version"
-              value="iPad Pro 12.9-inch (4th Generation)"
+              value={ipad.model}
               htmlId="modelVersion"
               onChange={() => {}}
               disabled
@@ -110,7 +118,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Serial Number"
-              value="DMPFC2WTPV03"
+              value={ipad.serial}
               htmlId="serialNumber"
               onChange={() => {}}
               disabled
@@ -125,7 +133,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Battery Level"
-              value="100%"
+              value={ipad.battery_level}
               htmlId="batteryLevel"
               onChange={() => {}}
               disabled
@@ -140,7 +148,7 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Group"
-              value="SCO Production"
+              value={ipad.group}
               htmlId="ipadGroup"
               onChange={() => {}}
               disabled
@@ -155,7 +163,13 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Last Seen"
-              value="25 min ago"
+              value={
+                ipad.last_seen
+                  ? `${formatMinsHours(
+                      differenceInMinutes(new Date(), ipad.last_seen)
+                    )} ago`
+                  : ""
+              }
               htmlId="ipadLastSeen"
               onChange={() => {}}
               disabled
@@ -170,7 +184,13 @@ const IpadCard = ({
             </label>
             <TextInput
               label="Last Transaction"
-              value="6 min ago"
+              value={
+                ipad.last_txn
+                  ? `${formatMinsHours(
+                      differenceInMinutes(new Date(), ipad.last_txn)
+                    )} ago`
+                  : ""
+              }
               htmlId="ipadLastTxn"
               onChange={() => {}}
               disabled
@@ -202,13 +222,16 @@ const IpadCard = ({
               <div className="col-span-4 sm:col-span-3">
                 <TextInput
                   label="Serial number"
-                  value={formState.ipadSerial}
+                  value={serialNo}
                   htmlId={"ipadSerial"}
-                  onChange={handleInputChange}
+                  onChange={(e) => setSerialNo(e.target.value)}
                 />
               </div>
               <div className="col-span-1 mt-1 ml-2">
-                <PrimaryButton label="Submit" onClick={() => {}} />
+                <PrimaryButton
+                  label="Submit"
+                  onClick={() => onSubmitSerialNo(serialNo)}
+                />
               </div>
             </>
           ) : (

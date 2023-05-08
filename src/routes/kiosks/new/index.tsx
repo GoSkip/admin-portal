@@ -41,7 +41,7 @@ const NewKiosk = (): JSX.Element => {
   const { selectable_stores } = session;
   const navigate = useNavigate();
 
-  const { data, isLoading, mutate } = useMutation({
+  const { isLoading, mutate } = useMutation({
     mutationFn: (props: CreateKioskMutationProps) =>
       createKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
@@ -65,7 +65,9 @@ const NewKiosk = (): JSX.Element => {
         jwt: session.token_info.token,
         storeId: Number(formState.store?.key),
       },
-      payloadParams: {},
+      payloadParams: {
+        kiosk_number: 1,
+      },
     };
 
     mutate(props);
