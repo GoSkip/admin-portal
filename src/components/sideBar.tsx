@@ -1,4 +1,4 @@
-import { sideMenu } from "./data/sideMenu.config";
+import { sideBar } from "./data/sideBar.config";
 import SidebarItem from "./sideBarItem";
 
 const Sidebar = () => {
@@ -9,7 +9,7 @@ const Sidebar = () => {
     >
       <div className="px-3 py-4 overflow-y-auto rounded bg-white h-screen">
         <ul className="space-y-2">
-          {sideMenu.map((item, index) => (
+          {sideBar.map((item, index) => (
             <SidebarItem key={index} item={item} />
           ))}
         </ul>

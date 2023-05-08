@@ -7,7 +7,7 @@ import {
   BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
 
-export const sideMenu = [
+export const sideBar = [
   { label: "Reports", to: "/reports", Icon: ChartBarIcon },
   { label: "Kiosks", to: "/kiosks", Icon: ComputerDesktopIcon },
   { label: "Products", to: "/products", Icon: CircleStackIcon },
