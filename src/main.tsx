@@ -5,6 +5,7 @@ import Router from "./routes";
 import SessionProvider from "./providers/SessionProvider";
 import GlobalStateProvider from "./providers/GlobalStateProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             pauseOnHover
             theme="light"
           />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </GlobalStateProvider>
     </SessionProvider>
