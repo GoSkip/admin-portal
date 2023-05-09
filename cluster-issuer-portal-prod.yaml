@@ -10,6 +10,7 @@ spec:
     privateKeySecretRef:
       name: production-issuer-portal-account-key
     solvers:
-      - http01:
-          ingress:
-            class: nginx
+      - dns01:
+          cloudDNS:
+            project: skip-sandbox
+

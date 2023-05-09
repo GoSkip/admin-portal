@@ -5,7 +5,6 @@ metadata:
   name: portal-ingress
   annotations:
     kubernetes.io/tls-acme: "true"
-    acme.cert-manager.io/http01-edit-in-place: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-portal-production"
     nginx.org/client-max-body-size: 50m
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -16,11 +15,11 @@ metadata:
 spec:
   ingressClassName: "nginx"
   tls:
-    - secretName: portal-ingress
+    - secretName: portal-ingress-cert
       hosts:
-        - sandbox-admin.getskip.com
+        - admin.skipsandbox.com
   rules:
-    - host: sandbox-admin.getskip.com
+    - host: admin.skipsandbox.com
       http:
         paths:
           - path: /
