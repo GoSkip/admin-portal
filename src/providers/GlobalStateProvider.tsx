@@ -10,12 +10,11 @@ const GlobalStateProvider = ({
 }: GlobalStateContextProps): JSX.Element => {
   const [filter, setFilter] = useState<string>("");
   const [pendingChangesMode, setPendingChangesMode] = useState<boolean>(false);
-  const [onDiscardPendingChangesFn, setOnDiscardPendingChangesFn] = useState<
-    () => void
-  >(() => {
-    return () => {};
-  });
-  const [onSavePendingChangesFn, setOnSavePendingChangesFn] = useState<
+  const [discardPendingChangesCallback, setDiscardPendingChangesCallback] =
+    useState<() => void>(() => {
+      return () => {};
+    });
+  const [savePendingChangesCallback, setSavePendingChangesCallback] = useState<
     () => void
   >(() => {
     return () => {};
@@ -26,12 +25,12 @@ const GlobalStateProvider = ({
       value={{
         filter,
         pendingChangesMode,
-        onDiscardPendingChangesFn,
-        onSavePendingChangesFn,
+        discardPendingChangesCallback,
+        savePendingChangesCallback,
         setFilter,
         setPendingChangesMode,
-        setOnDiscardPendingChangesFn,
-        setOnSavePendingChangesFn,
+        setDiscardPendingChangesCallback,
+        setSavePendingChangesCallback,
       }}
     >
       {children}

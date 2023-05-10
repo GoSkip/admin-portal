@@ -93,8 +93,8 @@ const KioskDetails = (): JSX.Element => {
   const {
     setPendingChangesMode,
     pendingChangesMode,
-    setOnDiscardPendingChangesFn,
-    setOnSavePendingChangesFn,
+    setDiscardPendingChangesCallback,
+    setSavePendingChangesCallback,
   } = useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
@@ -347,7 +347,7 @@ const KioskDetails = (): JSX.Element => {
   }, [isLoading]);
 
   useEffect(() => {
-    setOnDiscardPendingChangesFn(() => () => {
+    setDiscardPendingChangesCallback(() => () => {
       setFormState(defaultFormState);
     });
   }, [defaultFormState]);
@@ -397,7 +397,7 @@ const KioskDetails = (): JSX.Element => {
       payload = { ...payload, ipad_serial: formState.ipadSerial };
     }
 
-    setOnSavePendingChangesFn(() => () => {
+    setSavePendingChangesCallback(() => () => {
       if (
         formState.kioskNumber === "" ||
         isNaN(Number(formState.kioskNumber)) ||

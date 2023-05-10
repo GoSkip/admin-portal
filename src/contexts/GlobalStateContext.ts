@@ -3,21 +3,21 @@ import { createContext } from "react";
 export type GlobalStateContextType = {
   filter: string;
   pendingChangesMode: boolean;
-  onDiscardPendingChangesFn: () => void;
-  onSavePendingChangesFn: () => void;
+  discardPendingChangesCallback: () => void;
+  savePendingChangesCallback: () => void;
   setFilter: (filter: string) => void;
   setPendingChangesMode: (pendingChangesMode: boolean) => void;
-  setOnDiscardPendingChangesFn: (fn: () => any) => void;
-  setOnSavePendingChangesFn: (fn: () => any) => void;
+  setDiscardPendingChangesCallback: (fn: () => any) => void;
+  setSavePendingChangesCallback: (fn: () => any) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalStateContextType>({
   filter: "",
   pendingChangesMode: false,
-  onDiscardPendingChangesFn: () => {},
-  onSavePendingChangesFn: () => {},
+  discardPendingChangesCallback: () => {},
+  savePendingChangesCallback: () => {},
   setFilter: () => {},
   setPendingChangesMode: () => {},
-  setOnDiscardPendingChangesFn: () => {},
-  setOnSavePendingChangesFn: () => {},
+  setDiscardPendingChangesCallback: () => {},
+  setSavePendingChangesCallback: () => {},
 });
