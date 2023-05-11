@@ -18,17 +18,17 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
   const location = useLocation();
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { session, setActiveRetailer } =
-      useContext<SessionContextType>(SessionContext);
+    useContext<SessionContextType>(SessionContext);
   const [sortedRetailers, setSortedRetailers] = useState<Retailer[]>([]);
   const { active_retailer } = session;
   const { isLoading } = useQuery({
     queryKey: ["retailers"],
     queryFn: () =>
-        getRetailers({
-          jwt: session.token_info.token,
-          storeIds: session.store_ids,
-          retailerIds: session.retailer_ids,
-        }),
+      getRetailers({
+        jwt: session.token_info.token,
+        storeIds: session.store_ids,
+        retailerIds: session.retailer_ids,
+      }),
     enabled: !!session.token_info.token,
     onError: (error) => {
       console.error(error);
@@ -36,7 +36,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
     },
     onSuccess: (data) => {
       const sortedRetailers = data.data.retailers.sort(
-          (a: Retailer, b: Retailer) => a.name.localeCompare(b.name)
+        (a: Retailer, b: Retailer) => a.name.localeCompare(b.name)
       );
       setSortedRetailers(sortedRetailers);
 
@@ -52,24 +52,24 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
 
   if (renderExceptions.includes(location.pathname)) {
     return (
-        <div className="h-auto">
-          <Outlet />
-        </div>
+      <div className="h-auto">
+        <Outlet />
+      </div>
     );
   }
 
   return (
-      <>
-        <NavBar retailers={sortedRetailers} />
-        <div className="flex pt-16 overflow-hidden">
-          <Sidebar />
-          <div className="relative w-full h-full overflow-y-auto px-12 pt-6 lg:ml-64">
-            <LoadingProvider noBlur={false}>
-              <Outlet />
-            </LoadingProvider>
-          </div>
+    <>
+      <NavBar retailers={sortedRetailers} />
+      <div className="flex pt-16 overflow-hidden w-full">
+        <Sidebar />
+        <div className="px-12 pt-6 lg:ml-64 w-full h-full">
+          <LoadingProvider noBlur={false}>
+            <Outlet />
+          </LoadingProvider>
         </div>
-      </>
+      </div>
+    </>
   );
 };
 
