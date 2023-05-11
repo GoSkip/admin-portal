@@ -13,7 +13,6 @@ const PendingBar = (): JSX.Element => {
     setPendingChangesMode,
   } = useContext<GlobalStateContextType>(GlobalStateContext);
 
-  console.log("hola", discardPendingChangesCallback);
   return (
     <div className="fixed z-30 flex mx-auto items-center justify-between w-full bg-black text-white h-[64px]">
       <div />
