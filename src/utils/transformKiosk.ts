@@ -11,6 +11,7 @@ const transformKiosk = (kiosk: any): Kiosk => {
     network: kiosk.network,
     pinpad: kiosk.pinpad,
     printer: kiosk.printer,
+    ipad_serial: kiosk.ipad_serial,
     pinpad_serial: kiosk.pinpad_serial,
     printer_serial: kiosk.printer_serial,
   };

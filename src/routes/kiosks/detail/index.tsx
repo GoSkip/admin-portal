@@ -19,6 +19,7 @@ import {
   UpdateKioskPayloadParams,
   UpdateKioskQueryParams,
   fetchKiosk,
+  fetchKioskIpad,
   updateKiosk,
 } from "../../../api/kiosk";
 import { fetchStores } from "../../../api/store";
@@ -34,6 +35,7 @@ import {
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
 import { fetchTerminals } from "../../../api/terminal";
+import { Ipad } from "../../../types/kiosk";
 
 export type KioskDetailsForm = {
   kioskNumber: string;
@@ -53,6 +55,35 @@ export type KioskUpdateFormProps = {
   payloadParams: UpdateKioskPayloadParams;
 };
 
+export type KioskMetadata = {
+  insertedAt: Date | null;
+  updatedAt: Date | null;
+};
+
+const emptyFormState: KioskDetailsForm = {
+  kioskNumber: "1",
+  kioskDescription: "",
+  terminalId: null,
+  mount: null,
+  network: null,
+  pinpad: null,
+  printer: null,
+  pinpadSerial: "",
+  printerSerial: "",
+  ipadSerial: "",
+};
+
+const emptyIpad: Ipad = {
+  device_name: "",
+  mdm_name: "",
+  app_version: "",
+  ios_version: "",
+  model: "",
+  serial: "",
+  battery_level: "",
+  group: "",
+};
+
 const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
   const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
@@ -62,40 +93,24 @@ const KioskDetails = (): JSX.Element => {
   const {
     setPendingChangesMode,
     pendingChangesMode,
-    setOnDiscardPendingChangesFn,
-    setOnSavePendingChangesFn,
+    setDiscardPendingChangesCallback,
+    setSavePendingChangesCallback,
   } = useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
     token_info: { token },
   } = session;
   const [store, setStore] = useState<Store | null>(null);
-  const [defaultFormState, setDefaultFormState] = useState<KioskDetailsForm>({
-    kioskNumber: "1",
-    kioskDescription: "",
-    terminalId: null,
-    mount: null,
-    network: null,
-    pinpad: null,
-    printer: null,
-    pinpadSerial: "",
-    printerSerial: "",
-    ipadSerial: "",
+  const [defaultFormState, setDefaultFormState] =
+    useState<KioskDetailsForm>(emptyFormState);
+  const [formState, setFormState] = useState<KioskDetailsForm>(emptyFormState);
+  const [kioskMetadata, setKioskMetadata] = useState<KioskMetadata>({
+    insertedAt: null,
+    updatedAt: null,
   });
-  const [formState, setFormState] = useState<KioskDetailsForm>({
-    kioskNumber: "1",
-    kioskDescription: "",
-    terminalId: null,
-    mount: null,
-    network: null,
-    pinpad: null,
-    printer: null,
-    pinpadSerial: "",
-    printerSerial: "",
-    ipadSerial: "",
-  });
+  const [ipad, setIpad] = useState<Ipad>(emptyIpad);
 
-  const { isLoading: storeIsLoading } = useQuery(
+  const { isFetching: storeIsFetching } = useQuery(
     ["store", storeId],
     () =>
       fetchStores({
@@ -104,6 +119,7 @@ const KioskDetails = (): JSX.Element => {
       }),
     {
       enabled: !!kioskId && !!storeId && !!token,
+      refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
         toastError(`Problem loading store: ${storeId}`);
@@ -121,7 +137,7 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isLoading: terminalsIsLoading } = useQuery(
+  const { isFetching: terminalsIsFetching } = useQuery(
     ["terminals", storeId],
     () =>
       fetchTerminals({
@@ -132,6 +148,7 @@ const KioskDetails = (): JSX.Element => {
       }),
     {
       enabled: !!kioskId && !!storeId && !!token,
+      refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
         toastError(`Problem loading terminals: ${storeId}`);
@@ -149,7 +166,7 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isLoading: kioskIsLoading } = useQuery(
+  const { isFetching: kioskIsFetching } = useQuery(
     ["kiosk", storeId, kioskId],
     () =>
       fetchKiosk({
@@ -159,6 +176,7 @@ const KioskDetails = (): JSX.Element => {
       }),
     {
       enabled: !!kioskId && !!storeId && !!token,
+      refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
         toastError(`Problem loading kiosk: ${kioskId}.`);
@@ -197,10 +215,69 @@ const KioskDetails = (): JSX.Element => {
             : null,
           pinpadSerial: transformedData?.pinpad_serial ?? "",
           printerSerial: transformedData?.printer_serial ?? "",
+          ipadSerial: transformedData?.ipad_serial ?? "",
         };
 
+        setIpad((prevState) => ({
+          ...prevState,
+          last_txn: new Date(data.data.last_txn),
+        }));
         setDefaultFormState(newFormState);
         setFormState(newFormState);
+        setKioskMetadata({
+          insertedAt: new Date(data.data.inserted_at),
+          updatedAt: new Date(data.data.updated_at),
+        });
+      },
+    }
+  );
+
+  const { isFetching: ipadIsFetching } = useQuery(
+    ["ipad", formState.ipadSerial],
+    () =>
+      fetchKioskIpad({
+        jwt: token,
+        serialNumber: formState.ipadSerial,
+      }),
+    {
+      enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
+      refetchOnWindowFocus: false,
+      onError: (error) => {
+        console.error(error);
+        toastError(`Problem loading iPad: ${formState.ipadSerial}`);
+        setIpad(emptyIpad);
+        setFormState(defaultFormState);
+        setPendingChangesMode(false);
+      },
+      onSuccess: ({
+        data: {
+          device_name,
+          mdm_name,
+          app_version,
+          ios_version,
+          model,
+          serial,
+          battery_level,
+          group,
+          last_seen,
+        },
+      }) => {
+        const ipad: Ipad = {
+          device_name,
+          mdm_name,
+          app_version,
+          ios_version,
+          model,
+          serial,
+          battery_level,
+          group,
+          last_seen: new Date(last_seen),
+        };
+
+        setIpad((prevState) => ({
+          ...prevState,
+          ...ipad,
+        }));
       },
     }
   );
@@ -218,6 +295,17 @@ const KioskDetails = (): JSX.Element => {
       toastSuccess("Successfully updated kiosk!");
     },
   });
+
+  const onSubmitSerialNo = (serialNo: string) => {
+    if (!pendingChangesMode) {
+      setPendingChangesMode(true);
+    }
+
+    setFormState((prevState: any) => ({
+      ...prevState,
+      ipadSerial: serialNo,
+    }));
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -243,21 +331,23 @@ const KioskDetails = (): JSX.Element => {
     }
   };
 
+  const isLoading =
+    kioskIsFetching ||
+    storeIsFetching ||
+    terminalsIsFetching ||
+    ipadIsFetching ||
+    mutationIsLoading;
+
   useEffect(() => {
-    if (
-      kioskIsLoading ||
-      storeIsLoading ||
-      terminalsIsLoading ||
-      mutationIsLoading
-    ) {
+    if (isLoading) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [kioskIsLoading, storeIsLoading, terminalsIsLoading, mutationIsLoading]);
+  }, [isLoading]);
 
   useEffect(() => {
-    setOnDiscardPendingChangesFn(() => () => {
+    setDiscardPendingChangesCallback(() => () => {
       setFormState(defaultFormState);
     });
   }, [defaultFormState]);
@@ -303,7 +393,11 @@ const KioskDetails = (): JSX.Element => {
       payload = { ...payload, printer_serial: formState.printerSerial };
     }
 
-    setOnSavePendingChangesFn(() => () => {
+    if (formState.ipadSerial) {
+      payload = { ...payload, ipad_serial: formState.ipadSerial };
+    }
+
+    setSavePendingChangesCallback(() => () => {
       if (
         formState.kioskNumber === "" ||
         isNaN(Number(formState.kioskNumber)) ||
@@ -492,9 +586,10 @@ const KioskDetails = (): JSX.Element => {
           enterSerialNoMode={enterSerialNoMode}
           setEnterSerialNoMode={setEnterSerialNoMode}
           formState={formState}
-          handleInputChange={handleInputChange}
+          onSubmitSerialNo={onSubmitSerialNo}
+          ipad={ipad}
         />
-        <MetadataCard />
+        <MetadataCard kioskMetadata={kioskMetadata} />
         <ActionsCard />
       </div>
     </div>
