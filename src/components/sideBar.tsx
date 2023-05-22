@@ -85,8 +85,8 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="fixed left-0 z-20 pt-1 pb-32 flex-col flex-shrink-0 hidden w-64 h-full font-normal duration-75 lg:flex transition-width bg-white pr-3">
-      <div className="px-3 py-4 overflow-y-auto h-screen">
+    <aside className="fixed left-0 z-20 pt-1 pb-32 flex-col flex-shrink-0 hidden w-60 h-full font-normal duration-75 lg:flex transition-width bg-white">
+      <div className="pr-3 -py-4 overflow-y-auto h-screen">
         {renderMenuItems(menuItems)}
       </div>
       <SidebarFooter />
