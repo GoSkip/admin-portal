@@ -52,7 +52,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
 
   if (renderExceptions.includes(location.pathname)) {
     return (
-      <div className="h-auto">
+      <div>
         <Outlet />
       </div>
     );
@@ -63,7 +63,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
       <NavBar retailers={sortedRetailers} />
       <div className="flex pt-16 overflow-hidden w-full">
         <Sidebar />
-        <div className="px-12 pt-6 lg:ml-60 w-full h-full">
+        <div className="px-8 pt-6 lg:ml-60 w-full h-full">
           <LoadingProvider noBlur={false}>
             <Outlet />
           </LoadingProvider>
