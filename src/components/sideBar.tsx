@@ -1,67 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { menuItems } from "./data/sideBarMenu.config";
 import type { MenuItem } from "./data/sideBarMenu.config";
 import { useNavigate } from "react-router-dom";
-import { ChevronUpIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-  const Sidebar: React.FC = () => {
-    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-    const navigate = useNavigate();
-  
-    const handleMenuItemClick = (itemId: number, to: string | undefined, children?: MenuItem[]) => {
-      if (children) {
-        setSelectedItemId(selectedItemId === itemId ? null : itemId);
-      } else if (to && typeof to !== undefined) {
-        navigate(to);
-      }
-    };
-  
-    const isItemSelected = (itemId: number, children?: MenuItem[]): boolean => {
-      if (!children) return selectedItemId === itemId;
-      return children.some((child) => isItemSelected(itemId, child.children));
-    };
-  
-    const renderMenuItems = (items: MenuItem[]) => {
-      return items.map((item) => {
-        const isItemParentSelected = selectedItemId === item.id;
-        const isItemChild = item.children;
-        const hoverParentStyle = "flex items-center w-full text-base font-normal text-[#4b5563] stroke-[#9ca3af] inline-block transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff]";
-  
-        return (
-          <div key={item.id}>
-            <div
-              className={`${hoverParentStyle} ${
-                isItemSelected(item.id, item.children) ? "bg-[#f0f9ff]" : ""
-              }`}
-              onClick={() => {
-                handleMenuItemClick(item.id, item.to, item.children);
-              }}
-            >
-              <div className="flex items-center justify-center w-10">
-                {item.children && (
-                  <ChevronUpIcon
-                    className={`h-5 w-5 transition-transform ${
-                      isItemSelected(item.id, item.children)
-                        ? "transform rotate-180"
-                        : ""
-                    }`}
-                  />
-                )}
-              </div>
-              <div className="flex-grow">{item.label}</div>
-            </div>
-            {item.children && isItemParentSelected && (
-              <div className="pl-10">
-                {renderMenuItems(item.children)}
-              </div>
-            )}
-          </div>
-        );
+const Sidebar: React.FC = () => {
+  const [openMenuIds, setOpenMenuIds] = useState<number[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const navigate = useNavigate();
+
+  const handleMenuItemClick = (itemId: number, to: string | undefined, children?: MenuItem[]) => {
+    if (children) {
+      setOpenMenuIds((prevOpenMenuIds) => {
+        if (prevOpenMenuIds.includes(itemId)) {
+          return prevOpenMenuIds.filter((id) => id !== itemId);
+        } else {
+          return [itemId];
+        }
       });
-    };
-  
-    return <div>{renderMenuItems(menuItems)}</div>;
+    } else if (to && typeof to !== undefined) {
+      setSelectedItemId(itemId);
+      navigate(to);
+    } else {
+      setSelectedItemId(null);
+    }
   };
+
+  const isItemSelected = (itemId: number | null, children?: MenuItem[]): boolean => {
+    if (!itemId || !children) return false;
+    return children.some((child) => isItemSelected(itemId, child.children)) || itemId === children[0].id;
+  };
+
+  const renderMenuItems = (items: MenuItem[], parentIds: number[] = []) => {
+    return items.map((item) => {
+      const itemIds = [...parentIds, item.id];
+      const isOpen = openMenuIds.includes(item.id);
+      const isItemParentSelected = isItemSelected(selectedItemId, item.children);
+
+      return (
+        <div key={item.id}>
+          <div
+            className={`flex items-center w-full text-base font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${
+              item.id === selectedItemId ? "selected text-blue-600" : ""
+            }`}
+            onClick={() => handleMenuItemClick(item.id, item.to, item.children)}
+          >
+            <div className="flex items-center justify-center w-10">
+              {item.children && (
+                <ChevronDownIcon
+                  className={`h-5 w-5 transition-transform ${isOpen ? "transform rotate-180" : ""}`}
+                />
+              )}
+            </div>
+            <div className="flex-grow">{item.label}</div>
+          </div>
+          {item.children && isOpen && (
+            <div className="pl-10">{renderMenuItems(item.children, itemIds)}</div>
+          )}
+        </div>
+      );
+    });
+  };
+
+  return <div>{renderMenuItems(menuItems)}</div>;
+};
 
 export default Sidebar;
 

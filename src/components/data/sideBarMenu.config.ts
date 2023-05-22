@@ -32,7 +32,6 @@ export const menuItems = [
     {
         id: 6,
         label: "Administration",
-        to: "/admin",
         Icon: BuildingLibraryIcon,
         children: [
             { id: 61, label: "Files", to: "/admin/files" },
