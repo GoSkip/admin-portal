@@ -230,7 +230,7 @@ const PortalUserDetail = () => {
                   key={feature}
                   className="px-3 py-1 bg-[#dbeafe] rounded-full text-sm font-normal text-[#1e40af]"
                 >
-                  {feature}
+                  <span>{feature} <span className="font-light text-blue-300">x</span></span>
                 </div>
               ))}
               <button

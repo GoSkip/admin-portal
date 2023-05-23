@@ -21,7 +21,7 @@ export const portalUsers: PortalUser[] = [
     last: "Turner",
     email: "jturner@retailer.com",
     role: roles[9].name,
-    stores: ["#328 Carmi Lanes"],
+    stores: ["#328 Carmi Lanes",],
     features: ["Clerks", "Kiosks", "PLUs", "Stores"],
     phonenumber: "123-456-7890",
     active: true,

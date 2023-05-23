@@ -75,7 +75,7 @@ const Sidebar: React.FC = () => {
           <div
             className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${
               item.id === selectedItemId
-                ? "selected text-[#028fc7] font-semibold"
+                ? "selected text-blue-600 font-semibold"
                 : ""
             }`}
             onClick={() => handleMenuItemClick(item.id, item.to, item.children)}

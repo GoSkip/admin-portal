@@ -17,7 +17,7 @@ export const files: File[] = [
     siteId: 1231,
     uploaded: new Date("2023-03-29Z13:47:00"),
     status: "In Queue",
-    fileSize: 5590,
+    fileSize: 5591,
     fileId: 1161022,
   },
   {
