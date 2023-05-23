@@ -11,38 +11,47 @@ import {
 
     const people = [
       {
+        id: 1,
         first: "Justin",
         last: "Turner",
         email: "jturner@retailer.com",
         role: "Store",
         stores: "#328 Carmi Lanes",
         active: true,
+        phonenumber: "123-456-7890",
       },
       {
+        id: 2,
         first: "Clayton",
         last: "Turner",
         email: "kersh@retailer.com",
         role: "Store",
         stores: "6 stores",
-        active: true
+        active: true,
+        phonenumber: "123-456-7890",
       },
       {
+        id: 3,
         first: "Walker",
         last: "Buelher",
         email: "thewalker@retailer.com",
-        role: "Store",
+        role: "Retailer",
         stores: "#3723 Manresa",
-        active: false
+        active: true,
+        phonenumber: "123-456-7890",
       },
       {
+        id: 4,
         first: "File",
         last: "Admin",
         email: "skipadmin@retailer.com",
         role: "Store",
         stores: "All stores",
         active: false,
+        phonenumber: "123-456-7890",
       },
       {
+        id: 5,
         first: "Mookie",
         last: "Betts",
         email: "mookie@retailer.com",
@@ -50,21 +59,35 @@ import {
         stores: "5 stores",
       },
       {
+        id: 6,
         first: "Chris",
         last: "Taylor",
         email: "ct3@retailer.com",
         role: "Store",
         stores: "#306 Leominster",
         active: true,
+        phonenumber: "123-456-7890",
       },
       {
+        id: 7,
         first: "Dave",
         last: "Roberts",
         email: "dave.roberts@retailer.com",
         role: "Store",
         stores: "All stores",
         active: false,
+        phonenumber: "123-456-7890",
       },
+      { 
+        id: 8,
+        first: "Clayton",
+        last: "Kershaw",
+        email: "kersh@retailer.com",
+        role: "Retailer",
+        stores: ["#306 Leominister", "#323 Gardner Parkway", "#3723 Manresa", "#399 Arvin", "#365 Stockdale", "#328 Carmi Lanes"],
+        features: ["Clerks", "Kiosks", "PLUs", "Stores"],
+        phonenumber: "801-478-0646"
+      }
     ];
 
     const filteredPeople = activeFilter === true ? people.filter(person => person.active) : people.filter(person => !person.active);
@@ -75,7 +98,7 @@ import {
           <div className="flex h-20 -mt-4 items-center justify-between">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="text-gray-900 text-xl">Users</div>
+                <div className="text-gray-900 text-xl">Portal Users</div>
               </div>
             </div>
             <div>
@@ -219,7 +242,7 @@ import {
                           {person.email}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">
-                          <span className="inline-flex items-center rounded-full bg-[#e0f2fe] px-4 py-1 text-sm font-medium text-[#075985]">
+                          <span className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${person.role === "Store" ? "text-[#075985] bg-[#e0f2fe] " : "text-[#065f46] bg-[#d1fae5]"}`}>
                             {person.role}
                           </span>
                         </td>

@@ -26,7 +26,7 @@ export const menuItems = [
         Icon: UserCircleIcon,
         children: [
             { id: 51, label: "Clerks", to: "/people/clerks" },
-            { id:52, label: "Users", to: "/people/users" },
+            { id:52, label: "Portal Users", to: "/people/portal-users" },
         ],
     },
     {
