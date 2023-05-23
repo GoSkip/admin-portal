@@ -1,27 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-interface PortalUser {
-    id: number;
-    first: string;
-    last: string;
-    email: string;
-    phone: string;
-    role: string;
-    stores: string[];
-    features: string[];
-}
+import { portalUsers } from "../../../../components/data/portalUsers.config";
+import { useNavigate } from "react-router-dom";
+
 
 const PortalUserDetail = () => {
     const { userId } = useParams<{ userId: string }>();
-    const [user, setUser] = useState<PortalUser | null>({
-        id: 3, first: "Clayton",
-        last: "Kershaw",
-        email: "kersh@retailer.com",
-        role: "Retailer",
-        stores: ["#306 Leominister", "#323 Gardner Parkway", "#3723 Manresa", "#399 Arvin", "#365 Stockdale", "#328 Carmi Lanes"],
-        features: ["Clerks", "Kiosks", "PLUs", "Stores"],
-        phone: "801-478-0646"
-    });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -33,9 +18,12 @@ const PortalUserDetail = () => {
         fetchUser();
     }, [userId]);
 
+    const user = portalUsers.find((user) => user.id === Number(userId));
     if (!user) {
         return <div>Loading...</div>
     }
+
+    const dateFormatter = new Intl.DateTimeFormat("en-US", {month: "long", day: "numeric", year: "numeric"});
 
     const [selectedRole, setSelectedRole] = useState(user.role);
     const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,7 +43,7 @@ const PortalUserDetail = () => {
             <div className="flow-root w-[calc(100%-18rem)]">
                 <div className="flex flex-row mb-4">
                     <div className="text-gray-400 text-xl flex-auto">
-                        <span className="mr-5">Portal Users</span>
+                        <span className="mr-5 cursor-pointer" onClick={() => navigate("/people/portal-users")}>Portal Users</span>
                         <span className="mr-5">&gt;</span>
                         <span className="text-gray-800">{`${user.first} ${user.last}`}</span>
                     </div>
@@ -86,7 +74,7 @@ const PortalUserDetail = () => {
                                     type="text"
                                     name="first-name"
                                     id="first-name"
-                                    placeholder="Clayton"
+                                    placeholder={user.first}
                                     autoComplete="given-name"
                                     className="block w-full placeholder:pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -102,7 +90,7 @@ const PortalUserDetail = () => {
                                     type="text"
                                     name="last-name"
                                     id="last-name"
-                                    placeholder="Kershaw"
+                                    placeholder={user.last}
                                     autoComplete="family-name"
                                     className="block w-full placeholder:pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -119,7 +107,7 @@ const PortalUserDetail = () => {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    placeholder="kersh@retailer.com"
+                                    placeholder={user.email}
                                     autoComplete="email"
                                     className="block w-full placeholder:pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -135,7 +123,7 @@ const PortalUserDetail = () => {
                                     type="text"
                                     name="phone-number"
                                     id="phone-number"
-                                    placeholder="801-478-0646"
+                                    placeholder={user.phonenumber}
                                     autoComplete="phone-number"
                                     className="block w-full placeholder:pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -152,7 +140,7 @@ const PortalUserDetail = () => {
                                     type="text"
                                     name="role"
                                     id="role"
-                                    placeholder="Store"
+                                    placeholder={user.role}
                                     autoComplete="role"
                                     className="block w-full placeholder:pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -165,9 +153,9 @@ const PortalUserDetail = () => {
                 <div className="float-right rounded-md shadow-md bg-white text-left h-44 w-64">
                     <div className="mt-5 ml-5 text-gray-600 text-lg">Metadata</div>
                     <div className="mt-2 ml-5 text-gray-500 text-base">Created</div>
-                    <div className="ml-5 text-sm text-gray-400">April 11, 2021</div>
+                    <div className="ml-5 text-sm text-gray-400">{dateFormatter.format(user.created)}</div>
                     <div className="mt-2 ml-5 text-gray-500 text-base">Updated</div>
-                    <div className="ml-5 text-sm text-gray-400">February 2, 2023</div>
+                    <div className="ml-5 text-sm text-gray-400">{dateFormatter.format(user.updated)}</div>
                 </div>
             </div>
             <div className="flow-root mt-5">
@@ -196,7 +184,7 @@ const PortalUserDetail = () => {
                 </div>
             </div>
             <div className="flow-root mt-5">
-                <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
+                <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md mb-2">
                     <div className="m-5">
                         <div className="font-normal text-gray-800 text-xl">Feature access</div>
                         <div className="mb-2 text-sm font-light mt-2 text-gray-500">User has <span className="font-bold">Edit</span> access for the following feature(s):</div>
