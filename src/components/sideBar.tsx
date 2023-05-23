@@ -9,7 +9,11 @@ const Sidebar: React.FC = () => {
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  const handleMenuItemClick = (itemId: number, to: string | undefined, children?: MenuItem[]) => {
+  const handleMenuItemClick = (
+    itemId: number,
+    to: string | undefined,
+    children?: MenuItem[]
+  ) => {
     if (children) {
       setOpenMenuIds((prevOpenMenuIds) => {
         if (prevOpenMenuIds.includes(itemId)) {
@@ -26,9 +30,15 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const isItemSelected = (itemId: number | null, children?: MenuItem[]): boolean => {
+  const isItemSelected = (
+    itemId: number | null,
+    children?: MenuItem[]
+  ): boolean => {
     if (!itemId || !children) return false;
-    return children.some((child) => isItemSelected(itemId, child.children)) || itemId === children[0].id;
+    return (
+      children.some((child) => isItemSelected(itemId, child.children)) ||
+      itemId === children[0].id
+    );
   };
 
   const SidebarFooter = () => {
@@ -53,7 +63,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
     );
-  }
+  };
 
   const renderMenuItems = (items: MenuItem[], parentIds: number[] = []) => {
     return items.map((item) => {
@@ -63,21 +73,28 @@ const Sidebar: React.FC = () => {
       return (
         <div key={item.id}>
           <div
-            className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${item.id === selectedItemId ? "selected text-[#028fc7] font-semibold" : ""
-              }`}
+            className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${
+              item.id === selectedItemId
+                ? "selected text-[#028fc7] font-semibold"
+                : ""
+            }`}
             onClick={() => handleMenuItemClick(item.id, item.to, item.children)}
           >
             <div className="flex-grow align-middle pl-2">{item.label}</div>
             <div className="flex items-center justify-center w-10">
               {item.children && (
                 <ChevronDownIcon
-                  className={`h-5 w-5 transition-transform ${isOpen ? "transform rotate-180" : ""}`}
+                  className={`h-5 w-5 transition-transform ${
+                    isOpen ? "transform rotate-180" : ""
+                  }`}
                 />
               )}
             </div>
           </div>
           {item.children && isOpen && (
-            <div className="pl-10">{renderMenuItems(item.children, itemIds)}</div>
+            <div className="pl-10">
+              {renderMenuItems(item.children, itemIds)}
+            </div>
           )}
         </div>
       );
@@ -90,7 +107,8 @@ const Sidebar: React.FC = () => {
         {renderMenuItems(menuItems)}
       </div>
       <SidebarFooter />
-    </aside>);
+    </aside>
+  );
 };
 
 export default Sidebar;
