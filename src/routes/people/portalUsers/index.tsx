@@ -195,7 +195,9 @@ const PortalUsers = (): JSX.Element => {
                           className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${
                             user.role === "Store"
                               ? "text-[#075985] bg-[#e0f2fe] "
-                              : "text-[#065f46] bg-[#d1fae5]"
+                              : user.role === "Retailer" ? "text-[#065f46] bg-[#d1fae5]"
+                              : user.role === "File" ? "text-[#1f2937] bg-[#f3f4f6]"
+                              : "text-[#5e2e8f] bg-[#f3e8ff]"
                           }`}
                         >
                           {user.role}

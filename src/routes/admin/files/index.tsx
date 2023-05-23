@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { portalUsers } from "../../../components/data/portalUsers.config";
+import { files } from "../../../components/data/files.config";
 import {
   BarsArrowUpIcon,
   ChevronDownIcon,
@@ -12,18 +12,25 @@ const Files = (): JSX.Element => {
 
   const navigate = useNavigate();
 
-  const handleActiveUserClick = (id: number) => {
-    navigate(`/people/portal-users/${id}`);
-  };
+  // const handleUploadFile = (file: File) => {
+  //   console.log(file);
+  //   navigate(`/admin/files`);
+  // };
 
-  const handleNewUserClick = () => {
-    navigate("/people/portal-users/new");
-  };
+  const filteredFiles =
+    files.length > 0
+      ? files
+      : null;
 
-  const filteredUsers =
-    activeFilter === true
-      ? portalUsers.filter((user) => user.active)
-      : portalUsers.filter((user) => !user.active);
+  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "numeric",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    timeZone: "America/Chicago"
+  });
 
   return (
     <div>
@@ -38,7 +45,6 @@ const Files = (): JSX.Element => {
             <div className="sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 <button
-                  onClick={() => handleNewUserClick()}
                   className="rounded-md bg-[#0284c7] outline outline-1 outline-gray-400 px-4 py-2 text-sm font-light text-gray-50"
                 >
                   Upload file
@@ -136,7 +142,7 @@ const Files = (): JSX.Element => {
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-normal text-gray-500"
+                      className="px-3 py-3.5 text-left text-sm font-normal text-gray-500"
                     >
                       UPLOADED
                     </th>
@@ -161,48 +167,36 @@ const Files = (): JSX.Element => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {filteredUsers.map((user) => (
+                  {filteredFiles?.map((file) => (
                     <tr
-                      key={user.email}
-                      onClick={() => handleActiveUserClick(user.id)}
+                      key={file.fileType}
                     >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
                         <input type="checkbox" />
                       </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
-                        {user.first}
+                        {file.fileType}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {user.last}
+                        {file.siteName}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-                        {user.email}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${
-                            user.role === "Store"
-                              ? "text-[#075985] bg-[#e0f2fe] "
-                              : "text-[#065f46] bg-[#d1fae5]"
-                          }`}
-                        >
-                          {user.role}
-                        </span>
+                        {file.siteId}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {user.stores.length > 1 ? (
-                          <span className="font-bold">
-                            {user.stores.length} stores
-                          </span>
-                        ) : (
-                          user.stores.map((store) => <span>{store}</span>)
-                        )}
+                        {dateFormatter.format(file.uploaded)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {user.role}
+                        {file.status ===  "Success" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-green-100 text-green-800">{file.status}</span>
+                        : file.status === "In Queue" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#fef3c7] text-[#92400E]">{file.status}</span>
+                        : file.status === "In Process" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#dbeafe] text-[#1E40AF]">{file.status}</span>
+                        : <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-red-100 text-red-800">{file.status}</span>}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {user.role}
+                        {file.fileSize}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {file.fileId}
                       </td>
                     </tr>
                   ))}

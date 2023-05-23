@@ -4,15 +4,16 @@ export interface Role {
 }
 
 export const roles: Role[] = [
-  { id: 1, name: "Clerks" },
-  { id: 2, name: "Kiosks" },
-  { id: 3, name: "Loyalty" },
-  { id: 4, name: "Payments" },
-  { id: 5, name: "PLUs" },
-  { id: 6, name: "Portal Users" },
-  { id: 7, name: "Promotions" },
-  { id: 8, name: "Retailer" },
-  { id: 9, name: "Reports" },
-  { id: 10, name: "Stores" },
-  { id: 11, name: "Taxes" },
+  { id: 0, name: "Clerk" },
+  { id: 1, name: "Kiosk" },
+  { id: 2, name: "Loyalty" },
+  { id: 3, name: "Payment" },
+  { id: 4, name: "PLUs" },
+  { id: 5, name: "Portal User" },
+  { id: 6, name: "Promotion" },
+  { id: 7, name: "Retailer" },
+  { id: 8, name: "Report" },
+  { id: 9, name: "Store" },
+  { id: 10, name: "Taxes" },
+  { id: 11, name: "File" },
 ];

@@ -1,3 +1,5 @@
+import {roles} from "./roles.config";
+import type {Role} from "./roles.config";
 export interface PortalUser {
   id: number;
   first: string;
@@ -18,7 +20,7 @@ export const portalUsers: PortalUser[] = [
     first: "Justin",
     last: "Turner",
     email: "jturner@retailer.com",
-    role: "Store",
+    role: roles[9].name,
     stores: ["#328 Carmi Lanes"],
     features: ["Clerks", "Kiosks", "PLUs", "Stores"],
     phonenumber: "123-456-7890",
@@ -31,7 +33,7 @@ export const portalUsers: PortalUser[] = [
     first: "Clayton",
     last: "Kershaw",
     email: "kersh@retailer.com",
-    role: "Store",
+    role: roles[9].name,
     stores: [
       "#306 Leominister",
       "#323 Gardner Parkway",
@@ -51,7 +53,7 @@ export const portalUsers: PortalUser[] = [
     first: "Walker",
     last: "Buelher",
     email: "thewalker@retailer.com",
-    role: "Retailer",
+    role: roles[7].name,
     stores: ["#3723 Manresa"],
     features: ["Clerks", "Kiosks", "Payments", "PLUs", "Stores"],
     phonenumber: "123-456-7890",
@@ -64,7 +66,7 @@ export const portalUsers: PortalUser[] = [
     first: "File",
     last: "Admin",
     email: "skipadmin@retailer.com",
-    role: "Store",
+    role: roles[11].name,
     stores: ["#399 Arvin", "#365 Stockdale", "#328 Carmi Lanes"],
     features: ["Clerks", "Kiosks", "PLUs", "Stores"],
     phonenumber: "123-456-7890",
@@ -77,7 +79,7 @@ export const portalUsers: PortalUser[] = [
     first: "Mookie",
     last: "Betts",
     email: "mookie@retailer.com",
-    role: "Store",
+    role: roles[9].name,
     stores: [
       "#306 Leominister",
       "#3723 Manresa",
@@ -95,7 +97,7 @@ export const portalUsers: PortalUser[] = [
     first: "Chris",
     last: "Taylor",
     email: "ct3@retailer.com",
-    role: "Store",
+    role: roles[9].name,
     stores: ["#306 Leominster"],
     features: ["Clerks", "Kiosks", "PLUs", "Stores"],
     phonenumber: "123-456-7890",
@@ -108,7 +110,7 @@ export const portalUsers: PortalUser[] = [
     first: "Dave",
     last: "Roberts",
     email: "dave.roberts@retailer.com",
-    role: "Store",
+    role: roles[7].name,
     stores: [
       "#306 Leominister",
       "#323 Gardner Parkway",
@@ -128,7 +130,7 @@ export const portalUsers: PortalUser[] = [
     first: "Corbin",
     last: "Burns",
     email: "burns@retailer.com",
-    role: "Retailer",
+    role: roles[9].name,
     stores: ["#306 Leominister"],
     features: ["Clerks", "Kiosks", "PLUs", "Stores"],
     phonenumber: "801-478-0646",
