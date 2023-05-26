@@ -1,20 +1,49 @@
-import { sideMenu } from "./data/sideMenu.config";
-import SidebarItem from "./sideBarItem";
+import React, { useState, useRef, useEffect } from "react";
+import { menuItems } from "./data/sideBarMenu.config";
+import type { MenuItem } from "./data/sideBarMenu.config";
+import { useNavigate } from "react-router-dom";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-const Sidebar = () => {
-  return (
-    <aside
-      id="sidebar"
-      className="fixed left-0 z-20 pt-1 pb-32 flex-col flex-shrink-0 hidden w-64 h-full font-normal duration-75 lg:flex transition-width bg-white"
-    >
-      <div className="px-3 py-4 overflow-y-auto rounded bg-white h-screen">
-        <ul className="space-y-2">
-          {sideMenu.map((item, index) => (
-            <SidebarItem key={index} item={item} />
-          ))}
-        </ul>
-      </div>
-      <div className="absolute bottom-0 left-0 border-t border-gray-200  justify-center items-center  w-full h-28 pb-16 space-x-4 bg-white lg:flex dark:bg-gray-800 sidebar-bottom-menu">
+const Sidebar: React.FC = () => {
+  const [openMenuIds, setOpenMenuIds] = useState<number[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const navigate = useNavigate();
+
+  const handleMenuItemClick = (
+    itemId: number,
+    to: string | undefined,
+    children?: MenuItem[]
+  ) => {
+    if (children) {
+      setOpenMenuIds((prevOpenMenuIds) => {
+        if (prevOpenMenuIds.includes(itemId)) {
+          return prevOpenMenuIds.filter((id) => id !== itemId);
+        } else {
+          return [itemId];
+        }
+      });
+    } else if (to && typeof to !== undefined) {
+      setSelectedItemId(itemId);
+      navigate(to);
+    } else {
+      setSelectedItemId(null);
+    }
+  };
+
+  const isItemSelected = (
+    itemId: number | null,
+    children?: MenuItem[]
+  ): boolean => {
+    if (!itemId || !children) return false;
+    return (
+      children.some((child) => isItemSelected(itemId, child.children)) ||
+      itemId === children[0].id
+    );
+  };
+
+  const SidebarFooter = () => {
+    return (
+      <div className="absolute bottom-0 left-0 border-t border-gray-200 justify-center items-center w-full h-28 pb-16 space-x-4 bg-white lg:flex dark:bg-gray-800 sidebar-bottom-menu">
         <div className="text-[#0284c7] text-xs flex justify-between">
           <h4 className="mr-2 mt-1">CloudPOS^ by </h4>
           <svg
@@ -33,6 +62,51 @@ const Sidebar = () => {
           </svg>
         </div>
       </div>
+    );
+  };
+
+  const renderMenuItems = (items: MenuItem[], parentIds: number[] = []) => {
+    return items.map((item) => {
+      const itemIds = [...parentIds, item.id];
+      const isOpen = openMenuIds.includes(item.id);
+
+      return (
+        <div key={item.id}>
+          <div
+            className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${
+              item.id === selectedItemId
+                ? "selected text-blue-600 font-semibold"
+                : ""
+            }`}
+            onClick={() => handleMenuItemClick(item.id, item.to, item.children)}
+          >
+            <div className="flex-grow align-middle pl-2">{item.label}</div>
+            <div className="flex items-center justify-center w-10">
+              {item.children && (
+                <ChevronDownIcon
+                  className={`h-5 w-5 transition-transform ${
+                    isOpen ? "transform rotate-180" : ""
+                  }`}
+                />
+              )}
+            </div>
+          </div>
+          {item.children && isOpen && (
+            <div className="pl-10">
+              {renderMenuItems(item.children, itemIds)}
+            </div>
+          )}
+        </div>
+      );
+    });
+  };
+
+  return (
+    <aside className="fixed left-0 z-20 pt-1 pb-32 flex-col flex-shrink-0 hidden w-60 h-full font-normal duration-75 lg:flex transition-width bg-white">
+      <div className="pr-3 -py-4 overflow-y-auto h-screen">
+        {renderMenuItems(menuItems)}
+      </div>
+      <SidebarFooter />
     </aside>
   );
 };
