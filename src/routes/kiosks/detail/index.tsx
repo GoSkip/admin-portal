@@ -20,6 +20,7 @@ import {
   UpdateKioskQueryParams,
   fetchKiosk,
   fetchKioskIpad,
+  fetchKioskIpadLogs,
   updateKiosk,
 } from "../../../api/kiosk";
 import { fetchStores } from "../../../api/store";
@@ -35,7 +36,11 @@ import {
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
 import { fetchTerminals } from "../../../api/terminal";
-import { Ipad } from "../../../types/kiosk";
+import { Action, Ipad } from "../../../types/kiosk";
+
+const appIdentifier = import.meta.env.PROD
+  ? "com.goskip.Self-Checkout"
+  : "com.goskip.Self-Checkout.sandbox";
 
 export type KioskDetailsForm = {
   kioskNumber: string;
@@ -109,6 +114,7 @@ const KioskDetails = (): JSX.Element => {
     updatedAt: null,
   });
   const [ipad, setIpad] = useState<Ipad>(emptyIpad);
+  const [ipadLogs, setIpadLogs] = useState<Action[]>([]);
 
   const { isFetching: storeIsFetching } = useQuery(
     ["store", storeId],
@@ -238,6 +244,7 @@ const KioskDetails = (): JSX.Element => {
       fetchKioskIpad({
         jwt: token,
         serialNumber: formState.ipadSerial,
+        appIdentifier,
       }),
     {
       enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
@@ -278,6 +285,33 @@ const KioskDetails = (): JSX.Element => {
           ...prevState,
           ...ipad,
         }));
+      },
+    }
+  );
+
+  const { isFetching: ipadLogsIsFetching } = useQuery(
+    ["ipad_logs", formState.ipadSerial],
+    () =>
+      fetchKioskIpadLogs({
+        jwt: token,
+        serialNumber: formState.ipadSerial,
+      }),
+    {
+      enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
+      refetchOnWindowFocus: false,
+      onError: (error) => {
+        console.error(error);
+        toastError(`Problem loading logs for iPad: ${formState.ipadSerial}`);
+      },
+      onSuccess: ({ data: { logs } }) => {
+        const formattedLogs: Action[] = logs.map((log: any) => ({
+          actor: log.actor,
+          type: log.action_type,
+          timestamp: new Date(log.timestamp),
+          metadata: log.metadata,
+        }));
+
+        setIpadLogs(formattedLogs);
       },
     }
   );
@@ -336,6 +370,7 @@ const KioskDetails = (): JSX.Element => {
     storeIsFetching ||
     terminalsIsFetching ||
     ipadIsFetching ||
+    ipadLogsIsFetching ||
     mutationIsLoading;
 
   useEffect(() => {
@@ -590,7 +625,7 @@ const KioskDetails = (): JSX.Element => {
           ipad={ipad}
         />
         <MetadataCard kioskMetadata={kioskMetadata} />
-        <ActionsCard />
+        <ActionsCard actions={ipadLogs} />
       </div>
     </div>
   );
