@@ -29,31 +29,43 @@ const ActionsCard = ({ actions }: ActionsCardProps): JSX.Element => {
         <div className="col-span-1 text-left bg-gray-100 rounded-tr-xl pl-3 py-2">
           METADATA
         </div>
-        {actions.map((action: Action) => (
-          <Fragment key={action.timestamp.toString()}>
-            <div className="col-span-1 bg-white border border-gray-50 py-3 pl-6 flex justify-start items-center rounded-bl-xl">
-              <button
-                type="button"
-                className={classNames(
-                  `bg-${actorColors.get(action.actor)}-100
+        {actions.length > 0 ? (
+          <>
+            {actions.map((action: Action) => (
+              <Fragment key={action.timestamp.toString()}>
+                <div className="col-span-1 bg-white border border-gray-50 py-3 pl-6 flex justify-start items-center rounded-bl-xl">
+                  <button
+                    type="button"
+                    className={classNames(
+                      `bg-${actorColors.get(action.actor)}-100
               text-${actorColors.get(action.actor)}-400`,
-                  "rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm capitalize"
-                )}
-              >
-                {action.actor}
-              </button>
-            </div>
-            <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
-              <div className="pl-3 capitalize font-medium">{action.type}</div>
-            </div>
-            <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
-              <div className="pl-3">{action.timestamp.toLocaleString()}</div>
-            </div>
-            <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3 rounded-br-xl">
-              <div className="pl-3">{action.metadata}</div>
-            </div>
-          </Fragment>
-        ))}
+                      "rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm capitalize"
+                    )}
+                  >
+                    {action.actor}
+                  </button>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
+                  <div className="pl-3 capitalize font-medium">
+                    {action.type}
+                  </div>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3">
+                  <div className="pl-3">
+                    {action.timestamp.toLocaleString()}
+                  </div>
+                </div>
+                <div className="col-span-1 bg-white border border-gray-50 flex justify-start items-center py-3 rounded-br-xl">
+                  <div className="pl-3">{action.metadata}</div>
+                </div>
+              </Fragment>
+            ))}
+          </>
+        ) : (
+          <p className="text-center col-span-4 mt-4 mb-4 font-semibold">
+            No actions found for this iPad.
+          </p>
+        )}
       </div>
     </div>
   );
