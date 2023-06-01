@@ -14,16 +14,13 @@ steps:
     args:
       [
         "build",
-        "--build-arg",
-        "DEPLOY_ENV=${DEPLOY_ENV}",
         "-f",
-        "./Dockerfile.deploy",
+        "./Dockerfile.deploy.production",
         "-t",
         "gcr.io/$PROJECT_ID/${_IMAGE_NAME}:$COMMIT_SHA",
         ".",
       ]
     dir: .
-    env: ["DEPLOY_ENV=${_DEPLOY_ENV}"]
   - name: gcr.io/cloud-builders/gcloud
     dir: .
     args:
