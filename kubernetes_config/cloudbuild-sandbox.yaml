@@ -21,6 +21,11 @@ steps:
         ".",
       ]
     dir: .
+    env:
+      [
+        "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER}",
+        "CLOUDSDK_COMPUTE_ZONE=${_CLUSTER_ZONE}",
+      ]
   - name: "gcr.io/$PROJECT_ID/envsubst"
     dir: .
     entrypoint: /bin/bash
