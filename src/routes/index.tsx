@@ -21,6 +21,8 @@ import Reports from "./reports";
 import Login from "./login";
 import Logout from "./logout";
 
+console.log("--- env ---", import.meta.env);
+
 const Router = (): JSX.Element => {
   return (
     <BrowserRouter>
