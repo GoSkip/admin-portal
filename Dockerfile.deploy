@@ -7,7 +7,10 @@ RUN mv ./node_modules ./app-ui
 WORKDIR /app-ui
 COPY . .
 
-RUN yarn build
+ARG DEPLOY_ENV=production
+ENV DEPLOY_ENV=${DEPLOY_ENV}
+
+RUN yarn build --mode ${DEPLOY_ENV}
 
 FROM nginx:alpine
 
