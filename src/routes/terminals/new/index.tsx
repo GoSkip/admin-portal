@@ -16,56 +16,53 @@ import {
   LoadingContextType,
 } from "../../../contexts/LoadingContext";
 import {
-  CreateKioskPayloadParams,
-  CreateKioskQueryParams,
-  createKiosk,
-} from "../../../api/kiosk";
-import { toastError } from "../../../toasts";
+  CreateTerminalPayloadParams,
+  CreateTerminalQueryParams,
+  createTerminal,
+} from "../../../api/terminal";
+import { toastError, toastSuccess } from "../../../toasts";
 
-type NewKioskForm = {
+type NewTerminalForm = {
   store: Option | null;
+  password: string;
 };
 
-type CreateKioskMutationProps = {
-  queryParams: CreateKioskQueryParams;
-  payloadParams: CreateKioskPayloadParams;
+type CreateTerminalMutationProps = {
+  queryParams: CreateTerminalQueryParams;
+  payloadParams: CreateTerminalPayloadParams;
 };
 
-const NewKiosk = (): JSX.Element => {
+const NewTerminal = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
-  const [formState, setFormState] = useState<NewKioskForm>({
+  const [formState, setFormState] = useState<NewTerminalForm>({
     store: null,
+    password: "",
   });
   const { selectable_stores } = session;
   const navigate = useNavigate();
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (props: CreateKioskMutationProps) =>
-      createKiosk(props.queryParams, props.payloadParams),
+    mutationFn: (props: CreateTerminalMutationProps) =>
+      createTerminal(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);
-      toastError("Failed to create kiosk.");
+      toastError("Failed to create terminal.");
     },
-    onSuccess: (data: any) => {
-      const {
-        data: { id },
-      } = data;
-
-      if (formState.store?.key) {
-        navigate(`/kiosks/${formState.store.key}/${id}`);
-      }
+    onSuccess: ({ data: { id } }) => {
+      toastSuccess(`New terminal created with ID: ${id}`);
     },
   });
 
-  const onCreateKiosk = () => {
-    const props: CreateKioskMutationProps = {
+  const onCreateTerminal = () => {
+    const props: CreateTerminalMutationProps = {
       queryParams: {
         jwt: session.token_info.token,
         storeId: Number(formState.store?.key),
       },
       payloadParams: {
-        kiosk_number: 1,
+        live: true,
+        password: formState.password,
       },
     };
 
@@ -79,7 +76,7 @@ const NewKiosk = (): JSX.Element => {
         value: selectable_stores[0].name,
       };
 
-      setFormState({ store });
+      setFormState((prevState: NewTerminalForm) => ({ ...prevState, store }));
     }
   }, [selectable_stores]);
 
@@ -90,7 +87,10 @@ const NewKiosk = (): JSX.Element => {
 
   const handleStoreChange = (option: Option | null) => {
     if (option) {
-      setFormState({ store: option });
+      setFormState((prevState: NewTerminalForm) => ({
+        ...prevState,
+        store: option,
+      }));
     }
   };
 
@@ -125,7 +125,7 @@ const NewKiosk = (): JSX.Element => {
                 aria-hidden="true"
               />
               <Link to="#" className="ml-4 text-xl">
-                New Kiosk
+                New Terminal
               </Link>
             </div>
           </li>
@@ -138,7 +138,7 @@ const NewKiosk = (): JSX.Element => {
         <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl col-span-2 md:col-span-1">
           <div className="px-4 pt-2 text-xl font-normal">Select store</div>
           <div className="px-4 pb-2 text-sm text-gray-500">
-            Kiosks are assigned to a specific store
+            Terminals are assigned to a specific store
           </div>
           <div className="px-4 py-6">
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 mb-4 sm:grid-cols-2">
@@ -189,7 +189,7 @@ const NewKiosk = (): JSX.Element => {
               <PrimaryButton
                 label="Create"
                 disabled={!formState.store}
-                onClick={onCreateKiosk}
+                onClick={onCreateTerminal}
               />
             </div>
           </div>
@@ -199,4 +199,4 @@ const NewKiosk = (): JSX.Element => {
   );
 };
 
-export default NewKiosk;
+export default NewTerminal;
