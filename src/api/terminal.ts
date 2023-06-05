@@ -7,6 +7,16 @@ export type FetchTerminalsQueryParams = {
   limit: number;
 };
 
+export type CreateTerminalQueryParams = {
+  jwt: string;
+  storeId: number;
+};
+
+export type CreateTerminalPayloadParams = {
+  live: boolean;
+  password: string;
+};
+
 export const fetchTerminals: any = async ({
   storeId,
   page,
@@ -21,6 +31,26 @@ export const fetchTerminals: any = async ({
       page,
       limit,
     })}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const createTerminal: any = async (
+  { jwt, storeId }: CreateTerminalQueryParams,
+  payload: CreateTerminalPayloadParams
+) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.post(
+    `${domain}/v1/terminal?query=${JSON.stringify({
+      store_id: storeId,
+    })}`,
+    payload,
     {
       headers: {
         "Content-Type": "application/json",

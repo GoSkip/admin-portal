@@ -11,6 +11,7 @@ import Retailer from "./admin/retailer";
 import Kiosks from "./kiosks";
 import KioskNew from "./kiosks/new";
 import KioskDetail from "./kiosks/detail";
+import TerminalNew from "./terminals/new";
 import Clerks from "./people/clerks";
 import PortalUsers from "./people/portalUsers";
 import PortalUserDetail from "./people/portalUsers/detail";
@@ -53,6 +54,7 @@ const Router = (): JSX.Element => {
           <Route path="/kiosks" element={<Kiosks />} />
           <Route path="/kiosks/new" element={<KioskNew />} />
           <Route path="/kiosks/:storeId/:kioskId" element={<KioskDetail />} />
+          <Route path="/terminals/new" element={<TerminalNew />} />
           <Route path="/people">
             <Route path="clerks" element={<Clerks />} />
             <Route path="portal-users" element={<PortalUsers />} />
