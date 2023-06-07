@@ -17,19 +17,8 @@ spec:
   tls:
     - secretName: portal-ingress-cert
       hosts:
-        - admin.skipsandbox.com
         - sandbox-admin.getskip.com
   rules:
-    - host: admin.skipsandbox.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: portal
-                port:
-                  number: 8080
     - host: sandbox-admin.getskip.com
       http:
         paths:
