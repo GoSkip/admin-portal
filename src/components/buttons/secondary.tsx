@@ -25,7 +25,7 @@ const SecondaryButton = ({
       onClick={_onClick}
       className={classNames(
         disabled ? "bg-gray-200 text-white" : "bg-white hover:bg-gray-50",
-        `rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${additionalClasses}`
+        `rounded-md px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${additionalClasses}`
       )}
     >
       {label}

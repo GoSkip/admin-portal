@@ -31,7 +31,7 @@ import {
 } from "../../contexts/GlobalStateContext";
 import PrimaryButton from "../../components/buttons/primary";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
-const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
+export const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
 const calcKioskLastTxnColor = (last_txn: Date | undefined | null) => {
   if (!last_txn) {
@@ -45,7 +45,7 @@ const calcKioskLastTxnColor = (last_txn: Date | undefined | null) => {
   return "bg-green-100 text-green-800";
 };
 
-const calcTotalPages = ({
+export const calcTotalPages = ({
   limit,
   totalResults,
 }: {
