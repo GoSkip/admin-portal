@@ -20,6 +20,7 @@ import Promotions from "./promotions";
 import Reports from "./reports";
 import Login from "./login";
 import Logout from "./logout";
+import FileDetails from "./admin/files/detail";
 
 console.log("--- env ---", import.meta.env);
 
@@ -40,6 +41,7 @@ const Router = (): JSX.Element => {
           <Route path="/logout" element={<Logout />} />
           <Route path="/admin">
             <Route path="files" element={<Files />} />
+            <Route path="files/:storeId/:fileId" element={<FileDetails />} />
             <Route path="taxes" element={<Taxes />} />
             <Route path="loyalty" element={<Loyalty />} />
             <Route path="payments" element={<Payments />} />
