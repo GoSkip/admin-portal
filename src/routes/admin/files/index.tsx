@@ -156,7 +156,7 @@ const Files = (): JSX.Element => {
   };
 
   const onGotoFileDetails = (fileId: number) => {
-    navigate(`/files/${activeRetailerId}/${fileId}`);
+    navigate(`/admin/files/${activeRetailerId}/${fileId}`);
   };
 
   useLayoutEffect(() => {
@@ -363,7 +363,7 @@ const Files = (): JSX.Element => {
                           />
                         </td>
                         <td
-                          className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                          className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 cursor-pointer"
                           onClick={() => {
                             if (file.id) {
                               onGotoFileDetails(file.id);

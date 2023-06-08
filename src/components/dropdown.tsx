@@ -32,6 +32,10 @@ type DropdownProps = {
   onClick?: () => any;
 };
 
+type MenuItemProps = {
+  item: DropdownItemType;
+};
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -48,6 +52,25 @@ const menuBtnBackground = (isDisabled: boolean | undefined) => {
     return "bg-gray-200 text-coolGray-400 shadow-none ring-1 ring-inset ring-gray-100";
   }
   return "bg-white text-coolGray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50";
+};
+
+const MenuItem = ({ item }: MenuItemProps): JSX.Element => {
+  const handleItemClick = () => {
+    item.onClick(item.value);
+  };
+  return (
+    <Menu.Item>
+      {({ active }) => (
+        <span className={DropdownItemClasses(active)} onClick={handleItemClick}>
+          <item.icon
+            className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+            aria-hidden="true"
+          />
+          {item.name}
+        </span>
+      )}
+    </Menu.Item>
+  );
 };
 
 const Dropdown = ({
@@ -94,24 +117,8 @@ const Dropdown = ({
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             {items.map((item, i) => {
-              const handleItemClick = () => {
-                item.onClick(item.value);
-              };
               return (
-                <Menu.Item key={`${i}-${item.value}`}>
-                  {({ active }) => (
-                    <span
-                      className={DropdownItemClasses(active)}
-                      onClick={handleItemClick}
-                    >
-                      <item.icon
-                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </span>
-                  )}
-                </Menu.Item>
+                <MenuItem key={`${i}-${item.value}`} item={item}></MenuItem>
               );
             })}
           </div>

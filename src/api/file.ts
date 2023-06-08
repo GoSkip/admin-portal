@@ -15,11 +15,9 @@ export const fetchFiles = async ({
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
   const query = {
     store_id: retailerId,
-    // limit,
-    // page,
     product: "sco",
     begin_time: "2023-05-27T21:00:00.000Z",
-    end_time: "2023-06-07T21:00:00.000Z",
+    end_time: "2023-06-30T21:00:00.000Z",
   };
   const response = await axios.get(
     `${domain}/v1/file/store?query=${JSON.stringify(query)}`,

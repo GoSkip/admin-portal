@@ -30,7 +30,7 @@ export const getFileStatus = (str: string) => {
       return "In Queue";
     case "errored":
       return "Errored";
-    case "running":
+    case "parsing":
       return "In Process";
   }
   return str;

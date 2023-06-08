@@ -22,8 +22,6 @@ import Login from "./login";
 import Logout from "./logout";
 import FileNew from "./admin/files/new";
 
-console.log("--- env ---", import.meta.env);
-
 const Router = (): JSX.Element => {
   return (
     <BrowserRouter>
