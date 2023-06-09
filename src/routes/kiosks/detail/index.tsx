@@ -92,7 +92,7 @@ const emptyIpad: Ipad = {
 const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
   const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
-  const { storeId, kioskId } = useParams();
+  const { kioskId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const {
@@ -103,8 +103,10 @@ const KioskDetails = (): JSX.Element => {
   } = useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
+    active_store,
     token_info: { token },
   } = session;
+  const storeId = active_store.id;
   const [store, setStore] = useState<Store | null>(null);
   const [defaultFormState, setDefaultFormState] =
     useState<KioskDetailsForm>(emptyFormState);

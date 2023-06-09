@@ -5,6 +5,7 @@ import { Session, emptySession } from "../types/session";
 import advancedStoreSort from "../utils/advancedStoreSort";
 import { isPast } from "date-fns";
 import { Retailer } from "../types/retailer";
+import { Store } from "../types/store";
 
 type SessionContextProps = {
   children: any;
@@ -33,7 +34,19 @@ const SessionProvider = ({ children }: SessionContextProps): JSX.Element => {
 
   const setActiveRetailer = (retailer: Retailer) => {
     const selectable_stores = retailer.stores.flat().sort(advancedStoreSort);
-    _setSession({ ...session, active_retailer: retailer, selectable_stores });
+    _setSession({
+      ...session,
+      active_retailer: retailer,
+      active_store: selectable_stores[0],
+      selectable_stores,
+    });
+  };
+
+  const setActiveStore = (store: Store) => {
+    _setSession({
+      ...session,
+      active_store: store,
+    });
   };
 
   useEffect(() => {
@@ -53,6 +66,7 @@ const SessionProvider = ({ children }: SessionContextProps): JSX.Element => {
         session: session || prevSession,
         setSession: _setSession,
         setActiveRetailer,
+        setActiveStore,
       }}
     >
       {children}

@@ -30,6 +30,7 @@ import {
   GlobalStateContextType,
 } from "../../contexts/GlobalStateContext";
 import PrimaryButton from "../../components/buttons/primary";
+import { Store } from "../../types/store";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
@@ -75,7 +76,7 @@ const calcTo = ({
   return page * limit;
 };
 
-const calculateKioskDescriptrion = ({
+const calculateKioskDescription = ({
   kioskDescriptor,
   kioskNumber,
 }: {
@@ -92,7 +93,8 @@ const calculateKioskDescriptrion = ({
 const KioskList = (): JSX.Element => {
   requirePermissions(["kiosk.view"]);
 
-  const { session } = useContext<SessionContextType>(SessionContext);
+  const { session, setActiveStore } =
+    useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { filter } = useContext<GlobalStateContextType>(GlobalStateContext);
   const checkbox = useRef<HTMLInputElement | null>();
@@ -179,7 +181,12 @@ const KioskList = (): JSX.Element => {
   };
 
   const onGotoKioskDetails = (storeId: number, kioskId: number) => {
-    navigate(`/kiosks/${storeId}/${kioskId}`);
+    const store = stores.find((store: Store) => store.id === storeId);
+
+    if (store) {
+      setActiveStore(store);
+      navigate(`/kiosks/${kioskId}`);
+    }
   };
 
   useLayoutEffect(() => {
@@ -303,7 +310,7 @@ const KioskList = (): JSX.Element => {
                         {kiosk.store?.name ?? "N/A"}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
-                        {calculateKioskDescriptrion({
+                        {calculateKioskDescription({
                           kioskDescriptor: kiosk.kiosk_descriptor,
                           kioskNumber: kiosk.kiosk_number,
                         })}
