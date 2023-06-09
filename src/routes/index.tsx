@@ -12,6 +12,7 @@ import Kiosks from "./kiosks";
 import KioskNew from "./kiosks/new";
 import KioskDetail from "./kiosks/detail";
 import TerminalNew from "./terminals/new";
+import TerminalNewSignup from "./terminals/signup";
 import Clerks from "./people/clerks";
 import PortalUsers from "./people/portalUsers";
 import PortalUserDetail from "./people/portalUsers/detail";
@@ -55,6 +56,10 @@ const Router = (): JSX.Element => {
           <Route path="/kiosks/new" element={<KioskNew />} />
           <Route path="/kiosks/:storeId/:kioskId" element={<KioskDetail />} />
           <Route path="/terminals/new" element={<TerminalNew />} />
+          <Route
+            path="/terminals/new/:storeId/:terminalSignupId"
+            element={<TerminalNewSignup />}
+          />
           <Route path="/people">
             <Route path="clerks" element={<Clerks />} />
             <Route path="portal-users" element={<PortalUsers />} />
