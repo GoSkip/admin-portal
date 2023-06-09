@@ -16,20 +16,17 @@ import {
   LoadingContextType,
 } from "../../../contexts/LoadingContext";
 import {
-  CreateTerminalPayloadParams,
-  CreateTerminalQueryParams,
-  createTerminal,
+  CreateTerminalSignupQueryParams,
+  createTerminalSignup,
 } from "../../../api/terminal";
 import { toastError, toastSuccess } from "../../../toasts";
 
 type NewTerminalForm = {
   store: Option | null;
-  password: string;
 };
 
-type CreateTerminalMutationProps = {
-  queryParams: CreateTerminalQueryParams;
-  payloadParams: CreateTerminalPayloadParams;
+type CreateTerminalSignupMutationProps = {
+  queryParams: CreateTerminalSignupQueryParams;
 };
 
 const NewTerminal = (): JSX.Element => {
@@ -37,32 +34,27 @@ const NewTerminal = (): JSX.Element => {
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const [formState, setFormState] = useState<NewTerminalForm>({
     store: null,
-    password: "",
   });
   const { selectable_stores } = session;
   const navigate = useNavigate();
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (props: CreateTerminalMutationProps) =>
-      createTerminal(props.queryParams, props.payloadParams),
+    mutationFn: (props: CreateTerminalSignupMutationProps) =>
+      createTerminalSignup(props.queryParams),
     onError: (error: any) => {
       console.error(error);
       toastError("Failed to create terminal.");
     },
-    onSuccess: ({ data: { id } }) => {
-      toastSuccess(`New terminal created with ID: ${id}`);
+    onSuccess: ({ data: { id } }: any) => {
+      navigate(`/terminals/new/${formState.store?.key}/${id}`);
     },
   });
 
   const onCreateTerminal = () => {
-    const props: CreateTerminalMutationProps = {
+    const props: CreateTerminalSignupMutationProps = {
       queryParams: {
         jwt: session.token_info.token,
         storeId: Number(formState.store?.key),
-      },
-      payloadParams: {
-        live: true,
-        password: formState.password,
       },
     };
 

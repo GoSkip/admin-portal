@@ -7,14 +7,15 @@ export type FetchTerminalsQueryParams = {
   limit: number;
 };
 
-export type CreateTerminalQueryParams = {
+export type CreateTerminalSignupQueryParams = {
   jwt: string;
   storeId: number;
 };
 
-export type CreateTerminalPayloadParams = {
-  live: boolean;
-  password: string;
+export type FetchTerminalSignupQueryParams = {
+  jwt: string;
+  storeId: number;
+  terminalSignupId: number;
 };
 
 export const fetchTerminals: any = async ({
@@ -40,17 +41,38 @@ export const fetchTerminals: any = async ({
   );
 };
 
-export const createTerminal: any = async (
-  { jwt, storeId }: CreateTerminalQueryParams,
-  payload: CreateTerminalPayloadParams
-) => {
+export const createTerminalSignup: any = async ({
+  jwt,
+  storeId,
+}: CreateTerminalSignupQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.post(
-    `${domain}/v1/terminal?query=${JSON.stringify({
+    `${domain}/v1/terminal/signup?query=${JSON.stringify({
       store_id: storeId,
     })}`,
-    payload,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const fetchTerminalSignup: any = async ({
+  jwt,
+  storeId,
+  terminalSignupId,
+}: FetchTerminalSignupQueryParams) => {
+  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.get(
+    `${domain}/v1/terminal/signup?query=${JSON.stringify({
+      store_id: storeId,
+      terminal_signup_id: terminalSignupId,
+    })}`,
     {
       headers: {
         "Content-Type": "application/json",
