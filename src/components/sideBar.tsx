@@ -44,7 +44,7 @@ const Sidebar: React.FC = () => {
   const SidebarFooter = () => {
     return (
       <div className="absolute bottom-0 left-0 border-t border-gray-200 justify-center items-center w-full h-28 pb-16 space-x-4 bg-white lg:flex dark:bg-gray-800 sidebar-bottom-menu">
-        <div className="text-[#0284c7] text-xs flex justify-between">
+        <div className="text-lightBlue-700 text-xs flex justify-between">
           <h4 className="mr-2 mt-1">CloudPOS^ by </h4>
           <svg
             width="37"
@@ -73,7 +73,7 @@ const Sidebar: React.FC = () => {
       return (
         <div key={item.id}>
           <div
-            className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#f0f9ff] ${
+            className={`flex items-center w-full cursor-pointer h-8 ml-2 mt-1 font-normal text-[#4b5563] stroke-[#9ca3af] transition duration-200 border-transparent border-l-4 hover:border-l-4 hover:border-lightBlue-700 hover:text-lightBlue-700 hover:bg-[#f0f9ff] ${
               item.id === selectedItemId
                 ? "selected text-blue-600 font-semibold"
                 : ""

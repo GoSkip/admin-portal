@@ -9,6 +9,46 @@ export interface File {
   fileId: number;
 }
 
+export interface FileFromApi {
+  id: number;
+  business_name: string;
+  file_type: string;
+  inserted_at: Date;
+  parser_module: string;
+  status: string;
+  size: number;
+  store_id: number;
+  store_name: string;
+  updated_at: string;
+}
+
+export const getFileStatus = (str: string) => {
+  switch (str) {
+    case "parsed":
+      return "Success";
+    case "unparsed":
+      return "In Queue";
+    case "errored":
+      return "Errored";
+    case "parsing":
+      return "In Process";
+  }
+  return str;
+};
+
+export const createFile: (file: FileFromApi) => File = (file: FileFromApi) => {
+  return {
+    id: file.id,
+    fileType: file.file_type || file.parser_module,
+    siteName: file.store_name,
+    siteId: file.store_id,
+    uploaded: new Date(file.inserted_at),
+    status: file.status,
+    fileSize: file.size,
+    fileId: file.id,
+  };
+};
+
 export const files: File[] = [
   {
     id: 1,
