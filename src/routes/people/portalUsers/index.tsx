@@ -42,7 +42,7 @@ const PortalUsers = (): JSX.Element => {
                 </button>
                 <button
                   onClick={() => handleNewUserClick()}
-                  className="rounded-md bg-[#0284c7] outline outline-1 outline-gray-400 px-4 py-2 text-md font-medium text-gray-50"
+                  className="rounded-md bg-lightBlue-700 outline outline-1 outline-gray-400 px-4 py-2 text-md font-medium text-gray-50"
                 >
                   New User
                 </button>
@@ -54,7 +54,7 @@ const PortalUsers = (): JSX.Element => {
           <button
             className={`inline-flex items-center px-1 text-md font-medium mr-10  ${
               activeFilter === true
-                ? "border-b-2 border-indigo-500 pb-4 text-[#0ea5e9]"
+                ? "border-b-2 border-indigo-500 pb-4 text-lightBlue-700"
                 : "pt-1 text-gray-400"
             }`}
             onClick={() => setActiveFilter(true)}
@@ -195,8 +195,10 @@ const PortalUsers = (): JSX.Element => {
                           className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${
                             user.role === "Store"
                               ? "text-[#075985] bg-[#e0f2fe] "
-                              : user.role === "Retailer" ? "text-[#065f46] bg-[#d1fae5]"
-                              : user.role === "File" ? "text-[#1f2937] bg-[#f3f4f6]"
+                              : user.role === "Retailer"
+                              ? "text-[#065f46] bg-[#d1fae5]"
+                              : user.role === "File"
+                              ? "text-[#1f2937] bg-[#f3f4f6]"
                               : "text-[#5e2e8f] bg-[#f3e8ff]"
                           }`}
                         >
