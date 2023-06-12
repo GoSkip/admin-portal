@@ -13,6 +13,7 @@ export type Session = {
     expiration: string;
     token: string;
   };
+  lang: string;
 };
 
 export const emptySession: Session = {
@@ -27,4 +28,5 @@ export const emptySession: Session = {
     expiration: "",
     token: "",
   },
+  lang: "en",
 };

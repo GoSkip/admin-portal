@@ -17,10 +17,7 @@ const Files = (): JSX.Element => {
   //   navigate(`/admin/files`);
   // };
 
-  const filteredFiles =
-    files.length > 0
-      ? files
-      : null;
+  const filteredFiles = files.length > 0 ? files : null;
 
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     month: "numeric",
@@ -29,7 +26,7 @@ const Files = (): JSX.Element => {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-    timeZone: "America/Chicago"
+    timeZone: "America/Chicago",
   });
 
   return (
@@ -44,9 +41,7 @@ const Files = (): JSX.Element => {
           <div>
             <div className="sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <button
-                  className="rounded-md bg-[#0284c7] outline outline-1 outline-gray-400 px-4 py-2 text-sm font-light text-gray-50"
-                >
+                <button className="rounded-md bg-[#0284c7] outline outline-1 outline-gray-400 px-4 py-2 text-sm font-light text-gray-50">
                   Upload file
                 </button>
               </div>
@@ -168,9 +163,7 @@ const Files = (): JSX.Element => {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {filteredFiles?.map((file) => (
-                    <tr
-                      key={file.fileType}
-                    >
+                    <tr key={file.fileType}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
                         <input type="checkbox" />
                       </td>
@@ -187,10 +180,23 @@ const Files = (): JSX.Element => {
                         {dateFormatter.format(file.uploaded)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {file.status ===  "Success" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-green-100 text-green-800">{file.status}</span>
-                        : file.status === "In Queue" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#fef3c7] text-[#92400E]">{file.status}</span>
-                        : file.status === "In Process" ? <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#dbeafe] text-[#1E40AF]">{file.status}</span>
-                        : <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-red-100 text-red-800">{file.status}</span>}
+                        {file.status === "Success" ? (
+                          <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-green-100 text-green-800">
+                            {file.status}
+                          </span>
+                        ) : file.status === "In Queue" ? (
+                          <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#fef3c7] text-[#92400E]">
+                            {file.status}
+                          </span>
+                        ) : file.status === "In Process" ? (
+                          <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-[#dbeafe] text-[#1E40AF]">
+                            {file.status}
+                          </span>
+                        ) : (
+                          <span className="px-2 inline-flex text-xs leading-5 font-normal rounded-full bg-red-100 text-red-800">
+                            {file.status}
+                          </span>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {file.fileSize}

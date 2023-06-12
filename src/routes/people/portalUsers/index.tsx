@@ -6,9 +6,11 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 const PortalUsers = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -31,20 +33,20 @@ const PortalUsers = (): JSX.Element => {
         <div className="flex h-20 -mt-4 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="text-gray-900 text-xl">Portal Users</div>
+              <div className="text-gray-900 text-xl">{t("portal-users")}</div>
             </div>
           </div>
           <div>
             <div className="sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 <button className="rounded-md bg-white outline outline-1 outline-gray-400 px-4 py-2 text-md font-medium text-gray-600">
-                  Export
+                  {t("export")}
                 </button>
                 <button
                   onClick={() => handleNewUserClick()}
                   className="rounded-md bg-[#0284c7] outline outline-1 outline-gray-400 px-4 py-2 text-md font-medium text-gray-50"
                 >
-                  New User
+                  {t("new-user")}
                 </button>
               </div>
             </div>
@@ -59,7 +61,7 @@ const PortalUsers = (): JSX.Element => {
             }`}
             onClick={() => setActiveFilter(true)}
           >
-            Active users
+            {t("active-users")}
           </button>
           <button
             className={`inline-flex items-center px-1 text-md font-medium mr-10  ${
@@ -69,7 +71,7 @@ const PortalUsers = (): JSX.Element => {
             }`}
             onClick={() => setActiveFilter(false)}
           >
-            Inactive users
+            {t("inactive-users")}
           </button>
         </div>
         <hr />
@@ -87,7 +89,7 @@ const PortalUsers = (): JSX.Element => {
                 name="filter"
                 id="filter"
                 className="block w-full rounded-l-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-md focus:ring-2 focus:ring-inset focus:ring-gray-50 sm:text-sm sm:leading-6"
-                placeholder="Filter results"
+                placeholder={t("filter-results") || ""}
               />
             </div>
             <button
@@ -98,7 +100,7 @@ const PortalUsers = (): JSX.Element => {
                 className="-ml-0.5 h-5 w-5 text-gray-400"
                 aria-hidden="true"
               />
-              <span className="text-gray-600 font-normal">Sort</span>
+              <span className="text-gray-600 font-normal">{t("sort")}</span>
               <ChevronDownIcon
                 className="-ml-0.5 h-5 w-5 text-gray-400"
                 aria-hidden="true"
@@ -112,7 +114,7 @@ const PortalUsers = (): JSX.Element => {
                 name="actions"
                 id="actions"
                 className="block w-full rounded-l-lg border-0 py-1.5 pl-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-md focus:ring-2 focus:ring-inset focus:ring-gray-50 sm:text-sm sm:leading-6"
-                placeholder="Actions"
+                placeholder={t("actions") || ""}
               />
             </div>
             <button
@@ -142,40 +144,40 @@ const PortalUsers = (): JSX.Element => {
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-gray-500 sm:pl-6"
+                      className="py-3.5 pl-4 pr-3 text-left text-xs font-medium uppercase text-gray-500 sm:pl-6"
                     >
-                      FIRST
+                      {t("first")}
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-normal text-gray-500"
+                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
                     >
-                      LAST
+                      {t("last")}
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-normal text-gray-500"
+                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
                     >
-                      EMAIL
+                      {t("email")}
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-normal text-gray-500"
+                      className="px-3 py-3.5 text-center text-xs font-medium uppercase text-gray-500"
                     >
-                      ROLE
+                      {t("role")}
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-normal text-gray-500"
+                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
                     >
-                      STORES
+                      {t("stores")}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user, i) => (
                     <tr
-                      key={user.email}
+                      key={`${i}-${user.email}`}
                       onClick={() => handleActiveUserClick(user.id)}
                     >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
@@ -194,10 +196,12 @@ const PortalUsers = (): JSX.Element => {
                         <span
                           className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${
                             user.role === "Store"
-                              ? "text-[#075985] bg-[#e0f2fe] "
-                              : user.role === "Retailer" ? "text-[#065f46] bg-[#d1fae5]"
-                              : user.role === "File" ? "text-[#1f2937] bg-[#f3f4f6]"
-                              : "text-[#5e2e8f] bg-[#f3e8ff]"
+                              ? "text-lightBlue-800 bg-lightBlue-100 "
+                              : user.role === "Retailer"
+                              ? "text-emerald-800 bg-emerald-100"
+                              : user.role === "File"
+                              ? "text-coolGray-800 bg-coolGray-100"
+                              : "text-purple-800 bg-purple-100"
                           }`}
                         >
                           {user.role}
@@ -206,10 +210,14 @@ const PortalUsers = (): JSX.Element => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {user.stores.length > 1 ? (
                           <span className="font-bold">
-                            {user.stores.length} stores
+                            {t("n-stores", {
+                              n: user.stores.length,
+                            })}
                           </span>
                         ) : (
-                          user.stores.map((store) => <span>{store}</span>)
+                          user.stores.map((store, ii) => (
+                            <span key={`${store}-${i}-${ii}`}>{store}</span>
+                          ))
                         )}
                       </td>
                     </tr>
