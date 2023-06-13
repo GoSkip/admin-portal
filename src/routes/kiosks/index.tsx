@@ -30,6 +30,7 @@ import {
   GlobalStateContextType,
 } from "../../contexts/GlobalStateContext";
 import PrimaryButton from "../../components/buttons/primary";
+import { Trans, useTranslation } from "react-i18next";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 export const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
@@ -104,6 +105,7 @@ const KioskList = (): JSX.Element => {
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const onClickNewKiosk = () => {
     navigate("/kiosks/new");
@@ -204,10 +206,10 @@ const KioskList = (): JSX.Element => {
     <div className="w-full h-auto">
       <div className="sm:flex sm:items-center mb-4">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Kiosks</h1>
+          <h1 className="text-xl font-semibold text-gray-900">{t("kiosks")}</h1>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <PrimaryButton label="Add Kiosk" onClick={onClickNewKiosk} />
+          <PrimaryButton label={t("add-kiosk")} onClick={onClickNewKiosk} />
         </div>
       </div>
       <div>
@@ -237,19 +239,19 @@ const KioskList = (): JSX.Element => {
                       scope="col"
                       className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-500"
                     >
-                      Store
+                      {t("store")}
                     </th>
                     <th
                       scope="col"
                       className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
-                      Kiosk
+                      {t("kiosk")}
                     </th>
                     <th
                       scope="col"
                       className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
-                      Last Txn
+                      {t("last-txn")}
                     </th>
                   </tr>
                 </thead>
@@ -353,19 +355,18 @@ const KioskList = (): JSX.Element => {
               <p className="text-sm text-gray-700">
                 {totalResults > 0 ? (
                   <>
-                    Showing{" "}
-                    <span className="font-medium">
-                      {calcFrom({ page, limit })}
-                    </span>{" "}
-                    to{" "}
-                    <span className="font-medium">
-                      {calcTo({ page, limit, totalResults })}
-                    </span>{" "}
-                    of <span className="font-medium">{totalResults}</span>{" "}
-                    results
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: t("showing-n1-to-n2-of-n3-results", {
+                          n1: calcFrom({ page, limit }),
+                          n2: calcTo({ page, limit, totalResults }),
+                          n3: totalResults,
+                        }),
+                      }}
+                    ></span>
                   </>
                 ) : (
-                  <>No results.</>
+                  <>{t("no-results")}.</>
                 )}
               </p>
             </div>
@@ -378,7 +379,7 @@ const KioskList = (): JSX.Element => {
                   className="relative inline-flex items-center rounded-l-md border bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 cursor-pointer"
                   onClick={onPrevPage}
                 >
-                  <span className="sr-only">Previous</span>
+                  <span className="sr-only">{t("previous")}</span>
                   <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 {Array(totalPages)
@@ -401,7 +402,7 @@ const KioskList = (): JSX.Element => {
                   className="relative inline-flex items-center rounded-r-md border bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 cursor-pointer"
                   onClick={onNextPage}
                 >
-                  <span className="sr-only">Next</span>
+                  <span className="sr-only">{t("next")}</span>
                   <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                 </span>
               </nav>

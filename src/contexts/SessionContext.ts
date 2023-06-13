@@ -6,10 +6,12 @@ export type SessionContextType = {
   session: Session;
   setSession: (session: Session) => void;
   setActiveRetailer: (retailer: Retailer) => void;
+  setLang: (lang: string) => void;
 };
 
 export const SessionContext = createContext<SessionContextType>({
   session: emptySession,
   setSession: () => {},
   setActiveRetailer: () => {},
+  setLang: () => {},
 });

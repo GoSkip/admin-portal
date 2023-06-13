@@ -16,7 +16,7 @@ export const fetchFiles = async ({
   const query = {
     store_id: retailerId,
     product: "sco",
-    begin_time: "2023-05-27T21:00:00.000Z",
+    begin_time: "2023-06-01T21:00:00.000Z",
     end_time: "2023-06-30T21:00:00.000Z",
   };
   const response = await axios.get(

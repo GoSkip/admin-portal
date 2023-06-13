@@ -20,6 +20,7 @@ import Promotions from "./promotions";
 import Reports from "./reports";
 import Login from "./login";
 import Logout from "./logout";
+import FileDetails from "./admin/files/detail";
 import FileNew from "./admin/files/new";
 
 const Router = (): JSX.Element => {
@@ -39,6 +40,7 @@ const Router = (): JSX.Element => {
           <Route path="/logout" element={<Logout />} />
           <Route path="/admin">
             <Route path="files" element={<Files />} />
+            <Route path="files/:storeId/:fileId" element={<FileDetails />} />
             <Route path="files/new" element={<FileNew />} />
             <Route path="taxes" element={<Taxes />} />
             <Route path="loyalty" element={<Loyalty />} />

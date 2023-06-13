@@ -12,6 +12,8 @@ import {
   GlobalStateContext,
   GlobalStateContextType,
 } from "../contexts/GlobalStateContext";
+import LangSwitcher from "./langSwitcher";
+import { useTranslation } from "react-i18next";
 
 type NavBarProps = {
   retailers: Retailer[];
@@ -22,6 +24,7 @@ const NavBar = ({ retailers }: NavBarProps): JSX.Element => {
     useContext<SessionContextType>(SessionContext);
   const { pendingChangesMode } =
     useContext<GlobalStateContextType>(GlobalStateContext);
+  const { t } = useTranslation();
 
   if (pendingChangesMode) {
     return <PendingBar />;
@@ -108,26 +111,27 @@ const NavBar = ({ retailers }: NavBarProps): JSX.Element => {
           )}
         </Listbox>
       </div>
-      <div className="flex mr-7">
+      <div className="flex pr-7 gap-5">
+        <LangSwitcher></LangSwitcher>
         <button
           type="button"
-          className="p-1 text-gray-200 hover:text-white mr-5"
+          className="p-1 text-sm font-semibold text-lightBlue-200 hover:text-white"
         >
           <MagnifyingGlassIcon className="h-5 w-5" />
         </button>
         <button
           type="button"
-          className="p-1 text-gray-200 hover:text-white focus:outline-none mr-5"
+          className="p-1 text-sm font-semibold text-lightBlue-200 hover:text-white focus:outline-none"
         >
-          <span className="sr-only">View notifications</span>
-          <span>Support</span>
+          <span className="sr-only">{t("view-notifications")}</span>
+          <span>{t("support")}</span>
         </button>
 
         {/* Profile dropdown */}
-        <Menu as="div" className="relative ml-3">
+        <Menu as="div" className="relative mx-1">
           <div>
             <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              <span className="sr-only">Open user menu</span>
+              <span className="sr-only">{t("open-user-menu")}</span>
               <img
                 className="h-8 w-8 rounded-full"
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"

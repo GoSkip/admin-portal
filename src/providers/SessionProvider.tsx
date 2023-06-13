@@ -36,6 +36,11 @@ const SessionProvider = ({ children }: SessionContextProps): JSX.Element => {
     _setSession({ ...session, active_retailer: retailer, selectable_stores });
   };
 
+  const setLang = (lang: string) => {
+    localStorage.setItem("app-lang", lang);
+    _setSession({ ...session, lang });
+  };
+
   useEffect(() => {
     if (prevSession) {
       if (isPast(new Date(prevSession.token_info.expiration))) {
@@ -53,6 +58,7 @@ const SessionProvider = ({ children }: SessionContextProps): JSX.Element => {
         session: session || prevSession,
         setSession: _setSession,
         setActiveRetailer,
+        setLang,
       }}
     >
       {children}

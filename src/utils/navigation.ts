@@ -7,20 +7,21 @@ import {
   UserCircleIcon,
   BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
+import i18n from "../i18n";
 
 const navigation: NavElement[] = [
-  { name: "Reports", href: "/reports", icon: ChartBarIcon },
-  { name: "Kiosks", href: "/kiosks", icon: ComputerDesktopIcon },
-  { name: "Products", href: "/products", icon: CircleStackIcon },
-  { name: "Promotions", href: "/promotions", icon: TagIcon },
-  { name: "People", href: "/people", icon: UserCircleIcon },
-  { name: "Administration", href: "/admin", icon: BuildingLibraryIcon },
+  { name: i18n.t("reports"), href: "/reports", icon: ChartBarIcon },
+  { name: i18n.t("kiosks"), href: "/kiosks", icon: ComputerDesktopIcon },
+  { name: i18n.t("products"), href: "/products", icon: CircleStackIcon },
+  { name: i18n.t("promotions"), href: "/promotions", icon: TagIcon },
+  { name: i18n.t("people"), href: "/people", icon: UserCircleIcon },
+  { name: i18n.t("administration"), href: "/admin", icon: BuildingLibraryIcon },
 ];
 
 const userNavigation: NavElement[] = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign Out", href: "/logout" },
+  { name: i18n.t("your-profile"), href: "#" },
+  { name: i18n.t("settings"), href: "#" },
+  { name: i18n.t("sign-out"), href: "/logout" },
 ];
 
 export { navigation, userNavigation };

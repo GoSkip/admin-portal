@@ -387,11 +387,11 @@ const Files = (): JSX.Element => {
                               {fileStatus}
                             </span>
                           ) : fileStatus === "In Queue" ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-[#fef3c7] text-[#92400E]">
+                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-amber-100 text-amber-800">
                               {fileStatus}
                             </span>
                           ) : fileStatus === "In Process" ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-[#dbeafe] text-[#1E40AF]">
+                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-blue-100 text-blue-800">
                               {fileStatus}
                             </span>
                           ) : (

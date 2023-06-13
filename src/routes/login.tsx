@@ -47,11 +47,13 @@ const Login = (): JSX.Element => {
       }
     },
     onSuccess: (data: any) => {
+      const lang = localStorage.getItem("lang");
       setSession({
         ...data.data,
         permissions: [],
         rememberMe,
         active_retailer: emptyRetailer,
+        lang,
       });
 
       const pathRedirect = sessionStorage.getItem("pathRedirect");
