@@ -18,6 +18,14 @@ export type FetchTerminalSignupQueryParams = {
   terminalSignupId: number;
 };
 
+export type SendTerminalSignupEmailParams = {
+  jwt: string;
+  email: string;
+  domain: string;
+  url: string;
+  qr_svg: string;
+};
+
 export const fetchTerminals: any = async ({
   storeId,
   page,
@@ -73,6 +81,32 @@ export const fetchTerminalSignup: any = async ({
       store_id: storeId,
       terminal_signup_id: terminalSignupId,
     })}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+};
+
+export const sendTerminalSignupEmail: any = async ({
+  jwt,
+  email,
+  domain,
+  url,
+  qr_svg,
+}: SendTerminalSignupEmailParams) => {
+  const urlDomain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+
+  return await axios.post(
+    `${urlDomain}/v1/terminal/signup/send_email`,
+    {
+      email,
+      domain,
+      url,
+      qr_svg,
+    },
     {
       headers: {
         "Content-Type": "application/json",

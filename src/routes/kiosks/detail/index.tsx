@@ -24,7 +24,7 @@ import {
   updateKiosk,
 } from "../../../api/kiosk";
 import { fetchStores } from "../../../api/store";
-import StoreDetailsCard from "./storeDetailsCard";
+import StoreDetailsCard from "../../../components/cards/storeDetailsCard";
 import MetadataCard from "./metadataCard";
 import { toastError, toastSuccess } from "../../../toasts";
 import { Retailer } from "../../../types/retailer";

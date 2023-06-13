@@ -1,3 +1,0 @@
-const QRCard = (): JSX.Element => {
-  
-}

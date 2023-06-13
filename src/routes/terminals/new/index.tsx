@@ -19,7 +19,7 @@ import {
   CreateTerminalSignupQueryParams,
   createTerminalSignup,
 } from "../../../api/terminal";
-import { toastError, toastSuccess } from "../../../toasts";
+import { toastError } from "../../../toasts";
 
 type NewTerminalForm = {
   store: Option | null;
@@ -46,7 +46,7 @@ const NewTerminal = (): JSX.Element => {
       toastError("Failed to create terminal.");
     },
     onSuccess: ({ data: { id } }: any) => {
-      navigate(`/terminals/new/${formState.store?.key}/${id}`);
+      navigate(`/terminals/signup/${formState.store?.key}/${id}`);
     },
   });
 
