@@ -22,6 +22,8 @@ import Login from "./login";
 import Logout from "./logout";
 import FileDetails from "./admin/files/detail";
 import FileNew from "./admin/files/new";
+import { AccountSettingsPage } from "./account-settings/index";
+import { MyProfilePage } from "./me/index";
 
 const Router = (): JSX.Element => {
   return (
@@ -60,6 +62,8 @@ const Router = (): JSX.Element => {
           <Route path="/products" element={<Products />} />
           <Route path="/promotions" element={<Promotions />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/me" element={<MyProfilePage />} />
+          <Route path="/account-settings" element={<AccountSettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
