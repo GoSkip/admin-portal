@@ -38,5 +38,14 @@
   "last": "last",
   "email": "email",
   "role": "role",
-  "n-stores": "{{n}} stores"
+  "n-stores": "{{n}} stores",
+  "__untranslated__": "strings under this comment are not translated yet",
+  "file-type": "File type",
+  "site-name": "Site name",
+  "site-id": "Site ID",
+  "uploaded": "Uploaded",
+  "status": "Status",
+  "file-size": "File size",
+  "file-id": "File ID",
+  "account-settings": "Account settings"
 }

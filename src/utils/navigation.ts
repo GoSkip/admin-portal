@@ -19,8 +19,7 @@ const navigation: NavElement[] = [
 ];
 
 const userNavigation: NavElement[] = [
-  { name: i18n.t("your-profile"), href: "#" },
-  { name: i18n.t("settings"), href: "#" },
+  { name: i18n.t("account-settings"), href: "/account-settings" },
   { name: i18n.t("sign-out"), href: "/logout" },
 ];
 

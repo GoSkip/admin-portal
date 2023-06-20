@@ -19,9 +19,13 @@ import {
 import PrimaryButton from "../../../components/buttons/primary";
 import HeadingMd from "../../../components/typography/headingMd";
 import Dropdown, { DropdownItemType } from "../../../components/dropdown";
-import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowDownTrayIcon,
+  ArrowPathIcon,
+  FunnelIcon,
+} from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
-import { fetchFiles } from "../../../api/file";
+import { fetchRetailerFiles } from "../../../api/file";
 import {
   SessionContext,
   SessionContextType,
@@ -39,9 +43,20 @@ import {
 // @ts-ignore
 import { set } from "lodash";
 import { REFETCH_INTERVAL, calcTotalPages } from "../../kiosks";
+import { IconButton } from "../../../components/buttons/icon";
+import { mdiFilterVariant, mdiMenuDown } from "@mdi/js";
+import { TableFilterDropdown } from "../../../components/inputs/tableFilterDropdown";
+import {
+  HeaderTypes,
+  SkipTable,
+  TableHeaderType,
+} from "../../../components/data/skip-table";
+import { ObjectOfStrings } from "../../../utils/data-types";
+import { useTranslation } from "react-i18next";
 
 const Files = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  const { t } = useTranslation();
 
   // const handleUploadFile = (file: File) => {
   //   console.log(file);
@@ -89,7 +104,7 @@ const Files = (): JSX.Element => {
   const [totalResults, setTotalResults] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [files, setFiles] = useState<File[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<number[]>([]);
   const navigate = useNavigate();
 
   const onClickNewFile = () => {
@@ -106,7 +121,7 @@ const Files = (): JSX.Element => {
   const { isLoading } = useQuery(
     ["files", page, activeRetailerId],
     () =>
-      fetchFiles({
+      fetchRetailerFiles({
         retailerId: activeRetailerId,
         page,
         limit,
@@ -121,7 +136,6 @@ const Files = (): JSX.Element => {
       },
       onSuccess: ({ data: { store_files: files, total_results } }) => {
         const mappedFiles = files.map(createFile);
-
         setFiles(mappedFiles);
         setTotalResults(total_results);
         setTotalPages(calcTotalPages({ limit, totalResults: total_results }));
@@ -134,6 +148,17 @@ const Files = (): JSX.Element => {
       filter === "" ||
       file.siteName.toLowerCase().includes(filter.toLowerCase())
   );
+
+  // Filters
+
+  const fileTypes = filteredFiles.map((file, i) => {
+    return {
+      label: file.fileType,
+      value: `${i}-${file.fileType}`,
+    };
+  });
+
+  // ../Filters
 
   useEffect(() => {
     setIsLoading(isLoading);
@@ -155,8 +180,8 @@ const Files = (): JSX.Element => {
     setPage(page);
   };
 
-  const onGotoFileDetails = (fileId: number) => {
-    navigate(`/admin/files/${activeRetailerId}/${fileId}`);
+  const onRowClick = (item: File) => {
+    navigate(`/admin/files/${activeRetailerId}/${item.fileId}`);
   };
 
   useLayoutEffect(() => {
@@ -170,10 +195,71 @@ const Files = (): JSX.Element => {
   }, [selectedFiles, filteredFiles]);
 
   function toggleAll() {
-    setSelectedFiles(checked || indeterminate ? [] : filteredFiles);
+    setSelectedFiles(
+      checked || indeterminate ? [] : filteredFiles.map((f) => f.id)
+    );
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   }
+
+  const headers: TableHeaderType[] = [
+    {
+      label: t("file-type"),
+      value: "fileType",
+      itemCustomClass: "font-medium text-gray-900",
+    },
+    {
+      label: t("site-name"),
+      value: "siteName",
+    },
+    {
+      label: t("site-id"),
+      value: "siteId",
+      itemCustomClass: "text-gray-800",
+      type: HeaderTypes.NUMBER,
+    },
+    {
+      label: t("uploaded"),
+      value: "uploaded",
+      type: HeaderTypes.DATE,
+    },
+    {
+      label: t("status"),
+      value: "status",
+      itemCustomFormatter: ({ item }) => {
+        const v = getFileStatus(item?.status);
+        let color = "red";
+        switch (v) {
+          case "Success":
+            color = "green";
+            break;
+          case "In Queue":
+            color = "amber";
+            break;
+          case "In Process":
+            color = "blue";
+            break;
+        }
+        return (
+          <span
+            className={`px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-${color}-100 text-${color}-800`}
+          >
+            {v}
+          </span>
+        );
+      },
+    },
+    {
+      label: t("file-size"),
+      value: "fileSize",
+      type: HeaderTypes.NUMBER,
+    },
+    {
+      label: t("file-id"),
+      value: "fileId",
+      type: HeaderTypes.NUMBER,
+    },
+  ];
 
   return (
     <div>
@@ -199,222 +285,16 @@ const Files = (): JSX.Element => {
             </div>
           </div>
         </div>
-
         <hr />
-        {/* TODO: Delete this hidden code once new design gets approved by @peter */}
-        {false && (
-          <div className="flex space-x-12 mt-4">
-            <div className="mt-2 flex rounded-md shadow-sm w-2/3">
-              <div className="relative flex flex-grow items-stretch focus-within:z-10">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <MagnifyingGlassIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <input
-                  type="filter"
-                  name="filter"
-                  id="filter"
-                  className="block w-full rounded-l-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-md focus:ring-2 focus:ring-inset focus:ring-gray-50 sm:text-sm sm:leading-6"
-                  placeholder="Filter results"
-                />
-              </div>
-              <button
-                type="button"
-                className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-md font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <BarsArrowUpIcon
-                  className="-ml-0.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span className="text-gray-600 font-normal">Sort</span>
-                <ChevronDownIcon
-                  className="-ml-0.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-            <div className="mt-2 flex rounded-md w-64">
-              <div className="relative flex flex-grow items-stretch focus-within:z-10">
-                <input
-                  type="actions"
-                  name="actions"
-                  id="actions"
-                  className="block w-full rounded-l-lg border-0 py-1.5 pl-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:text-md focus:ring-2 focus:ring-inset focus:ring-gray-50 sm:text-sm sm:leading-6"
-                  placeholder="Actions"
-                />
-              </div>
-              <button
-                type="button"
-                className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-600 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <ChevronDownIcon
-                  className="-ml-0.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-          </div>
-        )}
       </div>
-      <div className="mt-5 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full pt-2 pb-4 align-middle sm:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg mb-2">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="relative w-12 px-6 sm:w-16 sm:px-8"
-                    >
-                      <input
-                        disabled={!totalResults && filteredFiles.length === 0}
-                        type="checkbox"
-                        className={`${
-                          !checked && "opacity-50"
-                        } absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-lightBlue-600 focus:ring-lightBlue-500 sm:left-6`}
-                        ref={checkbox as any}
-                        checked={checked}
-                        onChange={toggleAll}
-                      />
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-xs font-medium text-gray-500 sm:pl-6"
-                    >
-                      FILE TYPE
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      SITE NAME
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      SITE ID
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      UPLOADED
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      STATUS
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      FILE SIZE
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium text-gray-500"
-                    >
-                      FILE ID
-                    </th>
-                  </tr>
-                </thead>
-                <tbody
-                  className={`divide-y divide-gray-200 bg-white ${
-                    isLoading ? "blur-sm" : null
-                  }`}
-                >
-                  {filteredFiles?.map((file) => {
-                    const fileStatus = getFileStatus(file.status);
-                    return (
-                      <tr
-                        key={file.fileType}
-                        className={
-                          selectedFiles.includes(file)
-                            ? "bg-gray-50"
-                            : undefined
-                        }
-                      >
-                        <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                          {selectedFiles.includes(file) && (
-                            <div className="absolute inset-y-0 left-0 w-0.5 bg-lightBlue-600" />
-                          )}
-                          <input
-                            type="checkbox"
-                            className={`${
-                              !selectedFiles.includes(file) && "opacity-50"
-                            } absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-lightBlue-600 focus:ring-lightBlue-500 sm:left-6`}
-                            value={file.id}
-                            checked={selectedFiles.includes(file)}
-                            onChange={(e) =>
-                              setSelectedFiles(
-                                e.target.checked
-                                  ? [...selectedFiles, file]
-                                  : selectedFiles.filter(
-                                      (k) => k.id !== file.id
-                                    )
-                              )
-                            }
-                          />
-                        </td>
-                        <td
-                          className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 cursor-pointer"
-                          onClick={() => {
-                            if (file.id) {
-                              onGotoFileDetails(file.id);
-                            }
-                          }}
-                        >
-                          {file.fileType}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {file.siteName}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-                          {file.siteId}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {dateFormatter.format(file.uploaded)}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {fileStatus === "Success" ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800">
-                              {fileStatus}
-                            </span>
-                          ) : fileStatus === "In Queue" ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-amber-100 text-amber-800">
-                              {fileStatus}
-                            </span>
-                          ) : fileStatus === "In Process" ? (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-blue-100 text-blue-800">
-                              {fileStatus}
-                            </span>
-                          ) : (
-                            <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-100 text-red-800">
-                              {fileStatus}
-                            </span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {file.fileSize}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {file.fileId}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SkipTable
+        items={files}
+        itemKey="id"
+        headers={headers}
+        isLoading={isLoading}
+        selectable
+        onItemClick={onRowClick}
+      ></SkipTable>
     </div>
   );
 };

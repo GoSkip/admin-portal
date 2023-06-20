@@ -14,6 +14,7 @@ export type Session = {
     token: string;
   };
   lang: string;
+  username: string;
 };
 
 export const emptySession: Session = {
@@ -29,4 +30,5 @@ export const emptySession: Session = {
     token: "",
   },
   lang: "en",
+  username: "",
 };

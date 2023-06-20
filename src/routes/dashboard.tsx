@@ -21,6 +21,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
     useContext<SessionContextType>(SessionContext);
   const [sortedRetailers, setSortedRetailers] = useState<Retailer[]>([]);
   const { active_retailer } = session;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isLoading } = useQuery({
     queryKey: ["retailers"],
     queryFn: () =>
@@ -60,13 +61,21 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
 
   return (
     <>
-      <NavBar retailers={sortedRetailers} />
-      <div className="flex pt-16 overflow-hidden w-full">
-        <Sidebar />
-        <div className="px-8 pt-6 lg:ml-60 w-full h-full">
-          <LoadingProvider noBlur={false}>
-            <Outlet />
-          </LoadingProvider>
+      <div>
+        <Sidebar
+          retailers={sortedRetailers}
+          open={sidebarOpen}
+          setOpen={setSidebarOpen}
+        />
+        <div className="lg:pl-72">
+          <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <main className="pt-6 pb-10">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <LoadingProvider noBlur={false}>
+                <Outlet />
+              </LoadingProvider>
+            </div>
+          </main>
         </div>
       </div>
     </>

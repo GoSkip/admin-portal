@@ -38,7 +38,7 @@ const Login = (): JSX.Element => {
   }, [username]);
 
   const mutation = useMutation({
-    mutationFn: (props: LoginProps) => login(props),
+    mutationFn: (props: LoginProps) => login({ ...props, mocked: false }),
     onError: (error: any) => {
       if (error.response.status === 401) {
         toastError("Incorrect username or password.");
@@ -54,6 +54,7 @@ const Login = (): JSX.Element => {
         rememberMe,
         active_retailer: emptyRetailer,
         lang,
+        username,
       });
 
       const pathRedirect = sessionStorage.getItem("pathRedirect");
