@@ -161,6 +161,18 @@
   resolved "https://registry.npmjs.org/@heroicons/react/-/react-2.0.16.tgz"
   integrity sha512-x89rFxH3SRdYaA+JCXwfe+RkE1SFTo9GcOkZettHer71Y3T7V+ogKmfw5CjTazgS3d0ClJ7p1NA+SP7VQLQcLw==
 
+"@mdi/js@^7.2.96":
+  version "7.2.96"
+  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.2.96.tgz#a2a20be740a75e65c8b8b9e12a2b699c06a9208f"
+  integrity sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==
+
+"@mdi/react@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.6.1.tgz#624313593ae8065d2a09878ca81beb3e4b676b03"
+  integrity sha512-4qZeDcluDFGFTWkHs86VOlHkm6gnKaMql13/gpIcUQ8kzxHgpj31NuCkD8abECVfbULJ3shc7Yt4HJ6Wu6SN4w==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -770,7 +782,7 @@ lodash@^4.17.21:
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.1.0:
+loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -838,6 +850,11 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/normalize-range/-/normalize-range-0.1.2.tgz"
   integrity sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
 object-hash@^3.0.0:
   version "3.0.0"
@@ -927,6 +944,15 @@ postcss@^8.0.9, postcss@^8.4.21:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+prop-types@^15.7.2:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
@@ -969,6 +995,11 @@ react-i18next@^12.3.1:
   dependencies:
     "@babel/runtime" "^7.20.6"
     html-parse-stringify "^3.0.1"
+
+react-is@^16.13.1:
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 react-router-dom@^6.9.0:
   version "6.9.0"
