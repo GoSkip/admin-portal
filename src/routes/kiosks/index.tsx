@@ -31,6 +31,7 @@ import {
 } from "../../contexts/GlobalStateContext";
 import PrimaryButton from "../../components/buttons/primary";
 import { Trans, useTranslation } from "react-i18next";
+import SecondaryButton from "../../components/buttons/secondary";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 export const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 
@@ -109,6 +110,10 @@ const KioskList = (): JSX.Element => {
 
   const onClickNewKiosk = () => {
     navigate("/kiosks/new");
+  };
+
+  const onClickNewTerminal = () => {
+    navigate("/terminals/signup");
   };
 
   const limit = 10;
@@ -209,7 +214,12 @@ const KioskList = (): JSX.Element => {
           <h1 className="text-xl font-semibold text-gray-900">{t("kiosks")}</h1>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <PrimaryButton label={t("add-kiosk")} onClick={onClickNewKiosk} />
+          <SecondaryButton
+            additionalClasses="mr-4"
+            label="Add Terminal"
+            onClick={onClickNewTerminal}
+          />
+          <PrimaryButton label="Add Kiosk" onClick={onClickNewKiosk} />
         </div>
       </div>
       <div>
