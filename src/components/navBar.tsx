@@ -1,174 +1,128 @@
-import { Fragment, useContext } from "react";
-import { Listbox, Transition, Menu } from "@headlessui/react";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
-import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Retailer } from "../types/retailer";
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
-import PendingBar from "./pendingBar";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { userNavigation } from "../utils/navigation";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../contexts/GlobalStateContext";
 import LangSwitcher from "./langSwitcher";
 import { useTranslation } from "react-i18next";
 
+import { Fragment, useContext } from "react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/20/solid";
+
+import { FC } from "react";
+import { IconButton } from "./buttons/icon";
+import { NavLink } from "react-router-dom";
+import { SessionContext, SessionContextType } from "../contexts/SessionContext";
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
 type NavBarProps = {
-  retailers: Retailer[];
+  sidebarOpen: boolean;
+  setSidebarOpen: (v: boolean) => void;
 };
 
-const NavBar = ({ retailers }: NavBarProps): JSX.Element => {
-  const { session, setActiveRetailer } =
-    useContext<SessionContextType>(SessionContext);
-  const { pendingChangesMode } =
-    useContext<GlobalStateContextType>(GlobalStateContext);
+const NavBar: FC<NavBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
+  const { session } = useContext<SessionContextType>(SessionContext);
   const { t } = useTranslation();
-
-  if (pendingChangesMode) {
-    return <PendingBar />;
-  }
-
   return (
-    <nav className="fixed z-30 flex mx-auto items-center justify-between w-full bg-[#0ea5e9]">
-      <div className="flex flex-shrink-0 items-center">
-        <Listbox value={session.active_retailer} onChange={setActiveRetailer}>
-          {({ open }) => (
-            <>
-              <div className="relative w-80">
-                <Listbox.Button className="cursor-pointer relative w-full  py-2 px-8 text-left text-gray-200 text-lg sm:text-sm sm:leading-6">
-                  <span className="flex items-center justify-between">
-                    <img
-                      src={session.active_retailer.image_url}
-                      alt=""
-                      className="h-12 w-24"
-                    />
-                    <span className="block truncate text-center text-lg">
-                      {session.active_retailer.name}
-                    </span>
-                    <ChevronUpDownIcon className="h-8 w-8" />
-                  </span>
-                </Listbox.Button>
-                <Transition
-                  show={open}
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className="absolute z-10 max-h-64 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    {retailers.map((retailer: Retailer) => (
-                      <Listbox.Option
-                        key={retailer.name}
-                        className={({ active }) =>
-                          classNames(
-                            active ? "bg-blue-400 text-gray-50" : "bg-white",
-                            "relative cursor-pointer select-none py-4 pl-3 pr-9"
-                          )
-                        }
-                        value={retailer}
-                      >
-                        {({ selected, active }) => (
-                          <>
-                            <div className="flex items-center">
-                              <img
-                                src={retailer.image_url}
-                                alt=""
-                                className="h-5 w-5 flex-shrink-0 rounded-full"
-                              />
-                              <span
-                                className={classNames(
-                                  selected ? "font-semibold" : "font-normal",
-                                  "ml-3 block truncate"
-                                )}
-                              >
-                                {retailer.name}
-                              </span>
-                            </div>
+    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-lightBlue-500 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+      <button
+        type="button"
+        className="-m-2.5 p-2.5 text-lightBlue-200 lg:hidden"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <span className="sr-only">Open sidebar</span>
+        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+      </button>
 
-                            {selected ? (
-                              <span
-                                className={classNames(
-                                  active ? "text-white" : "text-blue-600",
-                                  "absolute inset-y-0 right-0 flex items-center pr-4"
-                                )}
-                              >
-                                <CheckIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </>
-          )}
-        </Listbox>
-      </div>
-      <div className="flex pr-7 gap-5">
-        <LangSwitcher></LangSwitcher>
-        <button
-          type="button"
-          className="p-1 text-sm font-semibold text-lightBlue-200 hover:text-white"
-        >
-          <MagnifyingGlassIcon className="h-5 w-5" />
-        </button>
-        <button
-          type="button"
-          className="p-1 text-sm font-semibold text-lightBlue-200 hover:text-white focus:outline-none"
-        >
-          <span className="sr-only">{t("view-notifications")}</span>
-          <span>{t("support")}</span>
-        </button>
+      {/* Separator */}
+      <div className="h-6 w-px bg-lightBlue-200 lg:hidden" aria-hidden="true" />
 
-        {/* Profile dropdown */}
-        <Menu as="div" className="relative mx-1">
-          <div>
-            <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              <span className="sr-only">{t("open-user-menu")}</span>
+      <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+        <div className="flex flex-1"></div>
+        <div className="flex items-center gap-x-4 lg:gap-x-6">
+          <IconButton
+            icon={MagnifyingGlassIcon}
+            color="lightBlue-200"
+            colorHover="lightBlue-100"
+            srOnlyText="View notifications"
+          ></IconButton>
+          <button
+            type="button"
+            className="p-1 text-sm font-semibold transition text-lightBlue-200 hover:text-lightBlue-100 focus:outline-none"
+          >
+            <span className="sr-only">{t("view-notifications")}</span>
+            <span>{t("support")}</span>
+          </button>
+          <LangSwitcher></LangSwitcher>
+
+          {/* Separator */}
+          <div
+            className="hidden lg:block lg:h-6 lg:w-px lg:bg-lightBlue-400"
+            aria-hidden="true"
+          />
+
+          {/* Profile dropdown */}
+          <Menu as="div" className="relative">
+            <Menu.Button className="-m-1.5 flex items-center p-1.5 transition text-lightBlue-200 hover:text-lightBlue-100">
+              <span className="sr-only">Open user menu</span>
               <img
-                className="h-8 w-8 rounded-full"
+                className="h-8 w-8 rounded-full bg-lightBlue-400"
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 alt=""
               />
             </Menu.Button>
-          </div>
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-          >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {userNavigation.map((item) => (
-                <Menu.Item key={item.name}>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="absolute right-0 z-10 mt-2.5 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white overflow-hidden shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                <Menu.Item key="k0">
                   {({ active }) => (
                     <NavLink
-                      to={item.href}
+                      to="/me"
                       className={classNames(
-                        active ? "bg-gray-100" : "",
-                        "block px-4 py-2 text-sm text-gray-600"
+                        active ? "bg-gray-50" : "",
+                        "flex flex-col px-4 py-3 text-sm leading-6 text-gray-900"
                       )}
                     >
-                      {item.name}
+                      <span>Signed in as</span>
+                      <span className="font-medium truncate">
+                        {session.username}
+                      </span>
                     </NavLink>
                   )}
                 </Menu.Item>
-              ))}
-            </Menu.Items>
-          </Transition>
-        </Menu>
+                {userNavigation.map((item) => (
+                  <Menu.Item key={item.name}>
+                    {({ active }) => (
+                      <NavLink
+                        to={item.href}
+                        className={classNames(
+                          active ? "bg-gray-50" : "",
+                          "block px-4 py-3 text-sm leading-6 text-gray-700"
+                        )}
+                      >
+                        {item.name}
+                      </NavLink>
+                    )}
+                  </Menu.Item>
+                ))}
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
