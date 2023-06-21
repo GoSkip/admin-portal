@@ -92,7 +92,7 @@ const LangSwitcher: FC = () => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex items-center w-full justify-center gap-x-2 rounded-md px-1 py-2 text-sm font-semibold text-lightBlue-200 hover:text-white">
+        <Menu.Button className="inline-flex items-center w-full justify-center gap-x-2 rounded-md px-1 py-2 text-sm font-semibold text-lightBlue-200 hover:text-lightBlue-100 transition">
           <CountryFlag code={lang.flag}></CountryFlag>
           {lang.label}
         </Menu.Button>
