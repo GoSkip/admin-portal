@@ -97,7 +97,7 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
   const handleItemChange = (v: string) => {
     setSelectedValue(v);
     if (onChange) {
-      onChange(selectedValue);
+      onChange(v);
     }
   };
 

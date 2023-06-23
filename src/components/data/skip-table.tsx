@@ -9,6 +9,7 @@ import { dateFormatter } from "../../utils/data-types";
 // @ts-ignore
 import { set } from "lodash";
 import {
+  FilterItemValueType,
   SortFieldType,
   advancedDynamicSort,
   dynamicFilter,
@@ -57,13 +58,21 @@ type SortItemType = {
 type FilterItemType = {
   key: string;
   value: string | number | Date;
+  originalType: HeaderTypes;
+};
+
+type MappedFilterItemType = {
+  [key: string]: FilterItemValueType;
 };
 
 const mapFilters = (arr: FilterItemType[]) => {
-  const obj: { [key: string]: string | number | Date } = {};
+  const obj: MappedFilterItemType = {};
   for (let i = 0; i < arr.length; i++) {
     const item = arr[i];
-    obj[item.key] = item.value;
+    obj[item.key] = {
+      eq: item.value,
+      originalType: item.originalType,
+    };
   }
   return obj;
 };
@@ -87,35 +96,37 @@ export const SkipTable: FC<SkipTableType> = ({
   const [indeterminate, setIndeterminate] = useState<boolean>(false);
   const [sorts, setSorts] = useState<string[]>([]);
   const [filters, setFilters] = useState<FilterItemType[]>([]);
-  const mappedSorts: SortFieldType[] = sorts
-    .filter((key) => {
-      const pureKey = key.replace("-", "");
-      const header = headers.find((h) => h.value === pureKey);
-      if (header) {
-        return true;
-      }
-      return false;
-    })
-    .map((key) => {
-      const isReversed = key.includes("-");
-      const pureKey = key.replace("-", "");
-      const header = headers.find((h) => h.value === pureKey);
-      let primer = undefined;
-      if (header?.type === HeaderTypes.NUMBER) {
-        primer = parseInt;
-      }
-      return {
-        key: pureKey,
-        reverse: isReversed,
-        primer,
-      };
-    });
-  const mappedFilters = mapFilters(filters);
-  const itemsCopy = [...items];
-  const filteredItems: any[] = dynamicFilter(itemsCopy, mappedFilters);
-  const sortedItems: any[] = filteredItems.sort(
-    advancedDynamicSort(...mappedSorts)
-  );
+  const [mappedSorts, setMappedSorts] = useState<SortFieldType[]>([]);
+  // const [mappedFilters, setMappedFilters] = useState<MappedFilterItemType>({});
+  const [filteredItems, setFilteredItems] = useState<any[]>(items);
+  const [sortedItems, setSortedItems] = useState<any[]>(filteredItems);
+
+  const getMappedSorts = (sorts: string[]) => {
+    const mappedSorts: SortFieldType[] = sorts
+      .filter((key) => {
+        const pureKey = key.replace("-", "");
+        const header = headers.find((h) => h.value === pureKey);
+        if (header) {
+          return true;
+        }
+        return false;
+      })
+      .map((key) => {
+        const isReversed = key.includes("-");
+        const pureKey = key.replace("-", "");
+        const header = headers.find((h) => h.value === pureKey);
+        let primer = undefined;
+        if (header?.type === HeaderTypes.NUMBER) {
+          primer = parseInt;
+        }
+        return {
+          key: pureKey,
+          reverse: isReversed,
+          primer,
+        };
+      });
+    return mappedSorts;
+  };
 
   const updateSorts = (v: string) => {
     const sortsCopy = [...sorts];
@@ -124,15 +135,21 @@ export const SkipTable: FC<SkipTableType> = ({
     if (iASC >= 0) {
       sortsCopy[iASC] = `-${v}`;
       setSorts(sortsCopy);
+      const newMappedSorts = getMappedSorts(sortsCopy);
+      setMappedSorts(newMappedSorts);
       return;
     }
     if (iDESC >= 0) {
       sortsCopy.splice(iDESC, 1);
       setSorts(sortsCopy);
+      const newMappedSorts = getMappedSorts(sortsCopy);
+      setMappedSorts(newMappedSorts);
       return;
     }
     sortsCopy.push(v);
     setSorts(sortsCopy);
+    const newMappedSorts = getMappedSorts(sortsCopy);
+    setMappedSorts(newMappedSorts);
   };
 
   const checkHeaderInSort = (v: string) => {
@@ -145,13 +162,31 @@ export const SkipTable: FC<SkipTableType> = ({
     return 0;
   };
 
-  const updateFilters = (key: string, v: string | null) => {
-    if (!!v) {
-      const newFilter = {
-        key,
-        value: v,
-      };
-      setFilters([newFilter]);
+  const updateFilters = (key: string, v: string | number | Date | null) => {
+    if (!!v || v === 0) {
+      const header = headers.find((h) => h.value === key);
+      const filterIndex = filters.findIndex((f) => f.key === key);
+      let newFilters = [];
+      if (filterIndex >= 0) {
+        newFilters = [...filters];
+        newFilters[filterIndex].value = v;
+      } else {
+        const newFilter = {
+          key,
+          value: v,
+          originalType: header?.type || HeaderTypes.STRING,
+        };
+        newFilters = [...filters, newFilter];
+      }
+      setFilters(newFilters);
+      const newMappedFilters = mapFilters(newFilters);
+      // setMappedFilters(newMappedFilters);
+      const itemsCopy = [...items];
+      const newFilteredItems: any[] = dynamicFilter(
+        itemsCopy,
+        newMappedFilters
+      );
+      setFilteredItems(newFilteredItems);
     }
   };
 
@@ -172,6 +207,20 @@ export const SkipTable: FC<SkipTableType> = ({
     setIndeterminate(isIndeterminate);
     set(checkbox, "current.indeterminate", isIndeterminate);
   }, [selectedItems, sortedItems]);
+
+  useLayoutEffect(() => {
+    const newMappedFilters = mapFilters(filters);
+    const itemsCopy = [...items];
+    const newFilteredItems: any[] = dynamicFilter(itemsCopy, newMappedFilters);
+    setFilteredItems(newFilteredItems);
+  }, [items]);
+
+  useLayoutEffect(() => {
+    const newSortedItems: any[] = filteredItems.sort(
+      advancedDynamicSort(...mappedSorts)
+    );
+    setSortedItems(newSortedItems);
+  }, [filteredItems]);
 
   return (
     <div className="mt-5 flow-root">
