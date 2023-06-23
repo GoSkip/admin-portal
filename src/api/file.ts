@@ -12,6 +12,12 @@ export type GetRetailerFilesProps = {
   page: number;
 };
 
+export type GetRetailerFileProp = {
+  jwt: string;
+  retailerId: number;
+  fileId: number;
+};
+
 export const fetchStoreFiles = async ({
   jwt,
   limit,
@@ -52,6 +58,28 @@ export const fetchRetailerFiles = async ({
   };
   const response = await axios.get(
     `${domain}/v1/file/retailer?query=${JSON.stringify(query)}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+  return response;
+};
+
+export const fetchFile = async ({
+  jwt,
+  retailerId,
+  fileId,
+}: GetRetailerFileProp) => {
+  // TODO: Find the correct endpoint to fetch a single file
+  const domain = import.meta.env.VITE_INTERATIONS_DOMAIN;
+  const query = {
+    fileIds: [fileId],
+  };
+  const response = await axios.get(
+    `${domain}/v2/backoffice/files/status?query=${JSON.stringify(query)}`,
     {
       headers: {
         "Content-Type": "application/json",
