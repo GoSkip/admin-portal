@@ -1,3 +1,6 @@
+import { HeaderTypes } from "../components/data/skip-table";
+import { dateFormatter } from "./data-types";
+
 export const dynamicSort = (...props: any[]) => {
   const dynamicSortInner = (property: any) => {
     return (obj1: any[], obj2: any[]) => {
@@ -60,10 +63,16 @@ export const advancedDynamicSort = (...props: any[]) => {
   };
 };
 
-type FilterItemValueType =
+export type ItemWithOriginalType = {
+  eq: string | string | number | Date;
+  originalType: HeaderTypes;
+};
+
+export type FilterItemValueType =
   | string
   | number
   | Date
+  | ItemWithOriginalType
   | { max: number; min: number };
 
 export type FilterItemType = {
@@ -72,8 +81,14 @@ export type FilterItemType = {
 
 export const dynamicFilter = (arr: any[], filters: FilterItemType) => {
   const fns = {
-    eq: (key: string, value: FilterItemValueType) => (obj: FilterItemType) =>
-      obj[key] === value,
+    eq:
+      (key: string, value: FilterItemValueType, originalType?: string) =>
+      (obj: FilterItemType) => {
+        if (originalType === HeaderTypes.DATE) {
+          return dateFormatter.format(obj[key] as Date) === value;
+        }
+        return obj[key] === value;
+      },
     min: (key: string, value: FilterItemValueType) => (obj: FilterItemType) =>
       obj[key] >= value,
     max: (key: string, value: FilterItemValueType) => (obj: FilterItemType) =>
@@ -86,10 +101,16 @@ export const dynamicFilter = (arr: any[], filters: FilterItemType) => {
   ) => {
     const filterObj =
       typeof filterValue === "object" ? filterValue : { eq: filterValue };
-
-    return Object.entries(filterObj).map(([condKey, condValue]) =>
-      fns[condKey as "eq" | "min" | "max"](filterKey, condValue)
-    );
+    if (
+      filterObj.hasOwnProperty("originalType") &&
+      filterObj.hasOwnProperty("eq")
+    ) {
+      const obj = filterObj as ItemWithOriginalType;
+      return fns.eq(filterKey, obj.eq, obj.originalType);
+    }
+    return Object.entries(filterObj).map(([condKey, condValue]) => {
+      return fns[condKey as "eq" | "min" | "max"](filterKey, condValue);
+    });
   };
 
   const predicats = Object.entries(filters).flatMap(([key, value]) =>

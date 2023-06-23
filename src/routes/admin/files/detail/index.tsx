@@ -19,8 +19,6 @@ import {
   UpdateKioskPayloadParams,
   UpdateKioskQueryParams,
   fetchKiosk,
-  fetchKioskIpad,
-  fetchKioskIpadLogs,
   updateKiosk,
 } from "../../../../api/kiosk";
 import { fetchStores } from "../../../../api/store";
@@ -33,10 +31,16 @@ import {
   LoadingContext,
   LoadingContextType,
 } from "../../../../contexts/LoadingContext";
-import IpadCard from "./ipadCard";
-import ActionsCard from "./actionsCard";
+import ActionsCard, { TaxStrategyType } from "./actionsCard";
 import { fetchTerminals } from "../../../../api/terminal";
-import { Action, Ipad } from "../../../../types/kiosk";
+import Dropdown, { DropdownItemType } from "../../../../components/dropdown";
+import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
+import { TwoLineInfo } from "../../../../components/data/two-line-info";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/outline";
+import { fetchFile } from "../../../../api/file";
 
 const appIdentifier = import.meta.env.PROD
   ? "com.goskip.Self-Checkout"
@@ -78,21 +82,26 @@ const emptyFormState: FileDetailsForm = {
   ipadSerial: "",
 };
 
-const emptyIpad: Ipad = {
-  device_name: "",
-  mdm_name: "",
-  app_version: "",
-  ios_version: "",
-  model: "",
-  serial: "",
-  battery_level: "",
-  group: "",
-};
+const emptyTaxStrategies: TaxStrategyType[] = [
+  {
+    id: "1",
+    value: "3",
+  },
+  {
+    id: "3",
+    value: "35",
+  },
+  {
+    id: "4",
+    value: "54",
+  },
+];
 
 const FileDetails = (): JSX.Element => {
+  const allowAxiosRequests = false;
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
   const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
-  const { storeId, kioskId } = useParams();
+  const { storeId, fileId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const {
@@ -113,8 +122,6 @@ const FileDetails = (): JSX.Element => {
     insertedAt: null,
     updatedAt: null,
   });
-  const [ipad, setIpad] = useState<Ipad>(emptyIpad);
-  const [ipadLogs, setIpadLogs] = useState<Action[]>([]);
 
   const { isFetching: storeIsFetching } = useQuery(
     ["store", storeId],
@@ -124,7 +131,7 @@ const FileDetails = (): JSX.Element => {
         storeIds: [Number(storeId)],
       }),
     {
-      enabled: !!kioskId && !!storeId && !!token,
+      enabled: !!fileId && !!storeId && !!token,
       refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
@@ -153,7 +160,7 @@ const FileDetails = (): JSX.Element => {
         storeId: Number(storeId),
       }),
     {
-      enabled: !!kioskId && !!storeId && !!token,
+      enabled: !!fileId && !!storeId && !!token && allowAxiosRequests,
       refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
@@ -173,19 +180,19 @@ const FileDetails = (): JSX.Element => {
   );
 
   const { isFetching: kioskIsFetching } = useQuery(
-    ["kiosk", storeId, kioskId],
+    ["kiosk", storeId, fileId],
     () =>
       fetchKiosk({
         jwt: token,
         storeId: Number(storeId),
-        kioskId: Number(kioskId),
+        kioskId: Number(fileId),
       }),
     {
-      enabled: !!kioskId && !!storeId && !!token,
+      enabled: !!fileId && !!storeId && !!token && allowAxiosRequests,
       refetchOnWindowFocus: false,
       onError: (error) => {
         console.error(error);
-        toastError(`Problem loading kiosk: ${kioskId}.`);
+        toastError(`Problem loading kiosk: ${fileId}.`);
       },
       onSuccess: (data) => {
         const transformedData = transformKiosk(data.data);
@@ -224,94 +231,12 @@ const FileDetails = (): JSX.Element => {
           ipadSerial: transformedData?.ipad_serial ?? "",
         };
 
-        setIpad((prevState) => ({
-          ...prevState,
-          last_txn: new Date(data.data.last_txn),
-        }));
         setDefaultFormState(newFormState);
         setFormState(newFormState);
         setKioskMetadata({
           insertedAt: new Date(data.data.inserted_at),
           updatedAt: new Date(data.data.updated_at),
         });
-      },
-    }
-  );
-
-  const { isFetching: ipadIsFetching } = useQuery(
-    ["ipad", formState.ipadSerial],
-    () =>
-      fetchKioskIpad({
-        jwt: token,
-        serialNumber: formState.ipadSerial,
-        appIdentifier,
-      }),
-    {
-      enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
-      refetchOnWindowFocus: false,
-      onError: (error) => {
-        console.error(error);
-        toastError(`Problem loading iPad: ${formState.ipadSerial}`);
-        setIpad(emptyIpad);
-        setFormState(defaultFormState);
-        setPendingChangesMode(false);
-      },
-      onSuccess: ({
-        data: {
-          device_name,
-          mdm_name,
-          app_version,
-          ios_version,
-          model,
-          serial,
-          battery_level,
-          group,
-          last_seen,
-        },
-      }) => {
-        const ipad: Ipad = {
-          device_name,
-          mdm_name,
-          app_version,
-          ios_version,
-          model,
-          serial,
-          battery_level,
-          group,
-          last_seen: new Date(last_seen),
-        };
-
-        setIpad((prevState) => ({
-          ...prevState,
-          ...ipad,
-        }));
-      },
-    }
-  );
-
-  const { isFetching: ipadLogsIsFetching } = useQuery(
-    ["ipad_logs", formState.ipadSerial],
-    () =>
-      fetchKioskIpadLogs({
-        jwt: token,
-        serialNumber: formState.ipadSerial,
-      }),
-    {
-      enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
-      refetchOnWindowFocus: false,
-      onError: (error) => {
-        console.error(error);
-        toastError(`Problem loading logs for iPad: ${formState.ipadSerial}`);
-      },
-      onSuccess: ({ data: { logs } }) => {
-        const formattedLogs: Action[] = logs.map((log: any) => ({
-          actor: log.actor,
-          type: log.action_type,
-          timestamp: new Date(log.timestamp),
-          metadata: log.metadata,
-        }));
-
-        setIpadLogs(formattedLogs);
       },
     }
   );
@@ -329,17 +254,6 @@ const FileDetails = (): JSX.Element => {
       toastSuccess("Successfully updated kiosk!");
     },
   });
-
-  const onSubmitSerialNo = (serialNo: string) => {
-    if (!pendingChangesMode) {
-      setPendingChangesMode(true);
-    }
-
-    setFormState((prevState: any) => ({
-      ...prevState,
-      ipadSerial: serialNo,
-    }));
-  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -369,8 +283,6 @@ const FileDetails = (): JSX.Element => {
     kioskIsFetching ||
     storeIsFetching ||
     terminalsIsFetching ||
-    ipadIsFetching ||
-    ipadLogsIsFetching ||
     mutationIsLoading;
 
   useEffect(() => {
@@ -389,7 +301,7 @@ const FileDetails = (): JSX.Element => {
 
   useEffect(() => {
     let payload: UpdateKioskPayloadParams = {
-      kiosk_id: Number(kioskId),
+      kiosk_id: Number(fileId),
     };
 
     if (formState.kioskNumber) {
@@ -428,10 +340,6 @@ const FileDetails = (): JSX.Element => {
       payload = { ...payload, printer_serial: formState.printerSerial };
     }
 
-    if (formState.ipadSerial) {
-      payload = { ...payload, ipad_serial: formState.ipadSerial };
-    }
-
     setSavePendingChangesCallback(() => () => {
       if (
         formState.kioskNumber === "" ||
@@ -452,173 +360,144 @@ const FileDetails = (): JSX.Element => {
     });
   }, [formState]);
 
+  const handleAction = (str: string) => {
+    return true;
+  };
+
+  const actionsDropdownItems: DropdownItemType[] = [
+    {
+      name: "Download file",
+      value: "download-file",
+      icon: ArrowDownTrayIcon,
+      onClick: handleAction,
+    },
+    {
+      name: "Reparse file",
+      value: "reparse-file",
+      icon: ArrowPathIcon,
+      onClick: handleAction,
+    },
+  ];
+
   return (
     <div className="w-full h-auto">
-      <nav className="flex" aria-label="Breadcrumb">
-        <ol role="list" className="flex items-center space-x-4 pb-6">
-          <li>
-            <div>
-              <Link
-                to="/admin/files"
-                className="text-gray-400 hover:text-gray-500 font-medium text-lg"
-              >
-                Files
-              </Link>
-            </div>
-          </li>
-          <li>
-            <div className="flex items-center">
-              <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              <Link to="#" className="ml-4 font-medium text-lg">
-                View Detail
-              </Link>
-            </div>
-          </li>
-        </ol>
-      </nav>
-      <div>
-        <hr />
+      <div className="grid grid-cols-4">
+        <div className="col-span-4 sm:col-span-3">
+          <nav
+            className="flex items-center justify-between pb-5"
+            aria-label="Breadcrumb"
+          >
+            <ol role="list" className="flex items-center space-x-4">
+              <li>
+                <div>
+                  <Link
+                    to="/admin/files"
+                    className="text-gray-400 hover:text-gray-500 font-medium text-lg"
+                  >
+                    Files
+                  </Link>
+                </div>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <ChevronRightIcon
+                    className="h-5 w-5 flex-shrink-0 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <Link to="#" className="ml-4 font-medium text-lg">
+                    View Detail
+                  </Link>
+                </div>
+              </li>
+            </ol>
+            <Dropdown items={actionsDropdownItems} label="Actions"></Dropdown>
+          </nav>
+          <div>
+            <hr />
+          </div>
+        </div>
       </div>
       <div className="mt-6 grid grid-cols-4">
-        <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">
-          <h2 className="text-xl font-medium text-gray-900">Kiosk details</h2>
-          <p className="mt-1 text-gray-500">
-            Identifiers, accessories, and connection details
-          </p>
-          <hr className="my-4 border-gray-200" />
-          <div className="grid grid-cols-4 gap-4">
-            <div className="col-span-1">
-              <label
-                htmlFor="kioskNumber"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Kiosk Number
-              </label>
-              <TextInput
-                htmlId="kioskNumber"
-                value={String(formState.kioskNumber)}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="kioskDescription"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Kiosk Description
-              </label>
-              <TextInput
-                htmlId="kioskDescription"
-                value={formState.kioskDescription}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="col-span-1">
-              <label
-                htmlFor="terminalId"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Terminal ID
-              </label>
-              <Select
-                items={terminalOptions}
-                label="Terminal ID"
-                selectedItem={formState.terminalId}
-                setSelectedItem={handleSelectChange("terminalId")}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="mount"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Mount
-              </label>
-              <Select
-                label="Mount"
-                items={mounts}
-                selectedItem={formState.mount}
-                setSelectedItem={handleSelectChange("mount")}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="network"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Network
-              </label>
-              <Select
-                label="Network"
-                items={networks}
-                selectedItem={formState.network}
-                setSelectedItem={handleSelectChange("network")}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="pinpad"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Pinpad
-              </label>
-              <Select
-                label="Pinpad"
-                items={pinpads}
-                selectedItem={formState.pinpad}
-                setSelectedItem={handleSelectChange("pinpad")}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="pinpadSerial"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Pinpad Serial #
-              </label>
-              <TextInput
-                htmlId="pinpadSerial"
-                value={formState.pinpadSerial}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="printer"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Printer
-              </label>
-              <Select
-                label="Printer"
-                items={printers}
-                selectedItem={formState.printer}
-                setSelectedItem={handleSelectChange("printer")}
-              />
-            </div>
-            <div className="col-span-2">
-              <label
-                htmlFor="printerSerial"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Printer Serial #
-              </label>
-              <TextInput
-                htmlId="printerSerial"
-                value={formState.printerSerial}
-                onChange={handleInputChange}
-              />
-            </div>
+        <div className="bg-white rounded-lg shadow p-5 col-span-4 sm:col-span-3">
+          <div className="grid grid-cols-6 gap-4">
+            <TwoLineInfo
+              className="col-span-3"
+              label="File type"
+              value="Products (NAXML)"
+            ></TwoLineInfo>
+            <TwoLineInfo
+              className="col-span-3"
+              label="Status"
+              value="Success"
+              valueColor="success"
+            ></TwoLineInfo>
+            {true && (
+              <>
+                <div className="col-span-2">
+                  <span className="text-sm font-medium text-coolGray-500">
+                    Items
+                  </span>
+                </div>
+                <div className="col-span-4">
+                  <ul
+                    role="list"
+                    className="divide-y divide-gray-200 rounded-md border border-gray-200"
+                  >
+                    <li className="flex items-center justify-between gap-4 p-3 text-coolGray-900 text-sm leading-6">
+                      <div className="flex flex-1 gap-2 items-center">
+                        <CheckCircleIcon
+                          className="h-auto w-5 flex-shrink-0 text-success"
+                          aria-hidden="true"
+                        />
+                        <div className="flex min-w-0 flex-1 gap-2">
+                          <span className="truncate">Items in file</span>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <span className="text-gray-400">28</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
+            {true && (
+              <>
+                <div className="col-span-2">
+                  <span className="text-sm font-medium text-coolGray-500">
+                    File issues
+                  </span>
+                </div>
+                <div className="col-span-4">
+                  <ul
+                    role="list"
+                    className="divide-y divide-gray-200 rounded-md border border-gray-200"
+                  >
+                    <li className="flex items-center justify-between gap-4 p-3 text-coolGray-900 text-sm leading-6">
+                      <div className="flex flex-1 gap-2 items-center">
+                        <ExclamationCircleIcon
+                          className="h-auto w-5 flex-shrink-0 text-error"
+                          aria-hidden="true"
+                        />
+                        <div className="flex min-w-0 flex-1 gap-2">
+                          <span className="truncate">Items ignored</span>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <span className="text-gray-400">28</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <StoreDetailsCard store={store} />
       </div>
       <div className="mt-4 grid grid-cols-4">
-        <ActionsCard actions={ipadLogs} />
-        <MetadataCard kioskMetadata={kioskMetadata} />
+        <ActionsCard taxStrategies={emptyTaxStrategies} />
+        <MetadataCard />
       </div>
     </div>
   );
