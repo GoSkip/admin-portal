@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "prepare": "husky install",
     "preview": "vite preview",
     "prettier-write": "prettier --write \"{src,__{tests,mocks}__}/**/*.{js,jsx,ts,tsx}\"",
     "prettier-check": "prettier --check \"{src,__{tests,mocks}__}/**/*.{js,jsx,ts,tsx}\""
@@ -42,6 +43,9 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   }
