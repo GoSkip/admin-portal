@@ -11,6 +11,7 @@ export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({
 }) => {
   const { session, setActiveRetailer } =
     useContext<SessionContextType>(SessionContext);
+  // @ts-ignore
   const { t } = useTranslation();
 
   const handleRetailerChange = (id: number) => {
