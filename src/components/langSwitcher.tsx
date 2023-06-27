@@ -63,9 +63,7 @@ const MenuItem: FC<LangType> = ({ value, label, flag }) => {
       {({ disabled }) => (
         <span
           className={classNames(
-            disabled
-              ? "opacity-40"
-              : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+            disabled ? "opacity-40" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
             "group flex gap-3 items-center px-4 py-2 text-sm cursor-pointer select-none"
           )}
           onClick={switchLang}
@@ -83,7 +81,7 @@ const LangSwitcher: FC = () => {
   const [lang, setLang] = useState<LangType>(availableLangs[0]);
 
   useEffect(() => {
-    const newLang = availableLangs.find((l) => l.value === session.lang);
+    const newLang = availableLangs.find(l => l.value === session.lang);
     if (newLang) {
       setLang(newLang);
     }
@@ -111,12 +109,7 @@ const LangSwitcher: FC = () => {
           <div className="py-1">
             {availableLangs.map((lang, i) => {
               return (
-                <MenuItem
-                  key={`${lang.value}-${i}`}
-                  value={lang.value}
-                  label={lang.label}
-                  flag={lang.flag}
-                ></MenuItem>
+                <MenuItem key={`${lang.value}-${i}`} value={lang.value} label={lang.label} flag={lang.flag}></MenuItem>
               );
             })}
           </div>

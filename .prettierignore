@@ -1,5 +1,5 @@
-node_modules
-build
+.husky
 dist
-res
-coverage
+kubernetes_config
+node_modules
+public

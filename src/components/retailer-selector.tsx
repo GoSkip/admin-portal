@@ -6,16 +6,13 @@ import { useTranslation } from "react-i18next";
 import { SessionContextType, SessionContext } from "../contexts/SessionContext";
 import { Retailer } from "../types/retailer";
 
-export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({
-  retailers,
-}) => {
-  const { session, setActiveRetailer } =
-    useContext<SessionContextType>(SessionContext);
+export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({ retailers }) => {
+  const { session, setActiveRetailer } = useContext<SessionContextType>(SessionContext);
   // @ts-ignore
   const { t } = useTranslation();
 
   const handleRetailerChange = (id: number) => {
-    const retailer = retailers.find((r) => r.id === id);
+    const retailer = retailers.find(r => r.id === id);
     if (retailer) {
       setActiveRetailer(retailer);
     }
@@ -23,23 +20,14 @@ export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({
 
   return (
     <div className="flex h-16 w-full shrink-0 items-center bg-lightBlue-500">
-      <Listbox
-        value={session.active_retailer.id}
-        onChange={handleRetailerChange}
-      >
+      <Listbox value={session.active_retailer.id} onChange={handleRetailerChange}>
         {({ open }) => (
           <>
             <div className="relative w-80">
               <Listbox.Button className="flex items-center justify-between cursor-pointer relative w-full h-16 py-2 px-5 text-left text-gray-200 text-lg sm:text-sm sm:leading-6">
                 <span className="flex items-center gap-3">
-                  <img
-                    src={session.active_retailer.image_url}
-                    alt=""
-                    className="h-8 w-auto flex-shrink-0"
-                  />
-                  <span className="block truncate text-lg font-bold">
-                    {session.active_retailer.name}
-                  </span>
+                  <img src={session.active_retailer.image_url} alt="" className="h-8 w-auto flex-shrink-0" />
+                  <span className="block truncate text-lg font-bold">{session.active_retailer.name}</span>
                 </span>
                 <ChevronUpDownIcon className="h-auto w-6 text-white" />
               </Listbox.Button>
@@ -65,18 +53,8 @@ export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({
                       {({ selected, active }) => (
                         <>
                           <div className="flex items-center gap-3">
-                            <img
-                              src={retailer.image_url}
-                              alt=""
-                              className="h-5 w-auto flex-shrink-0"
-                            />
-                            <span
-                              className={classNames(
-                                "font-semibold block truncate"
-                              )}
-                            >
-                              {retailer.name}
-                            </span>
+                            <img src={retailer.image_url} alt="" className="h-5 w-auto flex-shrink-0" />
+                            <span className={classNames("font-semibold block truncate")}>{retailer.name}</span>
                           </div>
 
                           {selected ? (
@@ -86,10 +64,7 @@ export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({
                                 "absolute inset-y-0 right-0 flex items-center pr-4"
                               )}
                             >
-                              <CheckIcon
-                                className="h-auto w-5"
-                                aria-hidden="true"
-                              />
+                              <CheckIcon className="h-auto w-5" aria-hidden="true" />
                             </span>
                           ) : null}
                         </>

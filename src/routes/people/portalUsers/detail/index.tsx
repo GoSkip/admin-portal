@@ -17,7 +17,7 @@ const PortalUserDetail = () => {
     fetchUser();
   }, [userId]);
 
-  const user = portalUsers.find((user) => user.id === Number(userId));
+  const user = portalUsers.find(user => user.id === Number(userId));
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -46,10 +46,7 @@ const PortalUserDetail = () => {
       <div className="flow-root w-[calc(100%-18rem)]">
         <div className="flex flex-row mb-4">
           <div className="text-gray-400 text-xl flex-auto">
-            <span
-              className="mr-5 cursor-pointer"
-              onClick={() => navigate("/people/portal-users")}
-            >
+            <span className="mr-5 cursor-pointer" onClick={() => navigate("/people/portal-users")}>
               Portal Users
             </span>
             <span className="mr-5">&gt;</span>
@@ -74,10 +71,7 @@ const PortalUserDetail = () => {
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
           <div className="grid m-5 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
             <div className="sm:col-span-3">
-              <label
-                htmlFor="first-name"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="first-name" className="block text-sm font-normal leading-6 text-gray-900">
                 First name
               </label>
               <div className="mt-2">
@@ -93,10 +87,7 @@ const PortalUserDetail = () => {
             </div>
 
             <div className="sm:col-span-3">
-              <label
-                htmlFor="last-name"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="last-name" className="block text-sm font-normal leading-6 text-gray-900">
                 Last name
               </label>
               <div className="mt-2">
@@ -113,10 +104,7 @@ const PortalUserDetail = () => {
           </div>
           <div className="grid m-5 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
             <div className="sm:col-span-3">
-              <label
-                htmlFor="email"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="email" className="block text-sm font-normal leading-6 text-gray-900">
                 Email
               </label>
               <div className="mt-2">
@@ -132,10 +120,7 @@ const PortalUserDetail = () => {
             </div>
 
             <div className="sm:col-span-3">
-              <label
-                htmlFor="phone-number"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="phone-number" className="block text-sm font-normal leading-6 text-gray-900">
                 Phone number
               </label>
               <div className="mt-2">
@@ -152,10 +137,7 @@ const PortalUserDetail = () => {
           </div>
           <div className="grid m-5 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
             <div className="sm:col-span-3">
-              <label
-                htmlFor="role"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="role" className="block text-sm font-normal leading-6 text-gray-900">
                 Role
               </label>
               <div className="mt-2">
@@ -174,32 +156,22 @@ const PortalUserDetail = () => {
         <div className="float-right rounded-md shadow-md bg-white text-left h-44 w-64">
           <div className="mt-5 ml-5 text-gray-600 text-lg">Metadata</div>
           <div className="mt-2 ml-5 text-gray-500 text-base">Created</div>
-          <div className="ml-5 text-sm text-gray-400">
-            {dateFormatter.format(user.created)}
-          </div>
+          <div className="ml-5 text-sm text-gray-400">{dateFormatter.format(user.created)}</div>
           <div className="mt-2 ml-5 text-gray-500 text-base">Updated</div>
-          <div className="ml-5 text-sm text-gray-400">
-            {dateFormatter.format(user.updated)}
-          </div>
+          <div className="ml-5 text-sm text-gray-400">{dateFormatter.format(user.updated)}</div>
         </div>
       </div>
       <div className="flow-root mt-5">
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
           <div className="m-5">
-            <div className="font-normal text-gray-800 text-xl">
-              Store access
-            </div>
+            <div className="font-normal text-gray-800 text-xl">Store access</div>
             <div className="mb-2 text-sm font-light mt-2 text-gray-500">
-              User has <span className="font-bold">View</span> access for the
-              following store(s):
+              User has <span className="font-bold">View</span> access for the following store(s):
             </div>
             <hr />
             <div className="flex flex-row items-center space-x-2 my-4">
-              {user.stores.map((store) => (
-                <div
-                  key={store}
-                  className="px-3 py-1 bg-[#dbeafe] rounded-full text-sm font-normal text-[#1e40af]"
-                >
+              {user.stores.map(store => (
+                <div key={store} className="px-3 py-1 bg-[#dbeafe] rounded-full text-sm font-normal text-[#1e40af]">
                   {store}
                 </div>
               ))}
@@ -216,23 +188,16 @@ const PortalUserDetail = () => {
       <div className="flow-root mt-5">
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md mb-2">
           <div className="m-5">
-            <div className="font-normal text-gray-800 text-xl">
-              Feature access
-            </div>
+            <div className="font-normal text-gray-800 text-xl">Feature access</div>
             <div className="mb-2 text-sm font-light mt-2 text-gray-500">
-              User has <span className="font-bold">Edit</span> access for the
-              following feature(s):
+              User has <span className="font-bold">Edit</span> access for the following feature(s):
             </div>
             <hr />
             <div className="flex flex-row items-center space-x-2 my-4">
-              {user.features.map((feature) => (
-                <div
-                  key={feature}
-                  className="px-3 py-1 bg-[#dbeafe] rounded-full text-sm font-normal text-[#1e40af]"
-                >
+              {user.features.map(feature => (
+                <div key={feature} className="px-3 py-1 bg-[#dbeafe] rounded-full text-sm font-normal text-[#1e40af]">
                   <span>
-                    {feature}{" "}
-                    <span className="font-light text-blue-300">x</span>
+                    {feature} <span className="font-light text-blue-300">x</span>
                   </span>
                 </div>
               ))}

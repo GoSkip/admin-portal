@@ -18,10 +18,7 @@ import skipLogo from "../assets/images/skip-logo.svg";
 import { RetailerSelector } from "./retailer-selector";
 import { useTranslation } from "react-i18next";
 import PendingBar from "./pendingBar";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../contexts/GlobalStateContext";
+import { GlobalStateContext, GlobalStateContextType } from "../contexts/GlobalStateContext";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -34,8 +31,7 @@ type SidebarProps = {
 };
 
 const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
-  const { pendingChangesMode } =
-    useContext<GlobalStateContextType>(GlobalStateContext);
+  const { pendingChangesMode } = useContext<GlobalStateContextType>(GlobalStateContext);
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -84,16 +80,9 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
                   leaveTo="opacity-0"
                 >
                   <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                    <button
-                      type="button"
-                      className="-m-2.5 p-2.5"
-                      onClick={() => setOpen(false)}
-                    >
+                    <button type="button" className="-m-2.5 p-2.5" onClick={() => setOpen(false)}>
                       <span className="sr-only">Close sidebar</span>
-                      <XMarkIcon
-                        className="h-6 w-6 text-white"
-                        aria-hidden="true"
-                      />
+                      <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                     </button>
                   </div>
                 </Transition.Child>
@@ -103,7 +92,7 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                          {menuItems.map((item) => (
+                          {menuItems.map(item => (
                             <li key={item.label}>
                               {!item.children ? (
                                 <NavLink
@@ -163,26 +152,15 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
                                       </Disclosure.Button>
                                       <ul
                                         className={classNames(
-                                          open
-                                            ? "duration-500 max-h-80"
-                                            : "max-h-0",
+                                          open ? "duration-500 max-h-80" : "max-h-0",
                                           "block px-2 overflow-hidden transition-[max-height]"
                                         )}
                                       >
                                         {item.children.map((subItem, i) => (
-                                          <li
-                                            key={subItem.label}
-                                            className={classNames(
-                                              i === 0 ? "mt-1" : ""
-                                            )}
-                                          >
+                                          <li key={subItem.label} className={classNames(i === 0 ? "mt-1" : "")}>
                                             <NavLink
                                               to={subItem.to}
-                                              className={({
-                                                isActive,
-                                              }: {
-                                                isActive: boolean;
-                                              }) => {
+                                              className={({ isActive }: { isActive: boolean }) => {
                                                 return classNames(
                                                   subItem.current || isActive
                                                     ? "active bg-lightBlue-50 text-lightBlue-500"
@@ -211,11 +189,7 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
                           className="flex border-t border-gray-200 justify-center items-center gap-x-1.5 px-6 py-4 text-sm font-medium leading-6 text-lightBlue-600"
                         >
                           <span aria-hidden="true">CloudPOS^ by</span>
-                          <img
-                            className="h-9 w-9 rounded-full"
-                            src={skipLogo}
-                            alt=""
-                          />
+                          <img className="h-9 w-9 rounded-full" src={skipLogo} alt="" />
                         </a>
                       </li>
                     </ul>
@@ -235,7 +209,7 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
                 <ul role="list" className="-mx-2 space-y-1">
-                  {menuItems.map((item) => (
+                  {menuItems.map(item => (
                     <li key={item.label}>
                       {!item.children ? (
                         <NavLink
@@ -300,19 +274,10 @@ const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
                                 )}
                               >
                                 {item.children.map((subItem, i) => (
-                                  <li
-                                    key={subItem.label}
-                                    className={classNames(
-                                      i === 0 ? "mt-1" : ""
-                                    )}
-                                  >
+                                  <li key={subItem.label} className={classNames(i === 0 ? "mt-1" : "")}>
                                     <NavLink
                                       to={subItem.to}
-                                      className={({
-                                        isActive,
-                                      }: {
-                                        isActive: boolean;
-                                      }) => {
+                                      className={({ isActive }: { isActive: boolean }) => {
                                         return classNames(
                                           subItem.current || isActive
                                             ? "active bg-lightBlue-50 text-lightBlue-500"

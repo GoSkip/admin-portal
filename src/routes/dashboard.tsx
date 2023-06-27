@@ -17,8 +17,7 @@ interface DashboardProps {
 const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
   const location = useLocation();
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
-  const { session, setActiveRetailer } =
-    useContext<SessionContextType>(SessionContext);
+  const { session, setActiveRetailer } = useContext<SessionContextType>(SessionContext);
   const [sortedRetailers, setSortedRetailers] = useState<Retailer[]>([]);
   const { active_retailer } = session;
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,14 +30,12 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
         retailerIds: session.retailer_ids,
       }),
     enabled: !!session.token_info.token,
-    onError: (error) => {
+    onError: error => {
       console.error(error);
       toastError("Problem loading retailers.");
     },
-    onSuccess: (data) => {
-      const sortedRetailers = data.data.retailers.sort(
-        (a: Retailer, b: Retailer) => a.name.localeCompare(b.name)
-      );
+    onSuccess: data => {
+      const sortedRetailers = data.data.retailers.sort((a: Retailer, b: Retailer) => a.name.localeCompare(b.name));
       setSortedRetailers(sortedRetailers);
 
       if (!active_retailer.id && !active_retailer.name) {
@@ -62,11 +59,7 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
   return (
     <>
       <div>
-        <Sidebar
-          retailers={sortedRetailers}
-          open={sidebarOpen}
-          setOpen={setSidebarOpen}
-        />
+        <Sidebar retailers={sortedRetailers} open={sidebarOpen} setOpen={setSidebarOpen} />
         <div className="lg:pl-72">
           <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main className="pt-6 pb-10">

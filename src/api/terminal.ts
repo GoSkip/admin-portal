@@ -26,12 +26,7 @@ export type SendTerminalSignupEmailParams = {
   qr_svg: string;
 };
 
-export const fetchTerminals: any = async ({
-  storeId,
-  page,
-  limit,
-  jwt,
-}: FetchTerminalsQueryParams) => {
+export const fetchTerminals: any = async ({ storeId, page, limit, jwt }: FetchTerminalsQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.get(
@@ -49,10 +44,7 @@ export const fetchTerminals: any = async ({
   );
 };
 
-export const createTerminalSignup: any = async ({
-  jwt,
-  storeId,
-}: CreateTerminalSignupQueryParams) => {
+export const createTerminalSignup: any = async ({ jwt, storeId }: CreateTerminalSignupQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.post(
@@ -69,11 +61,7 @@ export const createTerminalSignup: any = async ({
   );
 };
 
-export const fetchTerminalSignup: any = async ({
-  jwt,
-  storeId,
-  terminalSignupId,
-}: FetchTerminalSignupQueryParams) => {
+export const fetchTerminalSignup: any = async ({ jwt, storeId, terminalSignupId }: FetchTerminalSignupQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.get(

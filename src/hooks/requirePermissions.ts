@@ -6,9 +6,7 @@ function requirePermissions(requiredPermissions: string[]) {
     session: { permissions },
   } = useContext<SessionContextType>(SessionContext);
 
-  const success = !requiredPermissions.some(
-    (perm) => !permissions.includes(perm)
-  );
+  const success = !requiredPermissions.some(perm => !permissions.includes(perm));
 
   /**
    *

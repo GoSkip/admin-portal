@@ -5,18 +5,13 @@ type GlobalStateContextProps = {
   children: any;
 };
 
-const GlobalStateProvider = ({
-  children,
-}: GlobalStateContextProps): JSX.Element => {
+const GlobalStateProvider = ({ children }: GlobalStateContextProps): JSX.Element => {
   const [filter, setFilter] = useState<string>("");
   const [pendingChangesMode, setPendingChangesMode] = useState<boolean>(false);
-  const [discardPendingChangesCallback, setDiscardPendingChangesCallback] =
-    useState<() => void>(() => {
-      return () => {};
-    });
-  const [savePendingChangesCallback, setSavePendingChangesCallback] = useState<
-    () => void
-  >(() => {
+  const [discardPendingChangesCallback, setDiscardPendingChangesCallback] = useState<() => void>(() => {
+    return () => {};
+  });
+  const [savePendingChangesCallback, setSavePendingChangesCallback] = useState<() => void>(() => {
     return () => {};
   });
 

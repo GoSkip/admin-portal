@@ -17,9 +17,7 @@ export const TwoLineInfo: FC<TwoLineInfoProps> = ({
 }) => {
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
-      <span className={`block text-sm font-medium text-${labelColor}`}>
-        {label}
-      </span>
+      <span className={`block text-sm font-medium text-${labelColor}`}>{label}</span>
       <span className={`block text-sm text-${valueColor}`}>{value}</span>
     </div>
   );

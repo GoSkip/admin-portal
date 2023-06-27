@@ -13,10 +13,7 @@ const PortalUserNew = () => {
       <div className="flow-root w-[calc(100%-18rem)]">
         <div className="flex flex-row mb-4">
           <div className="text-gray-400 text-xl flex-auto">
-            <span
-              className="mr-5 cursor-pointer"
-              onClick={() => navigate("/people/portal-users")}
-            >
+            <span className="mr-5 cursor-pointer" onClick={() => navigate("/people/portal-users")}>
               Portal Users
             </span>
             <span className="mr-5">&gt;</span>
@@ -37,10 +34,7 @@ const PortalUserNew = () => {
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
           <div className="grid m-5 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
             <div className="sm:col-span-3">
-              <label
-                htmlFor="first-name"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="first-name" className="block text-sm font-normal leading-6 text-gray-900">
                 First name
               </label>
               <div className="mt-2">
@@ -55,10 +49,7 @@ const PortalUserNew = () => {
             </div>
 
             <div className="sm:col-span-3">
-              <label
-                htmlFor="last-name"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="last-name" className="block text-sm font-normal leading-6 text-gray-900">
                 Last name
               </label>
               <div className="mt-2">
@@ -74,10 +65,7 @@ const PortalUserNew = () => {
           </div>
           <div className="grid m-5 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
             <div className="sm:col-span-3">
-              <label
-                htmlFor="email"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="email" className="block text-sm font-normal leading-6 text-gray-900">
                 Email
               </label>
               <div className="mt-2">
@@ -92,10 +80,7 @@ const PortalUserNew = () => {
             </div>
 
             <div className="sm:col-span-3">
-              <label
-                htmlFor="phone-number"
-                className="block text-sm font-normal leading-6 text-gray-900"
-              >
+              <label htmlFor="phone-number" className="block text-sm font-normal leading-6 text-gray-900">
                 Phone number
               </label>
               <div className="mt-2">
@@ -114,17 +99,12 @@ const PortalUserNew = () => {
               <Listbox value={selected} onChange={setSelected}>
                 {({ open }) => (
                   <>
-                    <Listbox.Label className="block text-sm font-normal leading-6 text-gray-900">
-                      Role
-                    </Listbox.Label>
+                    <Listbox.Label className="block text-sm font-normal leading-6 text-gray-900">Role</Listbox.Label>
                     <div className="relative mt-2">
                       <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         <span className="block truncate">{selected.name}</span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <ChevronUpDownIcon
-                            className="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
+                          <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </span>
                       </Listbox.Button>
 
@@ -136,7 +116,7 @@ const PortalUserNew = () => {
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {roles.map((role) => (
+                          {roles.map(role => (
                             <Listbox.Option
                               key={role.id}
                               className={({ active }) =>
@@ -148,9 +128,7 @@ const PortalUserNew = () => {
                             >
                               {({ selected, active }) => (
                                 <>
-                                  <span
-                                    className={`${selected} ? 'font-semibold' : 'font-normal', 'block truncate')`}
-                                  >
+                                  <span className={`${selected} ? 'font-semibold' : 'font-normal', 'block truncate')`}>
                                     {role.name}
                                   </span>
 
@@ -159,10 +137,7 @@ const PortalUserNew = () => {
                                       className={`${active} ? 'text-white' : 'text-indigo-600',
                                                                                 'absolute inset-y-0 right-0 flex items-center pr-4'`}
                                     >
-                                      <CheckIcon
-                                        className="h-5 w-5"
-                                        aria-hidden="true"
-                                      />
+                                      <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                     </span>
                                   ) : null}
                                 </>
@@ -182,12 +157,9 @@ const PortalUserNew = () => {
       <div className="flow-root mt-5">
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
           <div className="m-5">
-            <div className="font-normal text-gray-800 text-xl">
-              Store access
-            </div>
+            <div className="font-normal text-gray-800 text-xl">Store access</div>
             <div className="mb-2 text-sm font-light mt-2 text-gray-500">
-              User has <span className="font-bold">View</span> access for the
-              following store(s):
+              User has <span className="font-bold">View</span> access for the following store(s):
             </div>
             <hr />
             <div className="flex flex-row items-center space-x-2 my-4">
@@ -201,12 +173,9 @@ const PortalUserNew = () => {
       <div className="flow-root mt-5">
         <div className="float-left bg-white w-[calc(100%-18rem)] shadow-md rounded-md">
           <div className="m-5">
-            <div className="font-normal text-gray-800 text-xl">
-              Feature access
-            </div>
+            <div className="font-normal text-gray-800 text-xl">Feature access</div>
             <div className="mb-2 text-sm font-light mt-2 text-gray-500">
-              User has <span className="font-bold">Edit</span> access for the
-              following feature(s):
+              User has <span className="font-bold">Edit</span> access for the following feature(s):
             </div>
             <hr />
             <div className="flex flex-row items-center space-x-2 my-4">

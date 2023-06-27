@@ -1,10 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import {
-  SessionContext,
-  SessionContextType,
-} from "../../../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "../../../contexts/SessionContext";
 import { Store } from "../../../types/store";
 import Select, { Option } from "../../../components/inputs/select";
 import SecondaryButton from "../../../components/buttons/secondary";
@@ -12,15 +9,8 @@ import PrimaryButton from "../../../components/buttons/primary";
 import { BeatLoader } from "react-spinners";
 import { useMutation } from "@tanstack/react-query";
 import Breadcrumbs from "../../../components/breadcrumbs";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../../contexts/LoadingContext";
-import {
-  CreateKioskPayloadParams,
-  CreateKioskQueryParams,
-  createKiosk,
-} from "../../../api/kiosk";
+import { LoadingContext, LoadingContextType } from "../../../contexts/LoadingContext";
+import { CreateKioskPayloadParams, CreateKioskQueryParams, createKiosk } from "../../../api/kiosk";
 import { toastError } from "../../../toasts";
 
 type NewKioskForm = {
@@ -42,8 +32,7 @@ const NewKiosk = (): JSX.Element => {
   const navigate = useNavigate();
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (props: CreateKioskMutationProps) =>
-      createKiosk(props.queryParams, props.payloadParams),
+    mutationFn: (props: CreateKioskMutationProps) => createKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);
       toastError("Failed to create kiosk.");
@@ -96,9 +85,7 @@ const NewKiosk = (): JSX.Element => {
   };
 
   const ogStore = formState.store
-    ? selectable_stores.find(
-        (store: Store) => String(store.id) === formState.store?.key
-      )
+    ? selectable_stores.find((store: Store) => String(store.id) === formState.store?.key)
     : null;
 
   useEffect(() => {
@@ -107,19 +94,14 @@ const NewKiosk = (): JSX.Element => {
 
   return (
     <div className="w-full h-auto">
-      <Breadcrumbs
-        root={{ target: "/kiosks", label: "Kiosks" }}
-        branches={[{ target: "#", label: "New Kiosk" }]}
-      />
+      <Breadcrumbs root={{ target: "/kiosks", label: "Kiosks" }} branches={[{ target: "#", label: "New Kiosk" }]} />
       <div>
         <hr />
       </div>
       <div className="space-y-10 divide-y divide-gray-900/10 mt-8 mb-8 grid grid-cols-2 drop-shadow-sm">
         <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl col-span-2 md:col-span-1">
           <div className="px-4 pt-2 text-xl font-normal">Select store</div>
-          <div className="px-4 pb-2 text-sm text-gray-500">
-            Kiosks are assigned to a specific store
-          </div>
+          <div className="px-4 pb-2 text-sm text-gray-500">Kiosks are assigned to a specific store</div>
           <div className="px-4 py-6">
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 mb-4 sm:grid-cols-2">
               {!!formState.store ? (
@@ -136,12 +118,8 @@ const NewKiosk = (): JSX.Element => {
                       </div>
                       <div className="col-span-1">
                         <div className="text-gray-800 text-sm">Address</div>
-                        <div className="text-sm text-gray-400">
-                          {ogStore.address}
-                        </div>
-                        <div className="text-sm text-gray-400">
-                          {ogStore.address2}
-                        </div>
+                        <div className="text-sm text-gray-400">{ogStore.address}</div>
+                        <div className="text-sm text-gray-400">{ogStore.address2}</div>
                       </div>
                     </>
                   ) : (
@@ -161,16 +139,8 @@ const NewKiosk = (): JSX.Element => {
             </div>
             <hr />
             <div className="flex justify-end mt-4">
-              <SecondaryButton
-                label="Cancel"
-                additionalClasses="mr-2"
-                onClick={() => navigate("/kiosks")}
-              />
-              <PrimaryButton
-                label="Create"
-                disabled={!formState.store}
-                onClick={onCreateKiosk}
-              />
+              <SecondaryButton label="Cancel" additionalClasses="mr-2" onClick={() => navigate("/kiosks")} />
+              <PrimaryButton label="Create" disabled={!formState.store} onClick={onCreateKiosk} />
             </div>
           </div>
         </form>

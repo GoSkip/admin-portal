@@ -11,20 +11,13 @@ type BreadcrumbsProps = {
   righthandComponent?: JSX.Element;
 };
 
-const Breadcrumbs = ({
-  root,
-  branches,
-  righthandComponent,
-}: BreadcrumbsProps): JSX.Element => {
+const Breadcrumbs = ({ root, branches, righthandComponent }: BreadcrumbsProps): JSX.Element => {
   return (
     <nav className="flex" aria-label="Breadcrumb">
       <ol role="list" className="flex items-center space-x-4 pb-6">
         <li>
           <div>
-            <Link
-              to={root.target}
-              className="text-gray-400 hover:text-gray-500 text-xl"
-            >
+            <Link to={root.target} className="text-gray-400 hover:text-gray-500 text-xl">
               {root.label}
             </Link>
           </div>
@@ -32,10 +25,7 @@ const Breadcrumbs = ({
         {branches.map((branch: BreadcrumbLink) => (
           <li>
             <div className="flex items-center">
-              <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
               <Link to={branch.target} className="ml-4 text-xl">
                 {branch.label}
               </Link>

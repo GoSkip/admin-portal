@@ -15,7 +15,7 @@ import _ from "lodash";
  *
  */
 
-const isLegitNumber = (str) => !Number.isNaN(parseInt(str));
+const isLegitNumber = str => !Number.isNaN(parseInt(str));
 
 function advancedStoreSort(a, b) {
   a = (a + "")
@@ -114,12 +114,7 @@ function advancedStoreSort(a, b) {
       return 1;
     }
 
-    if (
-      !isLegitNumber(headA) &&
-      !isLegitNumber(headB) &&
-      isLegitNumber(lastA) &&
-      isLegitNumber(lastB)
-    ) {
+    if (!isLegitNumber(headA) && !isLegitNumber(headB) && isLegitNumber(lastA) && isLegitNumber(lastB)) {
       if (headA > headB) {
         return 1;
       }
@@ -143,28 +138,15 @@ function advancedStoreSort(a, b) {
       }
     }
 
-    if (
-      _a.length === 1 &&
-      !isLegitNumber(headA) &&
-      (isLegitNumber(headB) || isLegitNumber(lastB))
-    ) {
+    if (_a.length === 1 && !isLegitNumber(headA) && (isLegitNumber(headB) || isLegitNumber(lastB))) {
       return 1;
     }
 
-    if (
-      _b.length === 1 &&
-      !isLegitNumber(headB) &&
-      (isLegitNumber(headA) || isLegitNumber(lastA))
-    ) {
+    if (_b.length === 1 && !isLegitNumber(headB) && (isLegitNumber(headA) || isLegitNumber(lastA))) {
       return -1;
     }
 
-    if (
-      _a.length === 1 &&
-      !isLegitNumber(headA) &&
-      !isLegitNumber(headB) &&
-      !isLegitNumber(lastB)
-    ) {
+    if (_a.length === 1 && !isLegitNumber(headA) && !isLegitNumber(headB) && !isLegitNumber(lastB)) {
       if (!/\d/gm.test(a) && /\d/gm.test(b)) {
         return 1;
       }
@@ -182,12 +164,7 @@ function advancedStoreSort(a, b) {
       }
     }
 
-    if (
-      _b.length === 1 &&
-      !isLegitNumber(headB) &&
-      !isLegitNumber(headA) &&
-      !isLegitNumber(lastA)
-    ) {
+    if (_b.length === 1 && !isLegitNumber(headB) && !isLegitNumber(headA) && !isLegitNumber(lastA)) {
       if (/\d/gm.test(a) && !/\d/gm.test(b)) {
         return -1;
       }

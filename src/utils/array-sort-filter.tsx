@@ -68,12 +68,7 @@ export type ItemWithOriginalType = {
   originalType: HeaderTypes;
 };
 
-export type FilterItemValueType =
-  | string
-  | number
-  | Date
-  | ItemWithOriginalType
-  | { max: number; min: number };
+export type FilterItemValueType = string | number | Date | ItemWithOriginalType | { max: number; min: number };
 
 export type FilterItemType = {
   [key: string]: FilterItemValueType;
@@ -81,30 +76,19 @@ export type FilterItemType = {
 
 export const dynamicFilter = (arr: any[], filters: FilterItemType) => {
   const fns = {
-    eq:
-      (key: string, value: FilterItemValueType, originalType?: string) =>
-      (obj: FilterItemType) => {
-        if (originalType === HeaderTypes.DATE) {
-          return dateFormatter.format(obj[key] as Date) === value;
-        }
-        return obj[key] === value;
-      },
-    min: (key: string, value: FilterItemValueType) => (obj: FilterItemType) =>
-      obj[key] >= value,
-    max: (key: string, value: FilterItemValueType) => (obj: FilterItemType) =>
-      obj[key] <= value,
+    eq: (key: string, value: FilterItemValueType, originalType?: string) => (obj: FilterItemType) => {
+      if (originalType === HeaderTypes.DATE) {
+        return dateFormatter.format(obj[key] as Date) === value;
+      }
+      return obj[key] === value;
+    },
+    min: (key: string, value: FilterItemValueType) => (obj: FilterItemType) => obj[key] >= value,
+    max: (key: string, value: FilterItemValueType) => (obj: FilterItemType) => obj[key] <= value,
   };
 
-  const makePredicat = (
-    filterKey: string,
-    filterValue: FilterItemValueType
-  ) => {
-    const filterObj =
-      typeof filterValue === "object" ? filterValue : { eq: filterValue };
-    if (
-      filterObj.hasOwnProperty("originalType") &&
-      filterObj.hasOwnProperty("eq")
-    ) {
+  const makePredicat = (filterKey: string, filterValue: FilterItemValueType) => {
+    const filterObj = typeof filterValue === "object" ? filterValue : { eq: filterValue };
+    if (filterObj.hasOwnProperty("originalType") && filterObj.hasOwnProperty("eq")) {
       const obj = filterObj as ItemWithOriginalType;
       return fns.eq(filterKey, obj.eq, obj.originalType);
     }
@@ -113,9 +97,7 @@ export const dynamicFilter = (arr: any[], filters: FilterItemType) => {
     });
   };
 
-  const predicats = Object.entries(filters).flatMap(([key, value]) =>
-    makePredicat(key, value)
-  );
+  const predicats = Object.entries(filters).flatMap(([key, value]) => makePredicat(key, value));
 
   return predicats.reduce((acc, fn) => acc.filter(fn), arr);
 };

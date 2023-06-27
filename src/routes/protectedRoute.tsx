@@ -9,13 +9,9 @@ interface ProtectedRoutesProps {
   routeExceptions: string[];
 }
 
-const ProtectedRoutes = ({
-  children,
-  routeExceptions,
-}: ProtectedRoutesProps): JSX.Element => {
+const ProtectedRoutes = ({ children, routeExceptions }: ProtectedRoutesProps): JSX.Element => {
   const location = useLocation();
-  const { session }: { session: Session } =
-    useContext<SessionContextType>(SessionContext);
+  const { session }: { session: Session } = useContext<SessionContextType>(SessionContext);
 
   let prevSession: Session | null = null;
 

@@ -5,12 +5,7 @@ type PrimaryButtonProps = {
   onClick?: () => any;
 };
 
-const PrimaryButton = ({
-  label,
-  additionalClasses,
-  disabled,
-  onClick,
-}: PrimaryButtonProps): JSX.Element => {
+const PrimaryButton = ({ label, additionalClasses, disabled, onClick }: PrimaryButtonProps): JSX.Element => {
   let _onClick = () => {};
 
   if (onClick) {
@@ -29,12 +24,7 @@ const PrimaryButton = ({
   ].join(" ");
 
   return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={_onClick}
-      className={`${initClasses} ${additionalClasses}`}
-    >
+    <button type="button" disabled={disabled} onClick={_onClick} className={`${initClasses} ${additionalClasses}`}>
       {label}
     </button>
   );

@@ -1,20 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import {
-  SessionContext,
-  SessionContextType,
-} from "../../contexts/SessionContext";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../contexts/LoadingContext";
+import { SessionContext, SessionContextType } from "../../contexts/SessionContext";
+import { LoadingContext, LoadingContextType } from "../../contexts/LoadingContext";
 import { useQuery } from "@tanstack/react-query";
-import {
-  SendTerminalSignupEmailParams,
-  fetchTerminalSignup,
-  sendTerminalSignupEmail,
-} from "../../api/terminal";
+import { SendTerminalSignupEmailParams, fetchTerminalSignup, sendTerminalSignupEmail } from "../../api/terminal";
 import { toastError, toastSuccess } from "../../toasts";
 import { fetchStores } from "../../api/store";
 import { Store } from "../../types/store";
@@ -37,17 +27,14 @@ const Signup = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [store, setStore] = useState<Store | null>(null);
   const navigate = useNavigate();
-  const [terminalSignup, setTerminalSignup] = useState<TerminalSignup | null>(
-    null
-  );
+  const [terminalSignup, setTerminalSignup] = useState<TerminalSignup | null>(null);
   const {
     active_retailer,
     token_info: { token },
   } = session;
 
   const { mutate } = useMutation({
-    mutationFn: (props: SendTerminalSignupEmailParams) =>
-      sendTerminalSignupEmail(props),
+    mutationFn: (props: SendTerminalSignupEmailParams) => sendTerminalSignupEmail(props),
     onError: (error: any) => {
       console.error(error);
       toastError("Failed to send email.");
@@ -67,11 +54,11 @@ const Signup = (): JSX.Element => {
     {
       enabled: !!storeId && !!terminalSignupId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading store: ${storeId}`);
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         let store = data.data.retailers
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
@@ -95,7 +82,7 @@ const Signup = (): JSX.Element => {
     {
       enabled: !!storeId && !!terminalSignupId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading terminal signup: ${terminalSignupId}`);
       },
@@ -152,18 +139,14 @@ const Signup = (): JSX.Element => {
         <form className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl sm:rounded-xl col-span-2 md:col-span-1">
           <div className="px-6 pt-4 text-xl font-normal">Success</div>
           <div className="px-6 pt-1 text-sm font-normal text-gray-400">
-            Terminal Link Code for new terminal signup at store{" "}
-            {store?.name || "N/A"}
+            Terminal Link Code for new terminal signup at store {store?.name || "N/A"}
           </div>
           <div className="px-6 pt-6">
             {terminalSignup?.qr_svg && svg_code ? <img src={svg_code} /> : null}
             <hr className="mt-8 mb-4" />
           </div>
           <div className="pl-4 pr-4 mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
+            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Send terminal link code
             </label>
             <div className="mt-2 flex rounded-md shadow-sm bg-slate-50">
@@ -175,7 +158,7 @@ const Signup = (): JSX.Element => {
                   className="block w-full rounded-none rounded-l-md border-0 py-1.5 pl-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset rocus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="Email address"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <button
@@ -191,10 +174,7 @@ const Signup = (): JSX.Element => {
                   })
                 }
               >
-                <EnvelopeIcon
-                  className="-ml-0.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
+                <EnvelopeIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
                 Send
               </button>
             </div>
@@ -203,15 +183,8 @@ const Signup = (): JSX.Element => {
             <hr className="mb-4" />
           </div>
           <div className="pt-2 pr-4 pb-4 flex justify-end">
-            <SecondaryButton
-              label="Copy to Clipboard"
-              onClick={copyQRToClipboard}
-            />
-            <PrimaryButton
-              additionalClasses="ml-4"
-              label="Close"
-              onClick={() => navigate("/kiosks")}
-            />
+            <SecondaryButton label="Copy to Clipboard" onClick={copyQRToClipboard} />
+            <PrimaryButton additionalClasses="ml-4" label="Close" onClick={() => navigate("/kiosks")} />
           </div>
         </form>
       </div>

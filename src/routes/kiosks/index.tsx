@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { toastError } from "../../toasts";
 import { Kiosk } from "../../types/kiosk";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -15,20 +9,11 @@ import { fetchKiosksByRetailer } from "../../api/kiosk";
 import { useNavigate } from "react-router-dom";
 import requirePermissions from "../../hooks/requirePermissions";
 import classNames from "classnames";
-import {
-  SessionContext,
-  SessionContextType,
-} from "../../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "../../contexts/SessionContext";
 // @ts-ignore
 import { set } from "lodash";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../contexts/LoadingContext";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../../contexts/GlobalStateContext";
+import { LoadingContext, LoadingContextType } from "../../contexts/LoadingContext";
+import { GlobalStateContext, GlobalStateContextType } from "../../contexts/GlobalStateContext";
 import PrimaryButton from "../../components/buttons/primary";
 import { Trans, useTranslation } from "react-i18next";
 import SecondaryButton from "../../components/buttons/secondary";
@@ -47,13 +32,7 @@ const calcKioskLastTxnColor = (last_txn: Date | undefined | null) => {
   return "bg-green-100 text-green-800";
 };
 
-export const calcTotalPages = ({
-  limit,
-  totalResults,
-}: {
-  limit: number;
-  totalResults: number;
-}) => {
+export const calcTotalPages = ({ limit, totalResults }: { limit: number; totalResults: number }) => {
   return Math.ceil(totalResults / limit);
 };
 
@@ -61,15 +40,7 @@ const calcFrom = ({ page, limit }: { page: number; limit: number }) => {
   return (page - 1) * limit + 1;
 };
 
-const calcTo = ({
-  page,
-  limit,
-  totalResults,
-}: {
-  page: number;
-  limit: number;
-  totalResults: number;
-}) => {
+const calcTo = ({ page, limit, totalResults }: { page: number; limit: number; totalResults: number }) => {
   if (totalResults < page * limit) {
     return totalResults;
   }
@@ -136,7 +107,7 @@ const KioskList = (): JSX.Element => {
       notifyOnChangeProps: "all",
       refetchInterval: REFETCH_INTERVAL,
       enabled: !!activeRetailerId,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError("Problem loading kiosks.");
       },
@@ -146,11 +117,9 @@ const KioskList = (): JSX.Element => {
             ...kiosk,
             inserted_at: new Date(kiosk.inserted_at),
             last_txn: kiosk.last_txn ? new Date(kiosk.last_txn) : null,
-            store: stores.find((store) => store.id === kiosk.store_id),
+            store: stores.find(store => store.id === kiosk.store_id),
           }))
-          .sort((a: Kiosk, b: Kiosk) =>
-            a.store?.name.localeCompare(b.store?.name ?? "")
-          );
+          .sort((a: Kiosk, b: Kiosk) => a.store?.name.localeCompare(b.store?.name ?? ""));
 
         setKiosks(sortedKiosks);
         setTotalResults(total_results);
@@ -160,9 +129,7 @@ const KioskList = (): JSX.Element => {
   );
 
   const filteredKiosks = kiosks.filter(
-    (kiosk: Kiosk) =>
-      filter === "" ||
-      kiosk.store?.name.toLowerCase().includes(filter.toLowerCase())
+    (kiosk: Kiosk) => filter === "" || kiosk.store?.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   useEffect(() => {
@@ -190,13 +157,8 @@ const KioskList = (): JSX.Element => {
   };
 
   useLayoutEffect(() => {
-    const isIndeterminate =
-      selectedKiosks.length > 0 &&
-      selectedKiosks.length < filteredKiosks.length;
-    setChecked(
-      selectedKiosks.length === filteredKiosks.length &&
-        filteredKiosks.length > 0
-    );
+    const isIndeterminate = selectedKiosks.length > 0 && selectedKiosks.length < filteredKiosks.length;
+    setChecked(selectedKiosks.length === filteredKiosks.length && filteredKiosks.length > 0);
     setIndeterminate(isIndeterminate);
     set(checkbox, "current.indeterminate", isIndeterminate);
   }, [selectedKiosks, filteredKiosks]);
@@ -214,11 +176,7 @@ const KioskList = (): JSX.Element => {
           <h1 className="text-xl font-semibold text-gray-900">{t("kiosks")}</h1>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <SecondaryButton
-            additionalClasses="mr-4"
-            label="Add Terminal"
-            onClick={onClickNewTerminal}
-          />
+          <SecondaryButton additionalClasses="mr-4" label="Add Terminal" onClick={onClickNewTerminal} />
           <PrimaryButton label="Add Kiosk" onClick={onClickNewKiosk} />
         </div>
       </div>
@@ -232,10 +190,7 @@ const KioskList = (): JSX.Element => {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th
-                      scope="col"
-                      className="relative w-12 px-6 sm:w-16 sm:px-8"
-                    >
+                    <th scope="col" className="relative w-12 px-6 sm:w-16 sm:px-8">
                       <input
                         disabled={!totalResults}
                         type="checkbox"
@@ -245,10 +200,7 @@ const KioskList = (): JSX.Element => {
                         onChange={toggleAll}
                       />
                     </th>
-                    <th
-                      scope="col"
-                      className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-500"
-                    >
+                    <th scope="col" className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-500">
                       {t("store")}
                     </th>
                     <th
@@ -265,20 +217,9 @@ const KioskList = (): JSX.Element => {
                     </th>
                   </tr>
                 </thead>
-                <tbody
-                  className={`divide-y divide-gray-200 bg-white ${
-                    isLoading ? "blur-sm" : null
-                  }`}
-                >
+                <tbody className={`divide-y divide-gray-200 bg-white ${isLoading ? "blur-sm" : null}`}>
                   {filteredKiosks.map((kiosk: Kiosk) => (
-                    <tr
-                      key={kiosk.id}
-                      className={
-                        selectedKiosks.includes(kiosk)
-                          ? "bg-gray-50"
-                          : undefined
-                      }
-                    >
+                    <tr key={kiosk.id} className={selectedKiosks.includes(kiosk) ? "bg-gray-50" : undefined}>
                       <td className="relative w-12 px-6 sm:w-16 sm:px-8">
                         {selectedKiosks.includes(kiosk) && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
@@ -288,13 +229,11 @@ const KioskList = (): JSX.Element => {
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
                           value={kiosk.id}
                           checked={selectedKiosks.includes(kiosk)}
-                          onChange={(e) =>
+                          onChange={e =>
                             setSelectedKiosks(
                               e.target.checked
                                 ? [...selectedKiosks, kiosk]
-                                : selectedKiosks.filter(
-                                    (k) => k.id !== kiosk.id
-                                  )
+                                : selectedKiosks.filter(k => k.id !== kiosk.id)
                             )
                           }
                         />
@@ -302,9 +241,7 @@ const KioskList = (): JSX.Element => {
                       <td
                         className={classNames(
                           "whitespace-nowrap py-4 pr-3 text-sm font-medium cursor-pointer",
-                          selectedKiosks.includes(kiosk)
-                            ? "text-indigo-600"
-                            : "text-gray-900"
+                          selectedKiosks.includes(kiosk) ? "text-indigo-600" : "text-gray-900"
                         )}
                         onClick={() => {
                           if (kiosk.store?.id) {
@@ -327,12 +264,7 @@ const KioskList = (): JSX.Element => {
                           )} inline-flex rounded-full px-2 text-xs font-semibold leading-5`}
                         >
                           {kiosk.last_txn
-                            ? formatMinsHours(
-                                differenceInMinutes(
-                                  new Date(),
-                                  new Date(kiosk.last_txn)
-                                )
-                              )
+                            ? formatMinsHours(differenceInMinutes(new Date(), new Date(kiosk.last_txn)))
                             : "N/A"}
                         </span>
                       </td>
@@ -381,10 +313,7 @@ const KioskList = (): JSX.Element => {
               </p>
             </div>
             <div>
-              <nav
-                className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                aria-label="Pagination"
-              >
+              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                 <span
                   className="relative inline-flex items-center rounded-l-md border bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 cursor-pointer"
                   onClick={onPrevPage}
@@ -400,9 +329,7 @@ const KioskList = (): JSX.Element => {
                       aria-current="page"
                       onClick={onGotoPage(idx + 1)}
                       className={`${
-                        idx + 1 === page
-                          ? "bg-indigo-50 text-indigo-600"
-                          : "hover:bg-gray-50"
+                        idx + 1 === page ? "bg-indigo-50 text-indigo-600" : "hover:bg-gray-50"
                       } relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 cursor-pointer`}
                     >
                       {idx + 1}
