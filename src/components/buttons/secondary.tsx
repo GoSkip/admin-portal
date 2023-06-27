@@ -1,4 +1,3 @@
-import classNames from "classnames";
 type SecondaryButtonProps = {
   label: string;
   additionalClasses?: string;
@@ -18,15 +17,23 @@ const SecondaryButton = ({
     _onClick = onClick;
   }
 
+  const initClasses = [
+    "inline-flex items-center justify-center",
+    "rounded-md border border-transparent",
+    "text-sm font-medium text-black",
+    "px-4 py-2 transition-all",
+    "bg-white shadow-sm",
+    "hover:bg-gray-300",
+    "focus:outline-none focus:ring-2 rocus:ring-gray-100 focus:ring-offset-2",
+    "sm:w-auto",
+  ].join(" ");
+
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={_onClick}
-      className={classNames(
-        disabled ? "bg-gray-200 text-white" : "bg-white hover:bg-gray-50",
-        `rounded-md px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${additionalClasses}`
-      )}
+      className={`${initClasses} ${additionalClasses}`}
     >
       {label}
     </button>
