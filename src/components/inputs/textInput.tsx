@@ -6,13 +6,7 @@ type InputProps = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Input = ({
-  htmlId,
-  value,
-  disabled,
-  label,
-  onChange,
-}: InputProps): JSX.Element => {
+const Input = ({ htmlId, value, disabled, label, onChange }: InputProps): JSX.Element => {
   return (
     <div className="relative mt-1">
       <input

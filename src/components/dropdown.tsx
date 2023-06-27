@@ -62,10 +62,7 @@ const MenuItem = ({ item }: MenuItemProps): JSX.Element => {
     <Menu.Item>
       {({ active }) => (
         <span className={DropdownItemClasses(active)} onClick={handleItemClick}>
-          <item.icon
-            className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-            aria-hidden="true"
-          />
+          <item.icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
           {item.name}
         </span>
       )}
@@ -73,21 +70,12 @@ const MenuItem = ({ item }: MenuItemProps): JSX.Element => {
   );
 };
 
-const Dropdown = ({
-  label,
-  disabled,
-  onClick,
-  items,
-}: DropdownProps): JSX.Element => {
+const Dropdown = ({ label, disabled, onClick, items }: DropdownProps): JSX.Element => {
   if (items.length === 0) {
     return <span></span>;
   }
   return (
-    <Menu
-      as="div"
-      className="relative inline-block text-left"
-      aria-disabled={disabled}
-    >
+    <Menu as="div" className="relative inline-block text-left" aria-disabled={disabled}>
       <div>
         <Menu.Button
           disabled={disabled}
@@ -97,9 +85,7 @@ const Dropdown = ({
         >
           {label}
           <ChevronDownIcon
-            className={`-mr-1 h-5 w-5 ${
-              disabled ? "text-coolGray-400" : "text-coolGray-700"
-            }`}
+            className={`-mr-1 h-5 w-5 ${disabled ? "text-coolGray-400" : "text-coolGray-700"}`}
             aria-hidden="true"
           />
         </Menu.Button>
@@ -117,9 +103,7 @@ const Dropdown = ({
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             {items.map((item, i) => {
-              return (
-                <MenuItem key={`${i}-${item.value}`} item={item}></MenuItem>
-              );
+              return <MenuItem key={`${i}-${item.value}`} item={item}></MenuItem>;
             })}
           </div>
         </Menu.Items>

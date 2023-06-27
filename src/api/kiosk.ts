@@ -84,11 +84,7 @@ export const fetchKiosksByRetailer: any = async ({
   );
 };
 
-export const fetchKiosk = async ({
-  jwt,
-  storeId,
-  kioskId,
-}: FetchKioskQueryParams) => {
+export const fetchKiosk = async ({ jwt, storeId, kioskId }: FetchKioskQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.get(
@@ -105,11 +101,7 @@ export const fetchKiosk = async ({
   );
 };
 
-export const fetchKioskIpad = async ({
-  jwt,
-  serialNumber,
-  appIdentifier,
-}: FetchKioskIpadQueryParams) => {
+export const fetchKioskIpad = async ({ jwt, serialNumber, appIdentifier }: FetchKioskIpadQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.get(
@@ -126,10 +118,7 @@ export const fetchKioskIpad = async ({
   );
 };
 
-export const fetchKioskIpadLogs = async ({
-  jwt,
-  serialNumber,
-}: FetchKioskIpadLogsQueryParams) => {
+export const fetchKioskIpadLogs = async ({ jwt, serialNumber }: FetchKioskIpadLogsQueryParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.get(
@@ -145,10 +134,7 @@ export const fetchKioskIpadLogs = async ({
   );
 };
 
-export const createKiosk = async (
-  { jwt, storeId }: CreateKioskQueryParams,
-  payload: CreateKioskPayloadParams
-) => {
+export const createKiosk = async ({ jwt, storeId }: CreateKioskQueryParams, payload: CreateKioskPayloadParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.post(
@@ -165,10 +151,7 @@ export const createKiosk = async (
   );
 };
 
-export const updateKiosk = async (
-  { jwt, storeId }: UpdateKioskQueryParams,
-  payload: UpdateKioskPayloadParams
-) => {
+export const updateKiosk = async ({ jwt, storeId }: UpdateKioskQueryParams, payload: UpdateKioskPayloadParams) => {
   const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
 
   return await axios.put(

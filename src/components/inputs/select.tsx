@@ -15,29 +15,17 @@ type SelectProps = {
   items: Option[];
 };
 
-const Select = ({
-  label,
-  selectedItem,
-  setSelectedItem,
-  items,
-}: SelectProps): JSX.Element => {
+const Select = ({ label, selectedItem, setSelectedItem, items }: SelectProps): JSX.Element => {
   return (
     <Listbox value={selectedItem} onChange={setSelectedItem}>
       {({ open }) => (
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-pointer rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
             <span className="block truncate capitalize">
-              {selectedItem
-                ? selectedItem.value
-                : label
-                ? `Select ${label}`
-                : "Select item"}
+              {selectedItem ? selectedItem.value : label ? `Select ${label}` : "Select item"}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-              <ChevronUpDownIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </span>
           </Listbox.Button>
           <Transition
@@ -48,7 +36,7 @@ const Select = ({
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {items.map((item) => (
+              {items.map(item => (
                 <Listbox.Option
                   key={item.key}
                   className={({ active }) =>
@@ -62,10 +50,7 @@ const Select = ({
                   {({ selected, active }) => (
                     <>
                       <span
-                        className={classNames(
-                          selected ? "font-semibold" : "font-normal",
-                          "block truncate capitalize"
-                        )}
+                        className={classNames(selected ? "font-semibold" : "font-normal", "block truncate capitalize")}
                       >
                         {item.value}
                       </span>

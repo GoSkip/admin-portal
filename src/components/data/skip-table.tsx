@@ -1,9 +1,6 @@
 import React, { FC, useLayoutEffect, useRef, useState } from "react";
 import { IconButton } from "../buttons/icon";
-import {
-  TableFilterDropdown,
-  TableFilterDropdownItemType,
-} from "../inputs/tableFilterDropdown";
+import { TableFilterDropdown, TableFilterDropdownItemType } from "../inputs/tableFilterDropdown";
 import { mdiMenuDown, mdiMenuUp } from "@mdi/js";
 import { dateFormatter } from "../../utils/data-types";
 // @ts-ignore
@@ -103,18 +100,18 @@ export const SkipTable: FC<SkipTableType> = ({
 
   const getMappedSorts = (sorts: string[]) => {
     const mappedSorts: SortFieldType[] = sorts
-      .filter((key) => {
+      .filter(key => {
         const pureKey = key.replace("-", "");
-        const header = headers.find((h) => h.value === pureKey);
+        const header = headers.find(h => h.value === pureKey);
         if (header) {
           return true;
         }
         return false;
       })
-      .map((key) => {
+      .map(key => {
         const isReversed = key.includes("-");
         const pureKey = key.replace("-", "");
-        const header = headers.find((h) => h.value === pureKey);
+        const header = headers.find(h => h.value === pureKey);
         let primer = undefined;
         if (header?.type === HeaderTypes.NUMBER) {
           primer = parseInt;
@@ -164,8 +161,8 @@ export const SkipTable: FC<SkipTableType> = ({
 
   const updateFilters = (key: string, v: string | number | Date | null) => {
     if (!!v || v === 0) {
-      const header = headers.find((h) => h.value === key);
-      const filterIndex = filters.findIndex((f) => f.key === key);
+      const header = headers.find(h => h.value === key);
+      const filterIndex = filters.findIndex(f => f.key === key);
       let newFilters = [];
       if (filterIndex >= 0) {
         newFilters = [...filters];
@@ -182,28 +179,20 @@ export const SkipTable: FC<SkipTableType> = ({
       const newMappedFilters = mapFilters(newFilters);
       // setMappedFilters(newMappedFilters);
       const itemsCopy = [...items];
-      const newFilteredItems: any[] = dynamicFilter(
-        itemsCopy,
-        newMappedFilters
-      );
+      const newFilteredItems: any[] = dynamicFilter(itemsCopy, newMappedFilters);
       setFilteredItems(newFilteredItems);
     }
   };
 
   const toggleAll = () => {
-    setSelectedItems(
-      checked || indeterminate ? [] : sortedItems.map((f) => f.id)
-    );
+    setSelectedItems(checked || indeterminate ? [] : sortedItems.map(f => f.id));
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
 
   useLayoutEffect(() => {
-    const isIndeterminate =
-      selectedItems.length > 0 && selectedItems.length < sortedItems.length;
-    setChecked(
-      selectedItems.length === sortedItems.length && sortedItems.length > 0
-    );
+    const isIndeterminate = selectedItems.length > 0 && selectedItems.length < sortedItems.length;
+    setChecked(selectedItems.length === sortedItems.length && sortedItems.length > 0);
     setIndeterminate(isIndeterminate);
     set(checkbox, "current.indeterminate", isIndeterminate);
   }, [selectedItems, sortedItems]);
@@ -216,9 +205,7 @@ export const SkipTable: FC<SkipTableType> = ({
   }, [items]);
 
   useLayoutEffect(() => {
-    const newSortedItems: any[] = filteredItems.sort(
-      advancedDynamicSort(...mappedSorts)
-    );
+    const newSortedItems: any[] = filteredItems.sort(advancedDynamicSort(...mappedSorts));
     setSortedItems(newSortedItems);
   }, [filteredItems]);
 
@@ -231,10 +218,7 @@ export const SkipTable: FC<SkipTableType> = ({
               <thead className="bg-gray-50">
                 <tr>
                   {selectable && (
-                    <th
-                      scope="col"
-                      className="relative w-12 px-6 sm:w-16 sm:px-8"
-                    >
+                    <th scope="col" className="relative w-12 px-6 sm:w-16 sm:px-8">
                       <input
                         disabled={sortedItems.length === 0}
                         type="checkbox"
@@ -250,17 +234,16 @@ export const SkipTable: FC<SkipTableType> = ({
                   {headers.map((header, i) => {
                     const key = header.value;
                     const headerInSort = checkHeaderInSort(key);
-                    const filterOptions: TableFilterDropdownItemType[] =
-                      items.map((item) => {
-                        let itemValue = item[key];
-                        if (header.type === HeaderTypes.DATE) {
-                          itemValue = dateFormatter.format(itemValue);
-                        }
-                        return {
-                          label: itemValue,
-                          value: itemValue,
-                        };
-                      });
+                    const filterOptions: TableFilterDropdownItemType[] = items.map(item => {
+                      let itemValue = item[key];
+                      if (header.type === HeaderTypes.DATE) {
+                        itemValue = dateFormatter.format(itemValue);
+                      }
+                      return {
+                        label: itemValue,
+                        value: itemValue,
+                      };
+                    });
                     return (
                       <th
                         key={`header-${i}-${key}`}
@@ -277,21 +260,15 @@ export const SkipTable: FC<SkipTableType> = ({
                           <div className="flex justify-center items-center gap-2">
                             <IconButton
                               icon={mdiMenuDown}
-                              color={
-                                headerInSort !== 0
-                                  ? "lightBlue-500"
-                                  : "gray-200"
-                              }
+                              color={headerInSort !== 0 ? "lightBlue-500" : "gray-200"}
                               colorHover={headerInSort !== 0 ? "" : "gray-500"}
                               size={0}
-                              customClasses={
-                                headerInSort === 1 ? "transform rotate-180" : ""
-                              }
+                              customClasses={headerInSort === 1 ? "transform rotate-180" : ""}
                             ></IconButton>
                             <TableFilterDropdown
                               label={header.label}
                               items={filterOptions}
-                              onChange={(e) => updateFilters(header.value, e)}
+                              onChange={e => updateFilters(header.value, e)}
                             ></TableFilterDropdown>
                           </div>
                         </div>
@@ -300,21 +277,13 @@ export const SkipTable: FC<SkipTableType> = ({
                   })}
                 </tr>
               </thead>
-              <tbody
-                className={`divide-y divide-gray-200 bg-white ${
-                  isLoading ? "blur-sm" : null
-                }`}
-              >
-                {sortedItems.map((item) => {
+              <tbody className={`divide-y divide-gray-200 bg-white ${isLoading ? "blur-sm" : null}`}>
+                {sortedItems.map(item => {
                   const selectableKey = item[itemKey];
                   return (
                     <tr
                       key={selectableKey}
-                      className={
-                        selectedItems.includes(selectableKey)
-                          ? "bg-gray-50"
-                          : undefined
-                      }
+                      className={selectedItems.includes(selectableKey) ? "bg-gray-50" : undefined}
                     >
                       {selectable && (
                         <td className="relative w-12 px-6 sm:w-16 sm:px-8">
@@ -324,18 +293,15 @@ export const SkipTable: FC<SkipTableType> = ({
                           <input
                             type="checkbox"
                             className={`${
-                              !selectedItems.includes(selectableKey) &&
-                              "opacity-70"
+                              !selectedItems.includes(selectableKey) && "opacity-70"
                             } absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-lightBlue-600 focus:ring-lightBlue-500 sm:left-6`}
                             value={selectableKey}
                             checked={selectedItems.includes(selectableKey)}
-                            onChange={(e) =>
+                            onChange={e =>
                               setSelectedItems(
                                 e.target.checked
                                   ? [...selectedItems, selectableKey]
-                                  : selectedItems.filter(
-                                      (k) => k !== selectableKey
-                                    )
+                                  : selectedItems.filter(k => k !== selectableKey)
                               )
                             }
                           />

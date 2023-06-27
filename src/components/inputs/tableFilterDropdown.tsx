@@ -3,11 +3,7 @@ import { IconButton } from "../buttons/icon";
 import { mdiFilterVariant } from "@mdi/js";
 
 import { Menu, Transition, Combobox } from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  CheckIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronDownIcon, CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Icon from "@mdi/react";
 import { uniqueArrayByKey } from "../../utils/data-types";
 import { stopPropagation } from "../../utils/events";
@@ -49,17 +45,10 @@ const MenuItem: FC<{
   return (
     <Menu.Item>
       {({ active }) => (
-        <span
-          className={menuItemClasses(active, isSelected)}
-          onClick={handleItemClick}
-        >
+        <span className={menuItemClasses(active, isSelected)} onClick={handleItemClick}>
           {item.label}
           {isSelected && (
-            <span
-              className={classNames(
-                "absolute inset-y-0 right-0 flex items-center pr-4 text-lightBlue-600"
-              )}
-            >
+            <span className={classNames("absolute inset-y-0 right-0 flex items-center pr-4 text-lightBlue-600")}>
               <CheckIcon className="h-5 w-5" aria-hidden="true" />
             </span>
           )}
@@ -69,11 +58,7 @@ const MenuItem: FC<{
   );
 };
 
-export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
-  items,
-  label,
-  onChange,
-}) => {
+export const TableFilterDropdown: FC<TableFilterDropdownType> = ({ items, label, onChange }) => {
   const uniqueItems = uniqueArrayByKey(items, "value");
   const itemsLength = uniqueItems.length;
   const maxItemsLength = 4;
@@ -83,11 +68,8 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
   const filteredItems = (
     query === ""
       ? uniqueItems
-      : uniqueItems.filter((item) => {
-          return item.label
-            ?.toString()
-            .toLowerCase()
-            .includes(query.toLowerCase());
+      : uniqueItems.filter(item => {
+          return item.label?.toString().toLowerCase().includes(query.toLowerCase());
         })
   ) as TableFilterDropdownItemType[];
   if (itemsLength === 0) {
@@ -102,11 +84,7 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
   };
 
   return (
-    <Menu
-      as="div"
-      className="relative inline-block text-left"
-      onClick={stopPropagation}
-    >
+    <Menu as="div" className="relative inline-block text-left" onClick={stopPropagation}>
       <div>
         <Menu.Button
           className="flex justify-center items-center rounded-circle pa-1 text-gray-200 hover:text-gray-500"
@@ -132,25 +110,16 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
         >
           {itemsLength > maxItemsLength ? (
             // Use `autocomplete` component
-            <Combobox
-              as="div"
-              value={selectedValue}
-              onChange={setSelectedValue}
-            >
+            <Combobox as="div" value={selectedValue} onChange={setSelectedValue}>
               <div className="relative">
                 <Combobox.Input
                   className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-lightBlue-600 sm:text-sm sm:leading-6"
                   placeholder={label || "Search..."}
-                  onChange={(event) => setQuery(event.target.value)}
-                  displayValue={(item: TableFilterDropdownItemType) =>
-                    item?.label
-                  }
+                  onChange={event => setQuery(event.target.value)}
+                  displayValue={(item: TableFilterDropdownItemType) => item?.label}
                 />
                 <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                  <ChevronUpDownIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
+                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </Combobox.Button>
 
                 {filteredItems.length > 0 && (
@@ -162,20 +131,13 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
                         className={({ active }) =>
                           classNames(
                             "relative cursor-default select-none py-2 pl-3 pr-9",
-                            active
-                              ? "bg-lightBlue-600 text-white"
-                              : "text-gray-900"
+                            active ? "bg-lightBlue-600 text-white" : "text-gray-900"
                           )
                         }
                       >
                         {({ active, selected }) => (
                           <>
-                            <span
-                              className={classNames(
-                                "block truncate",
-                                `${selected && "font-semibold"}`
-                              )}
-                            >
+                            <span className={classNames("block truncate", `${selected && "font-semibold"}`)}>
                               {item.label}
                             </span>
 
@@ -186,10 +148,7 @@ export const TableFilterDropdown: FC<TableFilterDropdownType> = ({
                                   active ? "text-white" : "text-lightBlue-600"
                                 )}
                               >
-                                <CheckIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>
                             )}
                           </>

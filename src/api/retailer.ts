@@ -12,13 +12,10 @@ export const getRetailers = async ({ jwt, retailerIds }: GetRetailersProps) => {
     product: "sco",
   };
 
-  return await axios.get(
-    `${domain}/v1/store/retailer?query=${JSON.stringify(retailerQuery)}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await axios.get(`${domain}/v1/store/retailer?query=${JSON.stringify(retailerQuery)}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  });
 };

@@ -9,10 +9,7 @@ type LoadingContextProps = {
   noBlur: boolean;
 };
 
-const LoadingProvider = ({
-  children,
-  noBlur,
-}: LoadingContextProps): JSX.Element => {
+const LoadingProvider = ({ children, noBlur }: LoadingContextProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (

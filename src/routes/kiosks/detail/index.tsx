@@ -3,14 +3,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import {
-  SessionContext,
-  SessionContextType,
-} from "../../../contexts/SessionContext";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../../../contexts/GlobalStateContext";
+import { SessionContext, SessionContextType } from "../../../contexts/SessionContext";
+import { GlobalStateContext, GlobalStateContextType } from "../../../contexts/GlobalStateContext";
 import { Store } from "../../../types/store";
 import Select, { Option } from "../../../components/inputs/select";
 import TextInput from "../../../components/inputs/textInput";
@@ -30,18 +24,13 @@ import { toastError, toastSuccess } from "../../../toasts";
 import { Retailer } from "../../../types/retailer";
 import Breadcrumbs from "../../../components/breadcrumbs";
 import transformKiosk from "../../../utils/transformKiosk";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../../contexts/LoadingContext";
+import { LoadingContext, LoadingContextType } from "../../../contexts/LoadingContext";
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
 import { fetchTerminals } from "../../../api/terminal";
 import { Action, Ipad } from "../../../types/kiosk";
 
-const appIdentifier = import.meta.env.PROD
-  ? "com.goskip.Self-Checkout"
-  : "com.goskip.Self-Checkout.sandbox";
+const appIdentifier = import.meta.env.PROD ? "com.goskip.Self-Checkout" : "com.goskip.Self-Checkout.sandbox";
 
 export type KioskDetailsForm = {
   kioskNumber: string;
@@ -96,19 +85,14 @@ const KioskDetails = (): JSX.Element => {
   const { storeId, kioskId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
-  const {
-    setPendingChangesMode,
-    pendingChangesMode,
-    setDiscardPendingChangesCallback,
-    setSavePendingChangesCallback,
-  } = useContext<GlobalStateContextType>(GlobalStateContext);
+  const { setPendingChangesMode, pendingChangesMode, setDiscardPendingChangesCallback, setSavePendingChangesCallback } =
+    useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
     token_info: { token },
   } = session;
   const [store, setStore] = useState<Store | null>(null);
-  const [defaultFormState, setDefaultFormState] =
-    useState<KioskDetailsForm>(emptyFormState);
+  const [defaultFormState, setDefaultFormState] = useState<KioskDetailsForm>(emptyFormState);
   const [formState, setFormState] = useState<KioskDetailsForm>(emptyFormState);
   const [kioskMetadata, setKioskMetadata] = useState<KioskMetadata>({
     insertedAt: null,
@@ -127,11 +111,11 @@ const KioskDetails = (): JSX.Element => {
     {
       enabled: !!kioskId && !!storeId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading store: ${storeId}`);
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         let store = data.data.retailers
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
@@ -156,17 +140,15 @@ const KioskDetails = (): JSX.Element => {
     {
       enabled: !!kioskId && !!storeId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading terminals: ${storeId}`);
       },
-      onSuccess: (data) => {
-        const terminalOptions: Option[] = data.data.terminals.map(
-          (terminal: { id: number; store_id: number }) => ({
-            key: String(terminal.id),
-            value: String(terminal.id),
-          })
-        );
+      onSuccess: data => {
+        const terminalOptions: Option[] = data.data.terminals.map((terminal: { id: number; store_id: number }) => ({
+          key: String(terminal.id),
+          value: String(terminal.id),
+        }));
 
         setTerminalOptions(terminalOptions);
       },
@@ -184,11 +166,11 @@ const KioskDetails = (): JSX.Element => {
     {
       enabled: !!kioskId && !!storeId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading kiosk: ${kioskId}.`);
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         const transformedData = transformKiosk(data.data);
 
         const newFormState: KioskDetailsForm = {
@@ -201,31 +183,22 @@ const KioskDetails = (): JSX.Element => {
                 value: String(transformedData.terminal_id),
               }
             : null,
-          mount: transformedData.mount
-            ? mounts.find((mount) => mount.value === transformedData.mount) ||
-              null
-            : null,
+          mount: transformedData.mount ? mounts.find(mount => mount.value === transformedData.mount) || null : null,
           network: transformedData.network
-            ? networks.find(
-                (network) => network.value === transformedData.network
-              ) || null
+            ? networks.find(network => network.value === transformedData.network) || null
             : null,
           pinpad: transformedData.pinpad
-            ? pinpads.find(
-                (pinpad) => pinpad.value === transformedData.pinpad
-              ) || null
+            ? pinpads.find(pinpad => pinpad.value === transformedData.pinpad) || null
             : null,
           printer: transformedData.printer
-            ? printers.find(
-                (printer) => printer.value === transformedData.printer
-              ) || null
+            ? printers.find(printer => printer.value === transformedData.printer) || null
             : null,
           pinpadSerial: transformedData?.pinpad_serial ?? "",
           printerSerial: transformedData?.printer_serial ?? "",
           ipadSerial: transformedData?.ipad_serial ?? "",
         };
 
-        setIpad((prevState) => ({
+        setIpad(prevState => ({
           ...prevState,
           last_txn: new Date(data.data.last_txn),
         }));
@@ -250,7 +223,7 @@ const KioskDetails = (): JSX.Element => {
     {
       enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading iPad: ${formState.ipadSerial}`);
         setIpad(emptyIpad);
@@ -258,17 +231,7 @@ const KioskDetails = (): JSX.Element => {
         setPendingChangesMode(false);
       },
       onSuccess: ({
-        data: {
-          device_name,
-          mdm_name,
-          app_version,
-          ios_version,
-          model,
-          serial,
-          battery_level,
-          group,
-          last_seen,
-        },
+        data: { device_name, mdm_name, app_version, ios_version, model, serial, battery_level, group, last_seen },
       }) => {
         const ipad: Ipad = {
           device_name,
@@ -282,7 +245,7 @@ const KioskDetails = (): JSX.Element => {
           last_seen: new Date(last_seen),
         };
 
-        setIpad((prevState) => ({
+        setIpad(prevState => ({
           ...prevState,
           ...ipad,
         }));
@@ -300,7 +263,7 @@ const KioskDetails = (): JSX.Element => {
     {
       enabled: !!kioskId && !!storeId && !!token && !!formState.ipadSerial,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading logs for iPad: ${formState.ipadSerial}`);
       },
@@ -318,8 +281,7 @@ const KioskDetails = (): JSX.Element => {
   );
 
   const { mutate, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: (props: KioskUpdateFormProps) =>
-      updateKiosk(props.queryParams, props.payloadParams),
+    mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);
       toastError("Problem updating kiosk.");
@@ -348,7 +310,7 @@ const KioskDetails = (): JSX.Element => {
     if (!pendingChangesMode) {
       setPendingChangesMode(true);
     }
-    setFormState((prevState) => ({
+    setFormState(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -359,7 +321,7 @@ const KioskDetails = (): JSX.Element => {
       if (!pendingChangesMode) {
         setPendingChangesMode(true);
       }
-      setFormState((prevState) => ({
+      setFormState(prevState => ({
         ...prevState,
         [name]: option,
       }));
@@ -434,11 +396,7 @@ const KioskDetails = (): JSX.Element => {
     }
 
     setSavePendingChangesCallback(() => () => {
-      if (
-        formState.kioskNumber === "" ||
-        isNaN(Number(formState.kioskNumber)) ||
-        Number(formState.kioskNumber) === 0
-      ) {
+      if (formState.kioskNumber === "" || isNaN(Number(formState.kioskNumber)) || Number(formState.kioskNumber) === 0) {
         toastError("Kiosk number must be an integer greater than 0.");
         return;
       }
@@ -470,42 +428,23 @@ const KioskDetails = (): JSX.Element => {
       <div className="mt-6 grid grid-cols-4">
         <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">
           <h2 className="text-xl font-medium text-gray-900">Kiosk details</h2>
-          <p className="mt-1 text-gray-500">
-            Identifiers, accessories, and connection details
-          </p>
+          <p className="mt-1 text-gray-500">Identifiers, accessories, and connection details</p>
           <hr className="my-4 border-gray-200" />
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
-              <label
-                htmlFor="kioskNumber"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="kioskNumber" className="block text-sm font-medium text-gray-700">
                 Kiosk Number
               </label>
-              <TextInput
-                htmlId="kioskNumber"
-                value={String(formState.kioskNumber)}
-                onChange={handleInputChange}
-              />
+              <TextInput htmlId="kioskNumber" value={String(formState.kioskNumber)} onChange={handleInputChange} />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="kioskDescription"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="kioskDescription" className="block text-sm font-medium text-gray-700">
                 Kiosk Description
               </label>
-              <TextInput
-                htmlId="kioskDescription"
-                value={formState.kioskDescription}
-                onChange={handleInputChange}
-              />
+              <TextInput htmlId="kioskDescription" value={formState.kioskDescription} onChange={handleInputChange} />
             </div>
             <div className="col-span-1">
-              <label
-                htmlFor="terminalId"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="terminalId" className="block text-sm font-medium text-gray-700">
                 Terminal ID
               </label>
               <Select
@@ -516,10 +455,7 @@ const KioskDetails = (): JSX.Element => {
               />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="mount"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="mount" className="block text-sm font-medium text-gray-700">
                 Mount
               </label>
               <Select
@@ -530,10 +466,7 @@ const KioskDetails = (): JSX.Element => {
               />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="network"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="network" className="block text-sm font-medium text-gray-700">
                 Network
               </label>
               <Select
@@ -544,10 +477,7 @@ const KioskDetails = (): JSX.Element => {
               />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="pinpad"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="pinpad" className="block text-sm font-medium text-gray-700">
                 Pinpad
               </label>
               <Select
@@ -558,23 +488,13 @@ const KioskDetails = (): JSX.Element => {
               />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="pinpadSerial"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="pinpadSerial" className="block text-sm font-medium text-gray-700">
                 Pinpad Serial #
               </label>
-              <TextInput
-                htmlId="pinpadSerial"
-                value={formState.pinpadSerial}
-                onChange={handleInputChange}
-              />
+              <TextInput htmlId="pinpadSerial" value={formState.pinpadSerial} onChange={handleInputChange} />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="printer"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="printer" className="block text-sm font-medium text-gray-700">
                 Printer
               </label>
               <Select
@@ -585,17 +505,10 @@ const KioskDetails = (): JSX.Element => {
               />
             </div>
             <div className="col-span-2">
-              <label
-                htmlFor="printerSerial"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="printerSerial" className="block text-sm font-medium text-gray-700">
                 Printer Serial #
               </label>
-              <TextInput
-                htmlId="printerSerial"
-                value={formState.printerSerial}
-                onChange={handleInputChange}
-              />
+              <TextInput htmlId="printerSerial" value={formState.printerSerial} onChange={handleInputChange} />
             </div>
           </div>
         </div>

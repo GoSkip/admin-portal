@@ -20,14 +20,10 @@ const StoreDetailsCard = ({ store }: StoreDetailsCardProps): JSX.Element => {
             <div className="flex flex-col gap-1">
               <div className="text-sm font-medium text-gray-500">Address</div>
               <p className="text-sm text-gray-400">{store.address || "--"}</p>
-              {store.address2 && (
-                <p className="text-sm text-gray-400">{store.address2}</p>
-              )}
+              {store.address2 && <p className="text-sm text-gray-400">{store.address2}</p>}
             </div>
             <div className="flex flex-col gap-1">
-              <div className="text-sm font-medium text-gray-500">
-                POS Site ID
-              </div>
+              <div className="text-sm font-medium text-gray-500">POS Site ID</div>
               <p className="text-sm text-gray-400">{store.posSiteId || "--"}</p>
             </div>
           </>

@@ -56,10 +56,7 @@ const Router = (): JSX.Element => {
           <Route path="/kiosks/new" element={<KioskNew />} />
           <Route path="/kiosks/:storeId/:kioskId" element={<KioskDetail />} />
           <Route path="/terminals/signup" element={<TerminalNew />} />
-          <Route
-            path="/terminals/signup/:storeId/:terminalSignupId"
-            element={<TerminalNewSignup />}
-          />
+          <Route path="/terminals/signup/:storeId/:terminalSignupId" element={<TerminalNewSignup />} />
           <Route path="/people">
             <Route path="clerks" element={<Clerks />} />
             <Route path="portal-users" element={<PortalUsers />} />

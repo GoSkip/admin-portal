@@ -3,49 +3,30 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import {
-  SessionContext,
-  SessionContextType,
-} from "../../../../contexts/SessionContext";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../../../../contexts/GlobalStateContext";
+import { SessionContext, SessionContextType } from "../../../../contexts/SessionContext";
+import { GlobalStateContext, GlobalStateContextType } from "../../../../contexts/GlobalStateContext";
 import { Store } from "../../../../types/store";
 import Select, { Option } from "../../../../components/inputs/select";
 import TextInput from "../../../../components/inputs/textInput";
 import { mounts, networks, pinpads, printers } from "../../../../utils/enums";
-import {
-  UpdateKioskPayloadParams,
-  UpdateKioskQueryParams,
-  fetchKiosk,
-  updateKiosk,
-} from "../../../../api/kiosk";
+import { UpdateKioskPayloadParams, UpdateKioskQueryParams, fetchKiosk, updateKiosk } from "../../../../api/kiosk";
 import { fetchStores } from "../../../../api/store";
 import StoreDetailsCard from "./storeDetailsCard";
 import MetadataCard from "./metadataCard";
 import { toastError, toastSuccess } from "../../../../toasts";
 import { Retailer } from "../../../../types/retailer";
 import transformKiosk from "../../../../utils/transformKiosk";
-import {
-  LoadingContext,
-  LoadingContextType,
-} from "../../../../contexts/LoadingContext";
+import { LoadingContext, LoadingContextType } from "../../../../contexts/LoadingContext";
 import ActionsCard, { TaxStrategyType } from "./actionsCard";
 import { fetchTerminals } from "../../../../api/terminal";
 import Dropdown, { DropdownItemType } from "../../../../components/dropdown";
 import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { TwoLineInfo } from "../../../../components/data/two-line-info";
 import Breadcrumbs from "../../../../components/breadcrumbs";
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { fetchFile } from "../../../../api/file";
 
-const appIdentifier = import.meta.env.PROD
-  ? "com.goskip.Self-Checkout"
-  : "com.goskip.Self-Checkout.sandbox";
+const appIdentifier = import.meta.env.PROD ? "com.goskip.Self-Checkout" : "com.goskip.Self-Checkout.sandbox";
 
 export type FileDetailsForm = {
   kioskNumber: string;
@@ -105,19 +86,14 @@ const FileDetails = (): JSX.Element => {
   const { storeId, fileId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
   const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
-  const {
-    setPendingChangesMode,
-    pendingChangesMode,
-    setDiscardPendingChangesCallback,
-    setSavePendingChangesCallback,
-  } = useContext<GlobalStateContextType>(GlobalStateContext);
+  const { setPendingChangesMode, pendingChangesMode, setDiscardPendingChangesCallback, setSavePendingChangesCallback } =
+    useContext<GlobalStateContextType>(GlobalStateContext);
   const {
     active_retailer,
     token_info: { token },
   } = session;
   const [store, setStore] = useState<Store | null>(null);
-  const [defaultFormState, setDefaultFormState] =
-    useState<FileDetailsForm>(emptyFormState);
+  const [defaultFormState, setDefaultFormState] = useState<FileDetailsForm>(emptyFormState);
   const [formState, setFormState] = useState<FileDetailsForm>(emptyFormState);
   const [kioskMetadata, setKioskMetadata] = useState<KioskMetadata>({
     insertedAt: null,
@@ -134,11 +110,11 @@ const FileDetails = (): JSX.Element => {
     {
       enabled: !!fileId && !!storeId && !!token,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading store: ${storeId}`);
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         let store = data.data.retailers
           .find((retailer: Retailer) => retailer.id === active_retailer.id)
           .stores.find((store: Store) => store.id === Number(storeId));
@@ -163,17 +139,15 @@ const FileDetails = (): JSX.Element => {
     {
       enabled: !!fileId && !!storeId && !!token && allowAxiosRequests,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading terminals: ${storeId}`);
       },
-      onSuccess: (data) => {
-        const terminalOptions: Option[] = data.data.terminals.map(
-          (terminal: { id: number; store_id: number }) => ({
-            key: String(terminal.id),
-            value: String(terminal.id),
-          })
-        );
+      onSuccess: data => {
+        const terminalOptions: Option[] = data.data.terminals.map((terminal: { id: number; store_id: number }) => ({
+          key: String(terminal.id),
+          value: String(terminal.id),
+        }));
 
         setTerminalOptions(terminalOptions);
       },
@@ -191,11 +165,11 @@ const FileDetails = (): JSX.Element => {
     {
       enabled: !!fileId && !!storeId && !!token && allowAxiosRequests,
       refetchOnWindowFocus: false,
-      onError: (error) => {
+      onError: error => {
         console.error(error);
         toastError(`Problem loading kiosk: ${fileId}.`);
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         const transformedData = transformKiosk(data.data);
 
         const newFormState: FileDetailsForm = {
@@ -208,24 +182,15 @@ const FileDetails = (): JSX.Element => {
                 value: String(transformedData.terminal_id),
               }
             : null,
-          mount: transformedData.mount
-            ? mounts.find((mount) => mount.value === transformedData.mount) ||
-              null
-            : null,
+          mount: transformedData.mount ? mounts.find(mount => mount.value === transformedData.mount) || null : null,
           network: transformedData.network
-            ? networks.find(
-                (network) => network.value === transformedData.network
-              ) || null
+            ? networks.find(network => network.value === transformedData.network) || null
             : null,
           pinpad: transformedData.pinpad
-            ? pinpads.find(
-                (pinpad) => pinpad.value === transformedData.pinpad
-              ) || null
+            ? pinpads.find(pinpad => pinpad.value === transformedData.pinpad) || null
             : null,
           printer: transformedData.printer
-            ? printers.find(
-                (printer) => printer.value === transformedData.printer
-              ) || null
+            ? printers.find(printer => printer.value === transformedData.printer) || null
             : null,
           pinpadSerial: transformedData?.pinpad_serial ?? "",
           printerSerial: transformedData?.printer_serial ?? "",
@@ -243,8 +208,7 @@ const FileDetails = (): JSX.Element => {
   );
 
   const { mutate, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: (props: KioskUpdateFormProps) =>
-      updateKiosk(props.queryParams, props.payloadParams),
+    mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);
       toastError("Problem updating kiosk.");
@@ -262,7 +226,7 @@ const FileDetails = (): JSX.Element => {
     if (!pendingChangesMode) {
       setPendingChangesMode(true);
     }
-    setFormState((prevState) => ({
+    setFormState(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -273,18 +237,14 @@ const FileDetails = (): JSX.Element => {
       if (!pendingChangesMode) {
         setPendingChangesMode(true);
       }
-      setFormState((prevState) => ({
+      setFormState(prevState => ({
         ...prevState,
         [name]: option,
       }));
     }
   };
 
-  const isLoading =
-    kioskIsFetching ||
-    storeIsFetching ||
-    terminalsIsFetching ||
-    mutationIsLoading;
+  const isLoading = kioskIsFetching || storeIsFetching || terminalsIsFetching || mutationIsLoading;
 
   useEffect(() => {
     if (isLoading) {
@@ -342,11 +302,7 @@ const FileDetails = (): JSX.Element => {
     }
 
     setSavePendingChangesCallback(() => () => {
-      if (
-        formState.kioskNumber === "" ||
-        isNaN(Number(formState.kioskNumber)) ||
-        Number(formState.kioskNumber) === 0
-      ) {
+      if (formState.kioskNumber === "" || isNaN(Number(formState.kioskNumber)) || Number(formState.kioskNumber) === 0) {
         toastError("Kiosk number must be an integer greater than 0.");
         return;
       }
@@ -387,9 +343,7 @@ const FileDetails = (): JSX.Element => {
           <Breadcrumbs
             root={{ target: "/admin/files", label: "Files" }}
             branches={[{ target: "#", label: "View Details" }]}
-            righthandComponent={
-              <Dropdown items={actionsDropdownItems} label="Actions" />
-            }
+            righthandComponent={<Dropdown items={actionsDropdownItems} label="Actions" />}
           />
           <div>
             <hr />
@@ -399,35 +353,18 @@ const FileDetails = (): JSX.Element => {
       <div className="mt-6 grid grid-cols-4">
         <div className="bg-white rounded-lg shadow p-5 col-span-4 sm:col-span-3">
           <div className="grid grid-cols-6 gap-4">
-            <TwoLineInfo
-              className="col-span-3"
-              label="File type"
-              value="Products (NAXML)"
-            ></TwoLineInfo>
-            <TwoLineInfo
-              className="col-span-3"
-              label="Status"
-              value="Success"
-              valueColor="success"
-            ></TwoLineInfo>
+            <TwoLineInfo className="col-span-3" label="File type" value="Products (NAXML)"></TwoLineInfo>
+            <TwoLineInfo className="col-span-3" label="Status" value="Success" valueColor="success"></TwoLineInfo>
             {true && (
               <>
                 <div className="col-span-2">
-                  <span className="text-sm font-medium text-coolGray-500">
-                    Items
-                  </span>
+                  <span className="text-sm font-medium text-coolGray-500">Items</span>
                 </div>
                 <div className="col-span-4">
-                  <ul
-                    role="list"
-                    className="divide-y divide-gray-200 rounded-md border border-gray-200"
-                  >
+                  <ul role="list" className="divide-y divide-gray-200 rounded-md border border-gray-200">
                     <li className="flex items-center justify-between gap-4 p-3 text-coolGray-900 text-sm leading-6">
                       <div className="flex flex-1 gap-2 items-center">
-                        <CheckCircleIcon
-                          className="h-auto w-5 flex-shrink-0 text-success"
-                          aria-hidden="true"
-                        />
+                        <CheckCircleIcon className="h-auto w-5 flex-shrink-0 text-success" aria-hidden="true" />
                         <div className="flex min-w-0 flex-1 gap-2">
                           <span className="truncate">Items in file</span>
                         </div>
@@ -443,21 +380,13 @@ const FileDetails = (): JSX.Element => {
             {true && (
               <>
                 <div className="col-span-2">
-                  <span className="text-sm font-medium text-coolGray-500">
-                    File issues
-                  </span>
+                  <span className="text-sm font-medium text-coolGray-500">File issues</span>
                 </div>
                 <div className="col-span-4">
-                  <ul
-                    role="list"
-                    className="divide-y divide-gray-200 rounded-md border border-gray-200"
-                  >
+                  <ul role="list" className="divide-y divide-gray-200 rounded-md border border-gray-200">
                     <li className="flex items-center justify-between gap-4 p-3 text-coolGray-900 text-sm leading-6">
                       <div className="flex flex-1 gap-2 items-center">
-                        <ExclamationCircleIcon
-                          className="h-auto w-5 flex-shrink-0 text-error"
-                          aria-hidden="true"
-                        />
+                        <ExclamationCircleIcon className="h-auto w-5 flex-shrink-0 text-error" aria-hidden="true" />
                         <div className="flex min-w-0 flex-1 gap-2">
                           <span className="truncate">Items ignored</span>
                         </div>

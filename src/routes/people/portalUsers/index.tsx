@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { portalUsers } from "../../../components/data/portalUsers.config";
-import {
-  BarsArrowUpIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { BarsArrowUpIcon, ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 
 const PortalUsers = (): JSX.Element => {
@@ -23,9 +19,7 @@ const PortalUsers = (): JSX.Element => {
   };
 
   const filteredUsers =
-    activeFilter === true
-      ? portalUsers.filter((user) => user.active)
-      : portalUsers.filter((user) => !user.active);
+    activeFilter === true ? portalUsers.filter(user => user.active) : portalUsers.filter(user => !user.active);
 
   return (
     <div>
@@ -55,9 +49,7 @@ const PortalUsers = (): JSX.Element => {
         <div>
           <button
             className={`inline-flex items-center px-1 text-md font-medium mr-10  ${
-              activeFilter === true
-                ? "border-b-2 border-indigo-500 pb-4 text-lightBlue-700"
-                : "pt-1 text-gray-400"
+              activeFilter === true ? "border-b-2 border-indigo-500 pb-4 text-lightBlue-700" : "pt-1 text-gray-400"
             }`}
             onClick={() => setActiveFilter(true)}
           >
@@ -65,9 +57,7 @@ const PortalUsers = (): JSX.Element => {
           </button>
           <button
             className={`inline-flex items-center px-1 text-md font-medium mr-10  ${
-              activeFilter === false
-                ? "border-b-2 border-indigo-500 pb-4 text-lightBlue-500"
-                : "pt-1 text-gray-400"
+              activeFilter === false ? "border-b-2 border-indigo-500 pb-4 text-lightBlue-500" : "pt-1 text-gray-400"
             }`}
             onClick={() => setActiveFilter(false)}
           >
@@ -79,10 +69,7 @@ const PortalUsers = (): JSX.Element => {
           <div className="mt-2 flex rounded-md shadow-sm w-2/3">
             <div className="relative flex flex-grow items-stretch focus-within:z-10">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </div>
               <input
                 type="filter"
@@ -96,15 +83,9 @@ const PortalUsers = (): JSX.Element => {
               type="button"
               className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-md font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             >
-              <BarsArrowUpIcon
-                className="-ml-0.5 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <BarsArrowUpIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
               <span className="text-gray-600 font-normal">{t("sort")}</span>
-              <ChevronDownIcon
-                className="-ml-0.5 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronDownIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
             </button>
           </div>
           <div className="mt-2 flex rounded-md w-64">
@@ -121,10 +102,7 @@ const PortalUsers = (): JSX.Element => {
               type="button"
               className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-600 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             >
-              <ChevronDownIcon
-                className="-ml-0.5 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronDownIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -136,10 +114,7 @@ const PortalUsers = (): JSX.Element => {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th
-                      scope="col"
-                      className="pl-6 text-left text-sm font-normal text-gray-500"
-                    >
+                    <th scope="col" className="pl-6 text-left text-sm font-normal text-gray-500">
                       <input type="checkbox" />
                     </th>
                     <th
@@ -148,50 +123,31 @@ const PortalUsers = (): JSX.Element => {
                     >
                       {t("first")}
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                    >
+                    <th scope="col" className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500">
                       {t("last")}
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                    >
+                    <th scope="col" className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500">
                       {t("email")}
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-xs font-medium uppercase text-gray-500"
-                    >
+                    <th scope="col" className="px-3 py-3.5 text-center text-xs font-medium uppercase text-gray-500">
                       {t("role")}
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                    >
+                    <th scope="col" className="px-3 py-3.5 text-left text-xs font-medium uppercase text-gray-500">
                       {t("stores")}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {filteredUsers.map((user, i) => (
-                    <tr
-                      key={`${i}-${user.email}`}
-                      onClick={() => handleActiveUserClick(user.id)}
-                    >
+                    <tr key={`${i}-${user.email}`} onClick={() => handleActiveUserClick(user.id)}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
                         <input type="checkbox" />
                       </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
                         {user.first}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {user.last}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-                        {user.email}
-                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{user.last}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-800">{user.email}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">
                         <span
                           className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-normal ${
@@ -215,9 +171,7 @@ const PortalUsers = (): JSX.Element => {
                             })}
                           </span>
                         ) : (
-                          user.stores.map((store, ii) => (
-                            <span key={`${store}-${i}-${ii}`}>{store}</span>
-                          ))
+                          user.stores.map((store, ii) => <span key={`${store}-${i}-${ii}`}>{store}</span>)
                         )}
                       </td>
                     </tr>

@@ -5,17 +5,13 @@ export type LoginProps = {
   mocked?: boolean;
 };
 
-export const login = async ({
-  username,
-  password,
-  mocked,
-}: LoginProps): Promise<any> => {
+export const login = async ({ username, password, mocked }: LoginProps): Promise<any> => {
   if (mocked) {
     /*
       The `mocked` property is added as a workaround to bypass login.
       You can use it in case if API server is down or your internet is off.
     */
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve({
         data: {
           selectable_stores: [],

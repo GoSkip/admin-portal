@@ -1,17 +1,11 @@
 import PrimaryButton from "./buttons/primary";
 import SecondaryButton from "./buttons/secondary";
 import { useContext } from "react";
-import {
-  GlobalStateContext,
-  GlobalStateContextType,
-} from "../contexts/GlobalStateContext";
+import { GlobalStateContext, GlobalStateContextType } from "../contexts/GlobalStateContext";
 
 const PendingBar = (): JSX.Element => {
-  const {
-    savePendingChangesCallback,
-    discardPendingChangesCallback,
-    setPendingChangesMode,
-  } = useContext<GlobalStateContextType>(GlobalStateContext);
+  const { savePendingChangesCallback, discardPendingChangesCallback, setPendingChangesMode } =
+    useContext<GlobalStateContextType>(GlobalStateContext);
 
   return (
     <div className="fixed z-30 flex mx-auto items-center justify-between w-full bg-black text-white h-[64px]">
@@ -26,11 +20,7 @@ const PendingBar = (): JSX.Element => {
             discardPendingChangesCallback();
           }}
         />
-        <PrimaryButton
-          additionalClasses="mr-4"
-          label="Save"
-          onClick={savePendingChangesCallback}
-        />
+        <PrimaryButton additionalClasses="mr-4" label="Save" onClick={savePendingChangesCallback} />
       </div>
     </div>
   );
