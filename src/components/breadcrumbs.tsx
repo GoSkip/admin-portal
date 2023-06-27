@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 type BreadcrumbLink = {
   label: string;
