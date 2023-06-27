@@ -21,6 +21,7 @@ import { Store } from "../../types/store";
 import { Retailer } from "../../types/retailer";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import Breadcrumbs from "../../components/breadcrumbs";
 import SecondaryButton from "../../components/buttons/secondary";
 import PrimaryButton from "../../components/buttons/primary";
 
@@ -137,44 +138,13 @@ const Signup = (): JSX.Element => {
   const svg_code = `data:image/svg+xml; base64, ${terminalSignup?.qr_svg}`;
   return (
     <div className="w-full h-auto">
-      <nav className="flex" aria-label="Breadcrumb">
-        <ol role="list" className="flex items-center space-x-4 pb-6">
-          <li>
-            <div>
-              <Link
-                to="/kiosks"
-                className="text-gray-400 hover:text-gray-500 text-xl"
-              >
-                Kiosks
-              </Link>
-            </div>
-          </li>
-          <li>
-            <div className="flex items-center">
-              <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              <Link to="/terminals/signup" className="ml-4 text-xl">
-                New Terminal
-              </Link>
-            </div>
-          </li>
-          {store?.name ? (
-            <li>
-              <div className="flex items-center">
-                <ChevronRightIcon
-                  className="h-5 w-5 flex-shrink-0 text-gray-400"
-                  aria-hidden="true"
-                />
-                <Link to="#" className="ml-4 text-xl">
-                  {store?.name}
-                </Link>
-              </div>
-            </li>
-          ) : null}
-        </ol>
-      </nav>
+      <Breadcrumbs
+        root={{ target: "/kiosks", label: "Kiosks" }}
+        branches={[
+          { target: "/terminals/signup", label: "New Terminal" },
+          { target: "#", label: store?.name ?? "N/A" },
+        ]}
+      />
       <div>
         <hr />
       </div>

@@ -36,6 +36,7 @@ import { fetchTerminals } from "../../../../api/terminal";
 import Dropdown, { DropdownItemType } from "../../../../components/dropdown";
 import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { TwoLineInfo } from "../../../../components/data/two-line-info";
+import Breadcrumbs from "../../../../components/breadcrumbs";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -383,35 +384,13 @@ const FileDetails = (): JSX.Element => {
     <div className="w-full h-auto">
       <div className="grid grid-cols-4">
         <div className="col-span-4 sm:col-span-3">
-          <nav
-            className="flex items-center justify-between pb-5"
-            aria-label="Breadcrumb"
-          >
-            <ol role="list" className="flex items-center space-x-4">
-              <li>
-                <div>
-                  <Link
-                    to="/admin/files"
-                    className="text-gray-400 hover:text-gray-500 font-medium text-lg"
-                  >
-                    Files
-                  </Link>
-                </div>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <ChevronRightIcon
-                    className="h-5 w-5 flex-shrink-0 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <Link to="#" className="ml-4 font-medium text-lg">
-                    View Detail
-                  </Link>
-                </div>
-              </li>
-            </ol>
-            <Dropdown items={actionsDropdownItems} label="Actions"></Dropdown>
-          </nav>
+          <Breadcrumbs
+            root={{ target: "/admin/files", label: "Files" }}
+            branches={[{ target: "#", label: "View Details" }]}
+            righthandComponent={
+              <Dropdown items={actionsDropdownItems} label="Actions" />
+            }
+          />
           <div>
             <hr />
           </div>
