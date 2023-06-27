@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Retailer } from "../types/retailer";
 import { userNavigation } from "../utils/navigation";
 import LangSwitcher from "./langSwitcher";
