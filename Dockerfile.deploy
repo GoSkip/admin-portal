@@ -1,6 +1,6 @@
 FROM node:lts-alpine as builder
 
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN yarn
 RUN mkdir /app-ui
 RUN mv ./node_modules ./app-ui
