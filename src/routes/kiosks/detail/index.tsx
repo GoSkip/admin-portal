@@ -28,6 +28,7 @@ import StoreDetailsCard from "../../../components/cards/storeDetailsCard";
 import MetadataCard from "./metadataCard";
 import { toastError, toastSuccess } from "../../../toasts";
 import { Retailer } from "../../../types/retailer";
+import Breadcrumbs from "../../../components/breadcrumbs";
 import transformKiosk from "../../../utils/transformKiosk";
 import {
   LoadingContext,
@@ -454,31 +455,15 @@ const KioskDetails = (): JSX.Element => {
 
   return (
     <div className="w-full h-auto">
-      <nav className="flex" aria-label="Breadcrumb">
-        <ol role="list" className="flex items-center space-x-4 pb-6">
-          <li>
-            <div>
-              <Link
-                to="/kiosks"
-                className="text-gray-400 hover:text-gray-500 text-xl"
-              >
-                Kiosks
-              </Link>
-            </div>
-          </li>
-          <li>
-            <div className="flex items-center">
-              <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              <Link to="#" className="ml-4 text-xl">
-                {store?.name ?? "N/A"} - {defaultFormState.kioskNumber}
-              </Link>
-            </div>
-          </li>
-        </ol>
-      </nav>
+      <Breadcrumbs
+        root={{ target: "/kiosks", label: "Kiosks" }}
+        branches={[
+          {
+            target: "#",
+            label: `${store?.name ?? "N/A"} - ${defaultFormState.kioskNumber}`,
+          },
+        ]}
+      />
       <div>
         <hr />
       </div>

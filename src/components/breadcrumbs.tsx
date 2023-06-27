@@ -8,7 +8,7 @@ type BreadcrumbLink = {
 type BreadcrumbsProps = {
   root: BreadcrumbLink;
   branches: BreadcrumbLink[];
-  righthandComponent: JSX.Element;
+  righthandComponent?: JSX.Element;
 };
 
 const Breadcrumbs = ({
