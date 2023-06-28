@@ -1,22 +1,22 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { toastError } from "../../toasts";
-import { Kiosk } from "../../types/kiosk";
+import { toastError } from "@/toasts";
+import { Kiosk } from "@itypes/kiosk";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import formatMinsHours from "../../utils/formatMinsHours";
+import formatMinsHours from "@utils/formatMinsHours";
 import { differenceInMinutes } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { fetchKiosksByRetailer } from "../../api/kiosk";
+import { fetchKiosksByRetailer } from "@api/kiosk";
 import { useNavigate } from "react-router-dom";
-import requirePermissions from "../../hooks/requirePermissions";
+import requirePermissions from "@hooks/requirePermissions";
 import classNames from "classnames";
-import { SessionContext, SessionContextType } from "../../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 // @ts-ignore
 import { set } from "lodash";
-import { LoadingContext, LoadingContextType } from "../../contexts/LoadingContext";
-import { GlobalStateContext, GlobalStateContextType } from "../../contexts/GlobalStateContext";
-import PrimaryButton from "../../components/buttons/primary";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
+import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
+import PrimaryButton from "@components/buttons/primary";
 import { Trans, useTranslation } from "react-i18next";
-import SecondaryButton from "../../components/buttons/secondary";
+import SecondaryButton from "@components/buttons/secondary";
 const MAX_MINUTES_BEFORE_WARNING = 300; /* 5 hours */
 export const REFETCH_INTERVAL = 1000 * 60 * 1; /* 1 minutes */
 

@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { LoadingContext, LoadingContextType } from "../contexts/LoadingContext";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
-import { Retailer } from "../types/retailer";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { Retailer } from "@itypes/retailer";
 import { useQuery } from "@tanstack/react-query";
 import { Outlet, useLocation } from "react-router-dom";
-import { getRetailers } from "../api/retailer";
-import { toastError } from "../toasts";
-import NavBar from "../components/navBar";
-import Sidebar from "../components/sideBar";
-import LoadingProvider from "../providers/LoadingProvider";
+import { getRetailers } from "@api/retailer";
+import { toastError } from "@/toasts";
+import NavBar from "@components/navBar";
+import Sidebar from "@components/sideBar";
+import LoadingProvider from "@providers/LoadingProvider";
 
 interface DashboardProps {
   renderExceptions: string[];

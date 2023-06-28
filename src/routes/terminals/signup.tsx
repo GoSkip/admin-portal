@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { SessionContext, SessionContextType } from "../../contexts/SessionContext";
-import { LoadingContext, LoadingContextType } from "../../contexts/LoadingContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
 import { useQuery } from "@tanstack/react-query";
-import { SendTerminalSignupEmailParams, fetchTerminalSignup, sendTerminalSignupEmail } from "../../api/terminal";
-import { toastError, toastSuccess } from "../../toasts";
-import { fetchStores } from "../../api/store";
-import { Store } from "../../types/store";
-import { Retailer } from "../../types/retailer";
+import { SendTerminalSignupEmailParams, fetchTerminalSignup, sendTerminalSignupEmail } from "@api/terminal";
+import { toastError, toastSuccess } from "@/toasts";
+import { fetchStores } from "@api/store";
+import { Store } from "@itypes/store";
+import { Retailer } from "@itypes/retailer";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import Breadcrumbs from "../../components/breadcrumbs";
-import SecondaryButton from "../../components/buttons/secondary";
-import PrimaryButton from "../../components/buttons/primary";
+import Breadcrumbs from "@components/breadcrumbs";
+import SecondaryButton from "@components/buttons/secondary";
+import PrimaryButton from "@components/buttons/primary";
 
 type TerminalSignup = {
   id: number;

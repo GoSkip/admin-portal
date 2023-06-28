@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 
 function requirePermissions(requiredPermissions: string[]) {
   const {

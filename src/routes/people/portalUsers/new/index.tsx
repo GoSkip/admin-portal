@@ -1,5 +1,5 @@
 import { useState, Fragment } from "react";
-import { roles } from "../../../../components/data/roles.config";
+import { roles } from "@components/data/roles.config";
 import { useNavigate } from "react-router-dom";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Listbox, Transition } from "@headlessui/react";

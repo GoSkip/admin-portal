@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LoadingContext } from "../contexts/LoadingContext";
+import { LoadingContext } from "@contexts/LoadingContext";
 import { Transition } from "@headlessui/react";
 import { ClipLoader } from "react-spinners";
 import classNames from "classnames";

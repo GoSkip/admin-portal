@@ -1,4 +1,4 @@
-import { Option } from "../components/inputs/select";
+import { Option } from "@components/inputs/select";
 export enum Mount {
   Counter = "counter",
   Floor = "floor",

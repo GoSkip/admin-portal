@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Retailer } from "../types/retailer";
-import { userNavigation } from "../utils/navigation";
+import { Retailer } from "@itypes/retailer";
+import { userNavigation } from "@utils/navigation";
 import LangSwitcher from "./langSwitcher";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +12,7 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import { FC } from "react";
 import { IconButton } from "./buttons/icon";
 import { NavLink } from "react-router-dom";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

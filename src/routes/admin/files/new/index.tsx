@@ -1,20 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { SessionContext, SessionContextType } from "../../../../contexts/SessionContext";
-import { Store, emptyStore } from "../../../../types/store";
-import Select, { Option } from "../../../../components/inputs/select";
-import SecondaryButton from "../../../../components/buttons/secondary";
-import PrimaryButton from "../../../../components/buttons/primary";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { Store, emptyStore } from "@itypes/store";
+import Select, { Option } from "@components/inputs/select";
+import SecondaryButton from "@components/buttons/secondary";
+import PrimaryButton from "@components/buttons/primary";
 import { BeatLoader } from "react-spinners";
-import { Session } from "../../../../types/session";
+import { Session } from "@itypes/session";
 import { useMutation } from "@tanstack/react-query";
-import { LoadingContext, LoadingContextType } from "../../../../contexts/LoadingContext";
-import { CreateKioskPayloadParams, CreateKioskQueryParams, createKiosk } from "../../../../api/kiosk";
-import { toastError } from "../../../../toasts";
-import SelectList, { SelectListItemType } from "../../../../components/inputs/selectList";
-import Breadcrumbs from "../../../../components/breadcrumbs";
-import { FileTypes } from "../../../../assets/consts/files";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
+import { CreateKioskPayloadParams, CreateKioskQueryParams, createKiosk } from "@api/kiosk";
+import { toastError } from "@/toasts";
+import SelectList, { SelectListItemType } from "@components/inputs/selectList";
+import Breadcrumbs from "@components/breadcrumbs";
+import { FileTypes } from "@assets/consts/files";
 
 type NewKioskForm = {
   store: Option | null;

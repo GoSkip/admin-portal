@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
-import TextInput from "../../../components/inputs/textInput";
-import PrimaryButton from "../../../components/buttons/primary";
-import SecondaryButton from "../../../components/buttons/secondary";
-import { Ipad } from "../../../types/kiosk";
+import TextInput from "@components/inputs/textInput";
+import PrimaryButton from "@components/buttons/primary";
+import SecondaryButton from "@components/buttons/secondary";
+import { Ipad } from "@itypes/kiosk";
 import { KioskDetailsForm } from ".";
 import { differenceInMinutes } from "date-fns";
-import formatMinsHours from "../../../utils/formatMinsHours";
+import formatMinsHours from "@utils/formatMinsHours";
 
 type IpadCardProps = {
   enterSerialNoMode: boolean;

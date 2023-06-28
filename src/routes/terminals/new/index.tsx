@@ -1,17 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { SessionContext, SessionContextType } from "../../../contexts/SessionContext";
-import { Store } from "../../../types/store";
-import Select, { Option } from "../../../components/inputs/select";
-import SecondaryButton from "../../../components/buttons/secondary";
-import PrimaryButton from "../../../components/buttons/primary";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { Store } from "@itypes/store";
+import Select, { Option } from "@components/inputs/select";
+import SecondaryButton from "@components/buttons/secondary";
+import PrimaryButton from "@components/buttons/primary";
 import { BeatLoader } from "react-spinners";
 import { useMutation } from "@tanstack/react-query";
-import Breadcrumbs from "../../../components/breadcrumbs";
-import { LoadingContext, LoadingContextType } from "../../../contexts/LoadingContext";
-import { CreateTerminalSignupQueryParams, createTerminalSignup } from "../../../api/terminal";
-import { toastError } from "../../../toasts";
+import Breadcrumbs from "@components/breadcrumbs";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
+import { CreateTerminalSignupQueryParams, createTerminalSignup } from "@api/terminal";
+import { toastError } from "@/toasts";
 
 type NewTerminalForm = {
   store: Option | null;

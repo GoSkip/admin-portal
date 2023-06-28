@@ -3,12 +3,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { SessionContext, SessionContextType } from "../../../contexts/SessionContext";
-import { GlobalStateContext, GlobalStateContextType } from "../../../contexts/GlobalStateContext";
-import { Store } from "../../../types/store";
-import Select, { Option } from "../../../components/inputs/select";
-import TextInput from "../../../components/inputs/textInput";
-import { mounts, networks, pinpads, printers } from "../../../utils/enums";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
+import { Store } from "@itypes/store";
+import Select, { Option } from "@components/inputs/select";
+import TextInput from "@components/inputs/textInput";
+import { mounts, networks, pinpads, printers } from "@utils/enums";
 import {
   UpdateKioskPayloadParams,
   UpdateKioskQueryParams,
@@ -16,19 +16,21 @@ import {
   fetchKioskIpad,
   fetchKioskIpadLogs,
   updateKiosk,
-} from "../../../api/kiosk";
-import { fetchStores } from "../../../api/store";
-import StoreDetailsCard from "../../../components/cards/storeDetailsCard";
+} from "@api/kiosk";
+import { fetchStores } from "@api/store";
+import StoreDetailsCard from "@components/cards/storeDetailsCard";
 import MetadataCard from "./metadataCard";
-import { toastError, toastSuccess } from "../../../toasts";
-import { Retailer } from "../../../types/retailer";
-import Breadcrumbs from "../../../components/breadcrumbs";
-import transformKiosk from "../../../utils/transformKiosk";
-import { LoadingContext, LoadingContextType } from "../../../contexts/LoadingContext";
+import { toastError, toastSuccess } from "@/toasts";
+import { Retailer } from "@itypes/retailer";
+import Breadcrumbs from "@components/breadcrumbs";
+import transformKiosk from "@utils/transformKiosk";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
-import { fetchTerminals } from "../../../api/terminal";
-import { Action, Ipad } from "../../../types/kiosk";
+import { fetchTerminals } from "@api/terminal";
+import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
+import Dropdown, { DropdownItemType } from "@components/dropdown";
+import { Action, Ipad } from "@itypes/kiosk";
 
 const appIdentifier = import.meta.env.PROD ? "com.goskip.Self-Checkout" : "com.goskip.Self-Checkout.sandbox";
 
@@ -78,6 +80,27 @@ const emptyIpad: Ipad = {
   battery_level: "",
   group: "",
 };
+
+const actionsDropdownItems: DropdownItemType[] = [
+  {
+    name: "Restart iPad",
+    value: "restart-ipad",
+    icon: ArrowDownTrayIcon,
+    onClick: () => {},
+  },
+  {
+    name: "Push assigned apps",
+    value: "push-assigned-apps",
+    icon: ArrowDownTrayIcon,
+    onClick: () => {},
+  },
+  {
+    name: "Refresh iPad details",
+    value: "refresh-ipad-details",
+    icon: ArrowDownTrayIcon,
+    onClick: () => {},
+  },
+];
 
 const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
@@ -413,17 +436,22 @@ const KioskDetails = (): JSX.Element => {
 
   return (
     <div className="w-full h-auto">
-      <Breadcrumbs
-        root={{ target: "/kiosks", label: "Kiosks" }}
-        branches={[
-          {
-            target: "#",
-            label: `${store?.name ?? "N/A"} - ${defaultFormState.kioskNumber}`,
-          },
-        ]}
-      />
-      <div>
-        <hr />
+      <div className="grid grid-cols-4">
+        <div className="col-span-4 sm:col-span-3">
+          <Breadcrumbs
+            root={{ target: "/kiosks", label: "Kiosks" }}
+            branches={[
+              {
+                target: "#",
+                label: `${store?.name ?? "N/A"} - ${defaultFormState.kioskNumber}`,
+              },
+            ]}
+            righthandComponent={<Dropdown items={actionsDropdownItems} label="Actions" />}
+          />
+          <div>
+            <hr />
+          </div>
+        </div>
       </div>
       <div className="mt-6 grid grid-cols-4">
         <div className="bg-white rounded-lg shadow-sm p-6 col-span-4 sm:col-span-3">

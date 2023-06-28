@@ -1,8 +1,8 @@
 import React, { FC, useLayoutEffect, useRef, useState } from "react";
-import { IconButton } from "../buttons/icon";
-import { TableFilterDropdown, TableFilterDropdownItemType } from "../inputs/tableFilterDropdown";
+import { IconButton } from "@components/buttons/icon";
+import { TableFilterDropdown, TableFilterDropdownItemType } from "@components/inputs/tableFilterDropdown";
 import { mdiMenuDown, mdiMenuUp } from "@mdi/js";
-import { dateFormatter } from "../../utils/data-types";
+import { dateFormatter } from "@utils/data-types";
 // @ts-ignore
 import { set } from "lodash";
 import {
@@ -11,7 +11,7 @@ import {
   advancedDynamicSort,
   dynamicFilter,
   dynamicSort,
-} from "../../utils/array-sort-filter";
+} from "@utils/array-sort-filter";
 
 export enum HeaderTypes {
   STRING = "string",

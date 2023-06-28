@@ -1,4 +1,4 @@
-import { HeaderTypes } from "../components/data/skip-table";
+import { HeaderTypes } from "@components/data/skip-table";
 import { dateFormatter } from "./data-types";
 
 export const dynamicSort = (...props: any[]) => {

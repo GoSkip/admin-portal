@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GlobalStateContext } from "../contexts/GlobalStateContext";
+import { GlobalStateContext } from "@contexts/GlobalStateContext";
 
 type GlobalStateContextProps = {
   children: any;

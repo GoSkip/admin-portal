@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import classNames from "classnames";
-import { Action } from "../../../types/kiosk";
+import { Action } from "@itypes/kiosk";
 
 type ActionsCardProps = {
   actions: Action[];
