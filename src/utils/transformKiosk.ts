@@ -1,4 +1,4 @@
-import { Kiosk } from "../types/kiosk";
+import { Kiosk } from "@itypes/kiosk";
 
 const transformKiosk = (kiosk: any): Kiosk => {
   let result: Kiosk = {

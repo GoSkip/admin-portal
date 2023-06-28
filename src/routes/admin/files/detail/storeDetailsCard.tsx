@@ -1,4 +1,4 @@
-import { Store } from "../../../../types/store";
+import { Store } from "@itypes/store";
 
 type StoreDetailsCardProps = {
   store: Store | null;

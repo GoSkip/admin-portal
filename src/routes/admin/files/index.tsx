@@ -1,30 +1,31 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { File, createFile, getFileStatus } from "../../../components/data/files.config";
+import { File, createFile, getFileStatus } from "@components/data/files.config";
 import { BarsArrowUpIcon, ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import PrimaryButton from "../../../components/buttons/primary";
-import HeadingMd from "../../../components/typography/headingMd";
-import Dropdown, { DropdownItemType } from "../../../components/dropdown";
+import PrimaryButton from "@components/buttons/primary";
+import HeadingMd from "@components/typography/headingMd";
+import Dropdown, { DropdownItemType } from "@components/dropdown";
 import { ArrowDownTrayIcon, ArrowPathIcon, FunnelIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
-import { fetchRetailerFiles } from "../../../api/file";
-import { SessionContext, SessionContextType } from "../../../contexts/SessionContext";
-import { toastError } from "../../../toasts";
-import requirePermissions from "../../../hooks/requirePermissions";
-import { LoadingContext, LoadingContextType } from "../../../contexts/LoadingContext";
-import { GlobalStateContext, GlobalStateContextType } from "../../../contexts/GlobalStateContext";
+import { fetchRetailerFiles } from "@api/file";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import { toastError } from "@/toasts";
+import requirePermissions from "@hooks/requirePermissions";
+import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
+import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
 // @ts-ignore
 import { set } from "lodash";
-import { REFETCH_INTERVAL, calcTotalPages } from "../../kiosks";
-import { IconButton } from "../../../components/buttons/icon";
+import { REFETCH_INTERVAL, calcTotalPages } from "@routes/kiosks";
+import { IconButton } from "@components/buttons/icon";
 import { mdiFilterVariant, mdiMenuDown } from "@mdi/js";
-import { TableFilterDropdown } from "../../../components/inputs/tableFilterDropdown";
-import { HeaderTypes, SkipTable, TableHeaderType } from "../../../components/data/skip-table";
-import { ObjectOfStrings } from "../../../utils/data-types";
+import { TableFilterDropdown } from "@components/inputs/tableFilterDropdown";
+import { HeaderTypes, SkipTable, TableHeaderType } from "@components/data/skip-table";
+import { ObjectOfStrings } from "@utils/data-types";
 import { useTranslation } from "react-i18next";
 
 const Files = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  // @ts-ignore
   const { t } = useTranslation();
 
   // const handleUploadFile = (file: File) => {

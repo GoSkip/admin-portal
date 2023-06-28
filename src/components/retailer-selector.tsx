@@ -3,8 +3,8 @@ import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import React, { FC, Fragment, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { SessionContextType, SessionContext } from "../contexts/SessionContext";
-import { Retailer } from "../types/retailer";
+import { SessionContextType, SessionContext } from "@contexts/SessionContext";
+import { Retailer } from "@itypes/retailer";
 
 export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({ retailers }) => {
   const { session, setActiveRetailer } = useContext<SessionContextType>(SessionContext);

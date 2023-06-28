@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { portalUsers } from "../../../components/data/portalUsers.config";
+import { portalUsers } from "@components/data/portalUsers.config";
 import { BarsArrowUpIcon, ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 
 const PortalUsers = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  // @ts-ignore
   const { t } = useTranslation();
 
   const navigate = useNavigate();

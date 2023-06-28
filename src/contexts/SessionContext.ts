@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import { Retailer } from "../types/retailer";
-import { Session, emptySession } from "../types/session";
+import { Retailer } from "@itypes/retailer";
+import { Session, emptySession } from "@itypes/session";
 
 export type SessionContextType = {
   session: Session;

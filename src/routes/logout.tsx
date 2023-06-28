@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toastSuccess } from "../toasts";
+import { toastSuccess } from "@/toasts";
 
 const Logout = (): JSX.Element => {
   const navigate = useNavigate();

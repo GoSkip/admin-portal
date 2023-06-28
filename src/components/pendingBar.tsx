@@ -1,7 +1,7 @@
 import PrimaryButton from "./buttons/primary";
 import SecondaryButton from "./buttons/secondary";
 import { useContext } from "react";
-import { GlobalStateContext, GlobalStateContextType } from "../contexts/GlobalStateContext";
+import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
 
 const PendingBar = (): JSX.Element => {
   const { savePendingChangesCallback, discardPendingChangesCallback, setPendingChangesMode } =

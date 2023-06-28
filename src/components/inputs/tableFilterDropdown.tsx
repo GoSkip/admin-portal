@@ -1,12 +1,12 @@
 import React, { FC, Fragment, useEffect, useState } from "react";
-import { IconButton } from "../buttons/icon";
+import { IconButton } from "@components/buttons/icon";
 import { mdiFilterVariant } from "@mdi/js";
 
 import { Menu, Transition, Combobox } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Icon from "@mdi/react";
-import { uniqueArrayByKey } from "../../utils/data-types";
-import { stopPropagation } from "../../utils/events";
+import { uniqueArrayByKey } from "@utils/data-types";
+import { stopPropagation } from "@utils/events";
 
 export type TableFilterDropdownItemType = {
   label: string;

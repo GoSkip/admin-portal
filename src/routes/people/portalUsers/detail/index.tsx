@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { portalUsers } from "../../../../components/data/portalUsers.config";
+import { portalUsers } from "@components/data/portalUsers.config";
 import { useNavigate } from "react-router-dom";
 
 const PortalUserDetail = () => {

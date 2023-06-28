@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { SessionContext } from "../contexts/SessionContext";
-import { Session, emptySession } from "../types/session";
+import { SessionContext } from "@contexts/SessionContext";
+import { Session, emptySession } from "@itypes/session";
 // @ts-ignore
-import advancedStoreSort from "../utils/advancedStoreSort";
+import advancedStoreSort from "@utils/advancedStoreSort";
 import { isPast } from "date-fns";
-import { Retailer } from "../types/retailer";
+import { Retailer } from "@itypes/retailer";
 
 type SessionContextProps = {
   children: any;

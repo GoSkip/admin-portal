@@ -2,8 +2,8 @@ import react, { FC, Fragment, useContext, useEffect, useState } from "react";
 
 import { Menu, Transition } from "@headlessui/react";
 import ReactCountryFlag from "react-country-flag";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
-import i18n from "../i18n";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
+import i18n from "@/i18n";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 import { Navigate } from "react-router-dom";
-import { Session } from "../types/session";
+import { Session } from "@itypes/session";
 import { useLocation } from "react-router-dom";
 
 interface ProtectedRoutesProps {

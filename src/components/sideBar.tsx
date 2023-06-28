@@ -13,12 +13,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { Retailer } from "../types/retailer";
-import skipLogo from "../assets/images/skip-logo.svg";
+import { Retailer } from "@itypes/retailer";
+import skipLogo from "@assets/images/skip-logo.svg";
 import { RetailerSelector } from "./retailer-selector";
 import { useTranslation } from "react-i18next";
 import PendingBar from "./pendingBar";
-import { GlobalStateContext, GlobalStateContextType } from "../contexts/GlobalStateContext";
+import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -32,6 +32,7 @@ type SidebarProps = {
 
 const Sidebar: FC<SidebarProps> = ({ open, retailers, setOpen }) => {
   const { pendingChangesMode } = useContext<GlobalStateContextType>(GlobalStateContext);
+  // @ts-ignore
   const { t } = useTranslation();
   const location = useLocation();
 

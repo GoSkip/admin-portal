@@ -1,4 +1,4 @@
-import { NavElement } from "../types/navElement";
+import { NavElement } from "@itypes/navElement";
 import {
   ChartBarIcon,
   ComputerDesktopIcon,

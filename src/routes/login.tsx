@@ -1,17 +1,17 @@
 import { useEffect, useState, useContext } from "react";
-import { toastError } from "../toasts";
-import { SessionContext, SessionContextType } from "../contexts/SessionContext";
+import { toastError } from "@/toasts";
+import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Transition } from "@headlessui/react";
-import { login, LoginProps } from "../api/login";
+import { login, LoginProps } from "@api/login";
 import { ClipLoader } from "react-spinners";
 import classNames from "classnames";
-import { emptyRetailer } from "../types/retailer";
+import { emptyRetailer } from "@itypes/retailer";
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-import store_logo from "../assets/images/Image@2x.webp";
-import standard_logo from "../assets/images/standard-logo.webp";
+import store_logo from "@assets/images/Image@2x.webp";
+import standard_logo from "@assets/images/standard-logo.webp";
 
 const Login = (): JSX.Element => {
   const { setSession } = useContext<SessionContextType>(SessionContext);
