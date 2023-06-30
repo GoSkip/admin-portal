@@ -1,4 +1,4 @@
-import axios from "axios";
+import { getOnboarding, postOnboarding, putOnboarding } from "./base";
 
 export type FetchKiosksByRetailerQueryParams = {
   jwt: string;
@@ -11,17 +11,6 @@ export type FetchKioskQueryParams = {
   jwt: string;
   storeId: number;
   kioskId: number;
-};
-
-export type FetchKioskIpadQueryParams = {
-  jwt: string;
-  serialNumber: string;
-  appIdentifier: string;
-};
-
-export type FetchKioskIpadLogsQueryParams = {
-  jwt: string;
-  serialNumber: string;
 };
 
 export type CreateKioskQueryParams = {
@@ -61,109 +50,49 @@ export type CreateKioskPayloadParams = {
   printer_serial?: string;
 };
 
-export const fetchKiosksByRetailer: any = async ({
-  retailerId,
-  page,
-  limit,
-  jwt,
-}: FetchKiosksByRetailerQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+export type CreateKioskParams = {
+  queryParams: CreateKioskQueryParams;
+  payloadParams: UpdateKioskQueryParams;
+};
 
-  return await axios.get(
-    `${domain}/v1/kiosk/list_by_retailer?query=${JSON.stringify({
-      retailer_id: retailerId,
-      page,
-      limit,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+export type UpdateKioskParams = {
+  queryParams: UpdateKioskQueryParams;
+  payloadParams: UpdateKioskPayloadParams;
+};
+
+export const fetchKiosksByRetailer = async ({ jwt, retailerId, page, limit }: FetchKiosksByRetailerQueryParams) => {
+  const query = {
+    retailer_id: retailerId,
+    page,
+    limit,
+  };
+
+  return await getOnboarding({ jwt, endpoint: "/kiosk/list_by_retailer", query });
 };
 
 export const fetchKiosk = async ({ jwt, storeId, kioskId }: FetchKioskQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+  const query = {
+    store_id: storeId,
+    kiosk_id: kioskId,
+  };
 
-  return await axios.get(
-    `${domain}/v1/kiosk/show?query=${JSON.stringify({
-      store_id: storeId,
-      kiosk_id: kioskId,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await getOnboarding({ jwt, endpoint: "/kiosk/show", query });
 };
 
-export const fetchKioskIpad = async ({ jwt, serialNumber, appIdentifier }: FetchKioskIpadQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+export const createKiosk = async ({ queryParams, payloadParams }: CreateKioskParams) => {
+  const { storeId: store_id, jwt } = queryParams;
+  const query = {
+    store_id,
+  };
 
-  return await axios.get(
-    `${domain}/v1/kiosk/show_ipad?query=${JSON.stringify({
-      serial_number: serialNumber,
-      app_identifier: appIdentifier,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await postOnboarding({ jwt, endpoint: "/kiosk", query, payload: payloadParams });
 };
 
-export const fetchKioskIpadLogs = async ({ jwt, serialNumber }: FetchKioskIpadLogsQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+export const updateKiosk = async ({ queryParams, payloadParams }: UpdateKioskParams) => {
+  const { storeId: store_id, jwt } = queryParams;
+  const query = {
+    store_id,
+  };
 
-  return await axios.get(
-    `${domain}/v1/kiosk/show_ipad_logs?query=${JSON.stringify({
-      serial_number: serialNumber,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
-};
-
-export const createKiosk = async ({ jwt, storeId }: CreateKioskQueryParams, payload: CreateKioskPayloadParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
-
-  return await axios.post(
-    `${domain}/v1/kiosk?query=${JSON.stringify({
-      store_id: storeId,
-    })}`,
-    payload,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
-};
-
-export const updateKiosk = async ({ jwt, storeId }: UpdateKioskQueryParams, payload: UpdateKioskPayloadParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
-
-  return await axios.put(
-    `${domain}/v1/kiosk_update?query=${JSON.stringify({
-      store_id: storeId,
-    })}`,
-    payload,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await putOnboarding({ jwt, endpoint: "/kiosk_update", query, payload: payloadParams });
 };

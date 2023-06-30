@@ -32,6 +32,7 @@ const NewKiosk = (): JSX.Element => {
   const navigate = useNavigate();
 
   const { isLoading, mutate } = useMutation({
+    // @ts-ignore
     mutationFn: (props: CreateKioskMutationProps) => createKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);

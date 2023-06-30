@@ -208,7 +208,7 @@ const FileDetails = (): JSX.Element => {
   );
 
   const { mutate, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props.queryParams, props.payloadParams),
+    mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props),
     onError: (error: any) => {
       console.error(error);
       toastError("Problem updating kiosk.");
@@ -339,7 +339,7 @@ const FileDetails = (): JSX.Element => {
   return (
     <div className="w-full h-auto">
       <div className="grid grid-cols-4">
-        <div className="col-span-4 sm:col-span-3">
+        <div className="col-span-4">
           <Breadcrumbs
             root={{ target: "/admin/files", label: "Files" }}
             branches={[{ target: "#", label: "View Details" }]}

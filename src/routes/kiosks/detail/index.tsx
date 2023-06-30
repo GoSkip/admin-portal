@@ -9,14 +9,15 @@ import { Store } from "@itypes/store";
 import Select, { Option } from "@components/inputs/select";
 import TextInput from "@components/inputs/textInput";
 import { mounts, networks, pinpads, printers } from "@utils/enums";
+import { CreateKioskParams, UpdateKioskParams, UpdateKioskPayloadParams, fetchKiosk, updateKiosk } from "@api/kiosk";
 import {
-  UpdateKioskPayloadParams,
-  UpdateKioskQueryParams,
-  fetchKiosk,
-  fetchKioskIpad,
-  fetchKioskIpadLogs,
-  updateKiosk,
-} from "@api/kiosk";
+  RestartIpadQueryParams,
+  fetchIpad,
+  fetchIpadLogs,
+  restartIpad,
+  pushAssignedApps,
+  PushAssignedAppsQueryParams,
+} from "@api/ipad";
 import { fetchStores } from "@api/store";
 import StoreDetailsCard from "@components/cards/storeDetailsCard";
 import MetadataCard from "./metadataCard";
@@ -28,7 +29,7 @@ import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
 import IpadCard from "./ipadCard";
 import ActionsCard from "./actionsCard";
 import { fetchTerminals } from "@api/terminal";
-import { ArrowDownTrayIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
+import { BoltIcon, CloudArrowUpIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import Dropdown, { DropdownItemType } from "@components/dropdown";
 import { Action, Ipad } from "@itypes/kiosk";
 
@@ -45,11 +46,6 @@ export type KioskDetailsForm = {
   pinpadSerial: string;
   printerSerial: string;
   ipadSerial: string;
-};
-
-export type KioskUpdateFormProps = {
-  queryParams: UpdateKioskQueryParams;
-  payloadParams: UpdateKioskPayloadParams;
 };
 
 export type KioskMetadata = {
@@ -72,6 +68,7 @@ const emptyFormState: KioskDetailsForm = {
 
 const emptyIpad: Ipad = {
   device_name: "",
+  device_id: 0,
   mdm_name: "",
   app_version: "",
   ios_version: "",
@@ -80,27 +77,6 @@ const emptyIpad: Ipad = {
   battery_level: "",
   group: "",
 };
-
-const actionsDropdownItems: DropdownItemType[] = [
-  {
-    name: "Restart iPad",
-    value: "restart-ipad",
-    icon: ArrowDownTrayIcon,
-    onClick: () => {},
-  },
-  {
-    name: "Push assigned apps",
-    value: "push-assigned-apps",
-    icon: ArrowDownTrayIcon,
-    onClick: () => {},
-  },
-  {
-    name: "Refresh iPad details",
-    value: "refresh-ipad-details",
-    icon: ArrowDownTrayIcon,
-    onClick: () => {},
-  },
-];
 
 const KioskDetails = (): JSX.Element => {
   const [enterSerialNoMode, setEnterSerialNoMode] = useState(false);
@@ -235,10 +211,10 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: ipadIsFetching } = useQuery(
+  const { isFetching: ipadIsFetching, refetch: refetchIpad } = useQuery(
     ["ipad", formState.ipadSerial],
     () =>
-      fetchKioskIpad({
+      fetchIpad({
         jwt: token,
         serialNumber: formState.ipadSerial,
         appIdentifier,
@@ -254,10 +230,22 @@ const KioskDetails = (): JSX.Element => {
         setPendingChangesMode(false);
       },
       onSuccess: ({
-        data: { device_name, mdm_name, app_version, ios_version, model, serial, battery_level, group, last_seen },
+        data: {
+          device_name,
+          id: device_id,
+          mdm_name,
+          app_version,
+          ios_version,
+          model,
+          serial,
+          battery_level,
+          group,
+          last_seen,
+        },
       }) => {
         const ipad: Ipad = {
           device_name,
+          device_id,
           mdm_name,
           app_version,
           ios_version,
@@ -276,10 +264,10 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: ipadLogsIsFetching } = useQuery(
+  const { isFetching: ipadLogsIsFetching, refetch: refetchIpadLogs } = useQuery(
     ["ipad_logs", formState.ipadSerial],
     () =>
-      fetchKioskIpadLogs({
+      fetchIpadLogs({
         jwt: token,
         serialNumber: formState.ipadSerial,
       }),
@@ -303,8 +291,10 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { mutate, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props.queryParams, props.payloadParams),
+  const { mutate: doUpdateKiosk, isLoading: updateIsLoading } = useMutation({
+    mutationFn(props: UpdateKioskParams): any {
+      return updateKiosk(props);
+    },
     onError: (error: any) => {
       console.error(error);
       toastError("Problem updating kiosk.");
@@ -313,6 +303,32 @@ const KioskDetails = (): JSX.Element => {
       setPendingChangesMode(false);
       setDefaultFormState(formState);
       toastSuccess("Successfully updated kiosk!");
+    },
+  });
+
+  const { mutate: doRestartIpad, isLoading: restartIsLoading } = useMutation({
+    mutationFn(props: RestartIpadQueryParams): any {
+      return restartIpad(props);
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toastError("Problem restarting iPad.");
+    },
+    onSuccess: () => {
+      toastSuccess("Successfully restarted iPad!");
+    },
+  });
+
+  const { mutate: doPushAssignedApps, isLoading: pushIsLoading } = useMutation({
+    mutationFn(props: PushAssignedAppsQueryParams): any {
+      return pushAssignedApps(props);
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toastError("Problem pushing assigned apps.");
+    },
+    onSuccess: () => {
+      toastSuccess("Successfully pushed assigned apps!");
     },
   });
 
@@ -351,13 +367,48 @@ const KioskDetails = (): JSX.Element => {
     }
   };
 
+  const actionsDropdownItems: DropdownItemType[] = [
+    {
+      name: "Restart iPad",
+      value: "restart-ipad",
+      icon: BoltIcon,
+      onClick: () => {
+        doRestartIpad({
+          jwt: token,
+          device_id: ipad.device_id,
+        });
+      },
+    },
+    {
+      name: "Push assigned apps",
+      value: "push-assigned-apps",
+      icon: CloudArrowUpIcon,
+      onClick: () => {
+        doPushAssignedApps({
+          jwt: token,
+          device_id: ipad.device_id,
+        });
+      },
+    },
+    {
+      name: "Refresh iPad details",
+      value: "refresh-ipad-details",
+      icon: ArrowPathIcon,
+      onClick: () => {
+        refetchIpad();
+        refetchIpadLogs();
+        toastSuccess("Successfully refreshed iPad details!");
+      },
+    },
+  ];
+
   const isLoading =
     kioskIsFetching ||
     storeIsFetching ||
     terminalsIsFetching ||
     ipadIsFetching ||
     ipadLogsIsFetching ||
-    mutationIsLoading;
+    updateIsLoading;
 
   useEffect(() => {
     if (isLoading) {
@@ -424,7 +475,7 @@ const KioskDetails = (): JSX.Element => {
         return;
       }
 
-      mutate({
+      doUpdateKiosk({
         queryParams: {
           jwt: session.token_info.token,
           storeId: Number(storeId),
@@ -446,7 +497,7 @@ const KioskDetails = (): JSX.Element => {
                 label: `${store?.name ?? "N/A"} - ${defaultFormState.kioskNumber}`,
               },
             ]}
-            righthandComponent={<Dropdown items={actionsDropdownItems} label="Actions" />}
+            righthandComponent={<Dropdown items={actionsDropdownItems} label="Actions" disabled={!ipad.device_id} />}
           />
           <div>
             <hr />

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getOnboarding, postOnboarding } from "./base";
 
 export type FetchTerminalsQueryParams = {
   jwt: string;
@@ -26,56 +27,31 @@ export type SendTerminalSignupEmailParams = {
   qr_svg: string;
 };
 
-export const fetchTerminals: any = async ({ storeId, page, limit, jwt }: FetchTerminalsQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+export const fetchTerminals: any = async ({ jwt, storeId, page, limit }: FetchTerminalsQueryParams) => {
+  const query = {
+    store_id: storeId,
+    page,
+    limit,
+  };
 
-  return await axios.get(
-    `${domain}/v1/terminal/list?query=${JSON.stringify({
-      store_id: storeId,
-      page,
-      limit,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await getOnboarding({ jwt, endpoint: "/terminal/list", query });
 };
 
 export const createTerminalSignup: any = async ({ jwt, storeId }: CreateTerminalSignupQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+  const query = {
+    store_id: storeId,
+  };
 
-  return await axios.post(
-    `${domain}/v1/terminal/signup?query=${JSON.stringify({
-      store_id: storeId,
-    })}`,
-    {},
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await postOnboarding({ jwt, endpoint: "/terminal/signup", query, payload: {} });
 };
 
 export const fetchTerminalSignup: any = async ({ jwt, storeId, terminalSignupId }: FetchTerminalSignupQueryParams) => {
-  const domain = import.meta.env.VITE_ONBOARDING_DOMAIN;
+  const query = {
+    store_id: storeId,
+    terminal_signup_id: terminalSignupId,
+  };
 
-  return await axios.get(
-    `${domain}/v1/terminal/signup?query=${JSON.stringify({
-      store_id: storeId,
-      terminal_signup_id: terminalSignupId,
-    })}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  return await getOnboarding({ jwt, endpoint: "/terminal/signup", query });
 };
 
 export const sendTerminalSignupEmail: any = async ({
