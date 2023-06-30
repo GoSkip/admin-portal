@@ -68,6 +68,8 @@ function put({ domain, baseEndpoint }: PutParams) {
   };
 }
 
+export const getBaseApi = get({ domain: import.meta.env.VITE_API_DOMAIN, baseEndpoint: "/v1" });
+
 export const getOnboarding = get({ domain: import.meta.env.VITE_ONBOARDING_DOMAIN, baseEndpoint: "/v1" });
 
 export const postOnboarding = post({ domain: import.meta.env.VITE_ONBOARDING_DOMAIN, baseEndpoint: "/v1" });

@@ -1,4 +1,5 @@
-import axios from "axios";
+import { getBaseApi } from "./base";
+
 export type GetRetailersProps = {
   jwt: string;
   storeIds: number[];
@@ -6,16 +7,10 @@ export type GetRetailersProps = {
 };
 
 export const getRetailers = async ({ jwt, retailerIds }: GetRetailersProps) => {
-  const domain = import.meta.env.VITE_API_DOMAIN;
-  const retailerQuery = {
+  const query = {
     retailer_id: retailerIds,
     product: "sco",
   };
 
-  return await axios.get(`${domain}/v1/store/retailer?query=${JSON.stringify(retailerQuery)}`, {
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${jwt}`,
-    },
-  });
+  return await getBaseApi({ jwt, endpoint: "/store/retailer", query });
 };
