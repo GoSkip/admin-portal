@@ -211,7 +211,7 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: ipadIsFetching } = useQuery(
+  const { isFetching: ipadIsFetching, refetch: refetchIpad } = useQuery(
     ["ipad", formState.ipadSerial],
     () =>
       fetchIpad({
@@ -264,7 +264,7 @@ const KioskDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: ipadLogsIsFetching } = useQuery(
+  const { isFetching: ipadLogsIsFetching, refetch: refetchIpadLogs } = useQuery(
     ["ipad_logs", formState.ipadSerial],
     () =>
       fetchIpadLogs({
@@ -395,7 +395,9 @@ const KioskDetails = (): JSX.Element => {
       value: "refresh-ipad-details",
       icon: ArrowPathIcon,
       onClick: () => {
-        console.log("Refresh ipad details");
+        refetchIpad();
+        refetchIpadLogs();
+        toastSuccess("Successfully refreshed iPad details!");
       },
     },
   ];
