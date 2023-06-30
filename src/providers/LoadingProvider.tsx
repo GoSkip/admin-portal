@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 import { LoadingContext } from "@contexts/LoadingContext";
 import { Transition } from "@headlessui/react";
 import { ClipLoader } from "react-spinners";
@@ -10,10 +10,12 @@ type LoadingContextProps = {
 };
 
 const LoadingProvider = ({ children, noBlur }: LoadingContextProps): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isFetching = useIsFetching();
+  const isMutating = useIsMutating();
+  const isLoading = isFetching > 0 || isMutating > 0;
 
   return (
-    <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
+    <LoadingContext.Provider value={{ isLoading }}>
       <Transition
         show={isLoading}
         enter="transition-opacity duration-75"

@@ -65,7 +65,6 @@ const Files = (): JSX.Element => {
   // requirePermissions(["file.view"]);
 
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { filter } = useContext<GlobalStateContextType>(GlobalStateContext);
   const checkbox = useRef<HTMLInputElement | null>();
   const [checked, setChecked] = useState<boolean>(false);
@@ -127,10 +126,6 @@ const Files = (): JSX.Element => {
   });
 
   // ../Filters
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
 
   const onPrevPage = () => {
     if (page > 1) {

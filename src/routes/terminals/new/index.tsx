@@ -23,7 +23,6 @@ type CreateTerminalSignupMutationProps = {
 
 const NewTerminal = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const [formState, setFormState] = useState<NewTerminalForm>({
     store: null,
   });
@@ -80,10 +79,6 @@ const NewTerminal = (): JSX.Element => {
   const ogStore = formState.store
     ? selectable_stores.find((store: Store) => String(store.id) === formState.store?.key)
     : null;
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
 
   return (
     <div className="w-full h-auto">

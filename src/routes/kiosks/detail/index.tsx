@@ -107,7 +107,6 @@ const KioskDetails = (): JSX.Element => {
   const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
   const { storeId, kioskId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { setPendingChangesMode, pendingChangesMode, setDiscardPendingChangesCallback, setSavePendingChangesCallback } =
     useContext<GlobalStateContextType>(GlobalStateContext);
   const {
@@ -350,22 +349,6 @@ const KioskDetails = (): JSX.Element => {
       }));
     }
   };
-
-  const isLoading =
-    kioskIsFetching ||
-    storeIsFetching ||
-    terminalsIsFetching ||
-    ipadIsFetching ||
-    ipadLogsIsFetching ||
-    mutationIsLoading;
-
-  useEffect(() => {
-    if (isLoading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [isLoading]);
 
   useEffect(() => {
     setDiscardPendingChangesCallback(() => () => {

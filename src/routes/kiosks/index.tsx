@@ -66,7 +66,6 @@ const KioskList = (): JSX.Element => {
   requirePermissions(["kiosk.view"]);
 
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { filter } = useContext<GlobalStateContextType>(GlobalStateContext);
   const checkbox = useRef<HTMLInputElement | null>();
   const [checked, setChecked] = useState<boolean>(false);
@@ -77,6 +76,7 @@ const KioskList = (): JSX.Element => {
   const [kiosks, setKiosks] = useState<Kiosk[]>([]);
   const [selectedKiosks, setSelectedKiosks] = useState<Kiosk[]>([]);
   const navigate = useNavigate();
+  // @ts-ignore
   const { t } = useTranslation();
 
   const onClickNewKiosk = () => {
@@ -131,10 +131,6 @@ const KioskList = (): JSX.Element => {
   const filteredKiosks = kiosks.filter(
     (kiosk: Kiosk) => filter === "" || kiosk.store?.name.toLowerCase().includes(filter.toLowerCase())
   );
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
 
   const onPrevPage = () => {
     if (page > 1) {

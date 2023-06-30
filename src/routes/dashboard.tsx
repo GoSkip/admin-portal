@@ -16,12 +16,11 @@ interface DashboardProps {
 
 const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
   const location = useLocation();
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { session, setActiveRetailer } = useContext<SessionContextType>(SessionContext);
   const [sortedRetailers, setSortedRetailers] = useState<Retailer[]>([]);
   const { active_retailer } = session;
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isLoading } = useQuery({
+  useQuery({
     queryKey: ["retailers"],
     queryFn: () =>
       getRetailers({
@@ -43,10 +42,6 @@ const Dashboard = ({ renderExceptions }: DashboardProps): JSX.Element => {
       }
     },
   });
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
 
   if (renderExceptions.includes(location.pathname)) {
     return (

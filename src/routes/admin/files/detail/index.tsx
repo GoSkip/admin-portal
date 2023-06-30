@@ -85,7 +85,6 @@ const FileDetails = (): JSX.Element => {
   const [terminalOptions, setTerminalOptions] = useState<Option[]>([]);
   const { storeId, fileId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const { setPendingChangesMode, pendingChangesMode, setDiscardPendingChangesCallback, setSavePendingChangesCallback } =
     useContext<GlobalStateContextType>(GlobalStateContext);
   const {
@@ -100,7 +99,7 @@ const FileDetails = (): JSX.Element => {
     updatedAt: null,
   });
 
-  const { isFetching: storeIsFetching } = useQuery(
+  useQuery(
     ["store", storeId],
     () =>
       fetchStores({
@@ -127,7 +126,7 @@ const FileDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: terminalsIsFetching } = useQuery(
+  useQuery(
     ["terminals", storeId],
     () =>
       fetchTerminals({
@@ -154,7 +153,7 @@ const FileDetails = (): JSX.Element => {
     }
   );
 
-  const { isFetching: kioskIsFetching } = useQuery(
+  useQuery(
     ["kiosk", storeId, fileId],
     () =>
       fetchKiosk({
@@ -207,7 +206,7 @@ const FileDetails = (): JSX.Element => {
     }
   );
 
-  const { mutate, isLoading: mutationIsLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (props: KioskUpdateFormProps) => updateKiosk(props.queryParams, props.payloadParams),
     onError: (error: any) => {
       console.error(error);
@@ -243,16 +242,6 @@ const FileDetails = (): JSX.Element => {
       }));
     }
   };
-
-  const isLoading = kioskIsFetching || storeIsFetching || terminalsIsFetching || mutationIsLoading;
-
-  useEffect(() => {
-    if (isLoading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [isLoading]);
 
   useEffect(() => {
     setDiscardPendingChangesCallback(() => () => {

@@ -23,7 +23,6 @@ type TerminalSignup = {
 const Signup = (): JSX.Element => {
   const { storeId, terminalSignupId } = useParams();
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const [email, setEmail] = useState<string>("");
   const [store, setStore] = useState<Store | null>(null);
   const navigate = useNavigate();
@@ -111,16 +110,6 @@ const Signup = (): JSX.Element => {
       }
     );
   };
-
-  const isLoading = storeIsFetching || terminalSignupIsFetching;
-
-  useEffect(() => {
-    if (isLoading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [isLoading]);
 
   const svg_code = `data:image/svg+xml; base64, ${terminalSignup?.qr_svg}`;
   return (

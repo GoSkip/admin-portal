@@ -24,7 +24,6 @@ type CreateKioskMutationProps = {
 
 const NewKiosk = (): JSX.Element => {
   const { session } = useContext<SessionContextType>(SessionContext);
-  const { setIsLoading } = useContext<LoadingContextType>(LoadingContext);
   const [formState, setFormState] = useState<NewKioskForm>({
     store: null,
   });
@@ -87,10 +86,6 @@ const NewKiosk = (): JSX.Element => {
   const ogStore = formState.store
     ? selectable_stores.find((store: Store) => String(store.id) === formState.store?.key)
     : null;
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
 
   return (
     <div className="w-full h-auto">
