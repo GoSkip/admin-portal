@@ -19,6 +19,7 @@ export type Kiosk = {
 
 export type Ipad = {
   device_name: string;
+  device_id: number;
   mdm_name: string;
   app_version: string;
   ios_version: string;
