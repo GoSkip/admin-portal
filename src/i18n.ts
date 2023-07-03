@@ -1,10 +1,10 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import en from "./i18n/en.json";
-import fr from "./i18n/fr.json";
-import de from "./i18n/de.json";
-import ar from "./i18n/ar.json";
+import en from "@i18n/en.json";
+import fr from "@i18n/fr.json";
+import de from "@i18n/de.json";
+import ar from "@i18n/ar.json";
 
 const langToUse = localStorage.getItem("app-lang") || "en";
 

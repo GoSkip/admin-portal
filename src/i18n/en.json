@@ -47,5 +47,15 @@
   "status": "Status",
   "file-size": "File size",
   "file-id": "File ID",
-  "account-settings": "Account settings"
+  "account-settings": "Account settings",
+  "pls-select-file-type-to-proceed": "Please select a file type to proceed",
+  "upload-file": "Upload file",
+  "upload-x-file": "Upload {{x}} file",
+  "select-x-file": "Select {{x}} file",
+  "drag-drop-file-area-label": "Drag & drop file here or Select a file to upload",
+  "max-size-x-mb": "Maximum size: {{x}} MB",
+  "files-supported-x": "Files supported: {{x}}",
+  "select-file": "Select file",
+  "selected-file": "Selected file",
+  "step-n-of-x": "Step {{n}} of {{x}}"
 }

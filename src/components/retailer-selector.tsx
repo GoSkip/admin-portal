@@ -8,7 +8,6 @@ import { Retailer } from "@itypes/retailer";
 
 export const RetailerSelector: FC<{ retailers: Retailer[] }> = ({ retailers }) => {
   const { session, setActiveRetailer } = useContext<SessionContextType>(SessionContext);
-  // @ts-ignore
   const { t } = useTranslation();
 
   const handleRetailerChange = (id: number) => {

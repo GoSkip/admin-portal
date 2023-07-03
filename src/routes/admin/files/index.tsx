@@ -25,7 +25,6 @@ import { useTranslation } from "react-i18next";
 
 const Files = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
-  // @ts-ignore
   const { t } = useTranslation();
 
   // const handleUploadFile = (file: File) => {

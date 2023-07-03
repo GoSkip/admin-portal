@@ -1,11 +1,14 @@
+import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 type SecondaryButtonProps = {
-  label: string;
+  label: ReactNode;
   additionalClasses?: string;
   disabled?: boolean;
+  to?: string;
   onClick?: () => any;
 };
 
-const SecondaryButton = ({ label, additionalClasses, disabled, onClick }: SecondaryButtonProps): JSX.Element => {
+const SecondaryButton = ({ label, additionalClasses, disabled, to, onClick }: SecondaryButtonProps): JSX.Element => {
   let _onClick = () => {};
 
   if (onClick) {
@@ -13,15 +16,27 @@ const SecondaryButton = ({ label, additionalClasses, disabled, onClick }: Second
   }
 
   const initClasses = [
-    "inline-flex items-center justify-center",
+    "inline-flex gap-2 items-center justify-center",
     "rounded-md border border-transparent",
-    "text-sm font-medium text-black",
+    "text-sm font-medium text-gray-900",
     "px-4 py-2 transition-all",
-    "bg-white shadow-sm",
-    "hover:bg-gray-300",
-    "focus:outline-none focus:ring-2 rocus:ring-gray-100 focus:ring-offset-2",
-    "sm:w-auto",
+    "ring-1 ring-gray-300",
+    disabled ? "bg-gray-300 text-white" : "bg-white shadow-sm hover:bg-gray-100",
   ].join(" ");
+
+  if (to && !disabled) {
+    return (
+      <Link
+        to={to}
+        type="button"
+        aria-disabled={disabled}
+        onClick={_onClick}
+        className={`${initClasses} ${additionalClasses}`}
+      >
+        {label}
+      </Link>
+    );
+  }
 
   return (
     <button type="button" disabled={disabled} onClick={_onClick} className={`${initClasses} ${additionalClasses}`}>

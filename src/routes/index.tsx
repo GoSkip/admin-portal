@@ -1,31 +1,32 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./protectedRoute";
-import Dashboard from "./dashboard";
-import Page404 from "./404";
-import Files from "./admin/files";
-import Taxes from "./admin/taxes";
-import Loyalty from "./admin/loyalty";
-import Payments from "./admin/payments";
-import Stores from "./admin/stores";
-import Retailer from "./admin/retailer";
-import Kiosks from "./kiosks";
-import KioskNew from "./kiosks/new";
-import KioskDetail from "./kiosks/detail";
-import TerminalNew from "./terminals/new";
-import TerminalNewSignup from "./terminals/signup";
-import Clerks from "./people/clerks";
-import PortalUsers from "./people/portalUsers";
-import PortalUserDetail from "./people/portalUsers/detail";
-import PortalUserNew from "./people/portalUsers/new";
-import Products from "./products";
-import Promotions from "./promotions";
-import Reports from "./reports";
-import Login from "./login";
-import Logout from "./logout";
-import FileDetails from "./admin/files/detail";
-import FileNew from "./admin/files/new";
-import { AccountSettingsPage } from "./account-settings/index";
-import { MyProfilePage } from "./me/index";
+import ProtectedRoute from "@routes/protectedRoute";
+import Dashboard from "@routes/dashboard";
+import Page404 from "@routes/404";
+import Files from "@routes/admin/files";
+import Taxes from "@routes/admin/taxes";
+import Loyalty from "@routes/admin/loyalty";
+import Payments from "@routes/admin/payments";
+import Stores from "@routes/admin/stores";
+import Retailer from "@routes/admin/retailer";
+import Kiosks from "@routes/kiosks";
+import KioskNew from "@routes/kiosks/new";
+import KioskDetail from "@routes/kiosks/detail";
+import TerminalNew from "@routes/terminals/new";
+import TerminalNewSignup from "@routes/terminals/signup";
+import Clerks from "@routes/people/clerks";
+import PortalUsers from "@routes/people/portalUsers";
+import PortalUserDetail from "@routes/people/portalUsers/detail";
+import PortalUserNew from "@routes/people/portalUsers/new";
+import Products from "@routes/products";
+import Promotions from "@routes/promotions";
+import Reports from "@routes/reports";
+import Login from "@routes/login";
+import Logout from "@routes/logout";
+import FileDetails from "@routes/admin/files/detail";
+import FileNew from "@routes/admin/files/new";
+import { AccountSettingsPage } from "@routes/account-settings/index";
+import { MyProfilePage } from "@routes/me/index";
+import FileNewDetails from "@routes/admin/files/new/details";
 
 const Router = (): JSX.Element => {
   return (
@@ -46,6 +47,7 @@ const Router = (): JSX.Element => {
             <Route path="files" element={<Files />} />
             <Route path="files/:storeId/:fileId" element={<FileDetails />} />
             <Route path="files/new" element={<FileNew />} />
+            <Route path="files/new/:fileType" element={<FileNewDetails />} />
             <Route path="taxes" element={<Taxes />} />
             <Route path="loyalty" element={<Loyalty />} />
             <Route path="payments" element={<Payments />} />
