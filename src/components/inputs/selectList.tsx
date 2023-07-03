@@ -5,6 +5,7 @@ export type SelectListItemType = {
   title: string;
   desc: string;
   value: string;
+  [key: string]: string | number | Date | boolean | undefined;
 };
 
 type SelectListProps = {
@@ -61,7 +62,6 @@ const SelectList = ({
                     checked
                       ? "bg-lightBlue-600 border-transparent"
                       : "bg-white border-gray-300",
-                    active ? "ring-2 ring-offset-2 ring-lightBlue-600" : "",
                     "mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center"
                   )}
                   aria-hidden="true"

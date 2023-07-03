@@ -1,7 +1,11 @@
+import { ReactNode } from "react";
+import { Link } from "react-router-dom";
+
 type PrimaryButtonProps = {
-  label: string;
+  label: ReactNode;
   additionalClasses?: string;
   disabled?: boolean;
+  to?: string;
   onClick?: () => any;
 };
 
@@ -9,6 +13,7 @@ const PrimaryButton = ({
   label,
   additionalClasses,
   disabled,
+  to,
   onClick,
 }: PrimaryButtonProps): JSX.Element => {
   let _onClick = () => {};
@@ -18,15 +23,29 @@ const PrimaryButton = ({
   }
 
   const initClasses = [
-    "inline-flex items-center justify-center",
+    "inline-flex gap-2 items-center justify-center",
     "rounded-md border border-transparent",
     "text-sm font-medium text-white",
     "px-4 py-2 transition-all",
-    "bg-lightBlue-700 shadow-sm",
-    "hover:bg-blue-700",
-    "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-    "sm:w-auto",
+    "focus:outline-none",
+    disabled
+      ? "bg-gray-300 text-white"
+      : "bg-lightBlue-700 shadow-sm hover:bg-lightBlue-900",
   ].join(" ");
+
+  if (to && !disabled) {
+    return (
+      <Link
+        to={to}
+        type="button"
+        aria-disabled={disabled}
+        onClick={_onClick}
+        className={`${initClasses} ${additionalClasses}`}
+      >
+        {label}
+      </Link>
+    );
+  }
 
   return (
     <button
