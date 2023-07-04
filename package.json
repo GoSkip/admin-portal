@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "prepare": "husky install",
     "preview": "vite preview",
+    "preprod": "yarn build && yarn preview",
     "prettier-write": "prettier --write \"{src,__{tests,mocks}__}/**/*.{js,jsx,ts,tsx}\"",
     "prettier-check": "prettier --check \"{src,__{tests,mocks}__}/**/*.{js,jsx,ts,tsx}\"",
     "test": "jest --passWithNoTests",

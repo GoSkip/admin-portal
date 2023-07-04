@@ -1,7 +1,6 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { File, createFile, getFileStatus } from "@components/data/files.config";
-import { BarsArrowUpIcon, ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "@components/buttons/primary";
 import HeadingMd from "@components/typography/headingMd";
 import Dropdown, { DropdownItemType } from "@components/dropdown";
@@ -10,17 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchRetailerFiles } from "@api/file";
 import { SessionContext, SessionContextType } from "@contexts/SessionContext";
 import { toastError } from "@/toasts";
-import requirePermissions from "@hooks/requirePermissions";
 import { LoadingContext, LoadingContextType } from "@contexts/LoadingContext";
 import { GlobalStateContext, GlobalStateContextType } from "@contexts/GlobalStateContext";
 // @ts-ignore
 import { set } from "lodash";
 import { REFETCH_INTERVAL, calcTotalPages } from "@routes/kiosks";
-import { IconButton } from "@components/buttons/icon";
-import { mdiFilterVariant, mdiMenuDown } from "@mdi/js";
-import { TableFilterDropdown } from "@components/inputs/tableFilterDropdown";
 import { HeaderTypes, SkipTable, TableHeaderType } from "@components/data/skip-table";
-import { ObjectOfStrings } from "@utils/data-types";
 import { useTranslation } from "react-i18next";
 
 const Files = (): JSX.Element => {
@@ -76,10 +70,6 @@ const Files = (): JSX.Element => {
   const [selectedFiles, setSelectedFiles] = useState<number[]>([]);
   const navigate = useNavigate();
 
-  const onClickNewFile = () => {
-    navigate("/admin/files/new");
-  };
-
   const limit = 10;
   const {
     active_retailer: { id: activeRetailerId },
@@ -116,36 +106,9 @@ const Files = (): JSX.Element => {
     (file: File) => filter === "" || file.siteName.toLowerCase().includes(filter.toLowerCase())
   );
 
-  // Filters
-
-  const fileTypes = filteredFiles.map((file, i) => {
-    return {
-      label: file.fileType,
-      value: `${i}-${file.fileType}`,
-    };
-  });
-
-  // ../Filters
-
   useEffect(() => {
     setIsLoading(isLoading);
   }, [isLoading]);
-
-  const onPrevPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  const onNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
-
-  const onGotoPage = (page: number) => () => {
-    setPage(page);
-  };
 
   const onRowClick = (item: File) => {
     navigate(`/admin/files/${activeRetailerId}/${item.fileId}`);
@@ -157,12 +120,6 @@ const Files = (): JSX.Element => {
     setIndeterminate(isIndeterminate);
     set(checkbox, "current.indeterminate", isIndeterminate);
   }, [selectedFiles, filteredFiles]);
-
-  function toggleAll() {
-    setSelectedFiles(checked || indeterminate ? [] : filteredFiles.map(f => f.id));
-    setChecked(!checked && !indeterminate);
-    setIndeterminate(false);
-  }
 
   const headers: TableHeaderType[] = [
     {
@@ -236,7 +193,7 @@ const Files = (): JSX.Element => {
             <div className="sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 <Dropdown items={actionsDropdownItems} label="Actions"></Dropdown>
-                <PrimaryButton label="Upload file" onClick={onClickNewFile}></PrimaryButton>
+                <PrimaryButton label="Upload file" to={"/admin/files/new"}></PrimaryButton>
               </div>
             </div>
           </div>

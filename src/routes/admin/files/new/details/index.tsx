@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Breadcrumb, BreadcrumbItemType } from "@components/breadcrumb";
 import { DragDropFileArea } from "@components/inputs/drag-drop-file-area";
 import { StepperDots } from "@components/data/stepper-dots";
-import Icon from "@mdi/react";
+import { Icon } from "@mdi/react";
 import { IconButton } from "@components/buttons/icon";
 import { mdiCloseCircle, mdiDownload, mdiFileCheckOutline } from "@mdi/js";
 import { Card } from "@components/common/card";

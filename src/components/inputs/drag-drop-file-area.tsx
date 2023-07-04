@@ -1,5 +1,5 @@
 import { mdiClose, mdiCloseCircle, mdiFileCheckOutline, mdiFileUploadOutline } from "@mdi/js";
-import Icon from "@mdi/react";
+import { Icon } from "@mdi/react";
 import React, { FC, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";

@@ -4,7 +4,7 @@ import { mdiFilterVariant } from "@mdi/js";
 
 import { Menu, Transition, Combobox } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import Icon from "@mdi/react";
+import { Icon } from "@mdi/react";
 import { uniqueArrayByKey } from "@utils/data-types";
 import { stopPropagation } from "@utils/events";
 

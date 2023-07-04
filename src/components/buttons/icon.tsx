@@ -1,4 +1,4 @@
-import Icon from "@mdi/react";
+import { Icon } from "@mdi/react";
 import React, { FC, ForwardRefExoticComponent, SVGProps } from "react";
 
 type HeroIconType = ForwardRefExoticComponent<
