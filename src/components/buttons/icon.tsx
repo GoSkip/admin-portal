@@ -1,4 +1,4 @@
-import Icon from "@mdi/react";
+import { Icon } from "@mdi/react";
 import React, { FC, ForwardRefExoticComponent, SVGProps } from "react";
 
 type HeroIconType = ForwardRefExoticComponent<
@@ -14,6 +14,7 @@ type IconBtnProps = {
   color?: string;
   colorHover?: string;
   backgroundColor?: string;
+  backgroundColorHover?: string;
   size?: string | number;
   srOnlyText?: string;
   onClick?: () => void;
@@ -24,7 +25,8 @@ export const IconButton: FC<IconBtnProps> = ({
   customClasses = "",
   color = "gray-200",
   colorHover = "gray-500",
-  backgroundColor = "transparent",
+  backgroundColor = "",
+  backgroundColorHover = "",
   size = 1,
   srOnlyText,
   onClick,
@@ -32,7 +34,7 @@ export const IconButton: FC<IconBtnProps> = ({
   const classes: string[] = [
     "transition",
     `text-${color || "black"} hover:text-${colorHover}`,
-    `bg-${backgroundColor}-600 hover:bg-${backgroundColor}-500 focus-visible:outline-${backgroundColor}-600`,
+    `bg-${backgroundColor} hover:bg-${backgroundColorHover} focus-visible:outline-${backgroundColorHover}`,
     `rounded-full p-${size} focus-visible:outline`,
     `shadow-${size == 0 ? "0" : "sm"}`,
     `focus-visible:outline-${size == 0 ? 0 : 2}`,

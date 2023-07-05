@@ -23,6 +23,7 @@
       "@components/*": ["./src/components/*"],
       "@contexts/*": ["./src/contexts/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
       "@providers/*": ["./src/providers/*"],
       "@routes/*": ["./src/routes/*"],
       "@itypes/*": ["./src/types/*"],

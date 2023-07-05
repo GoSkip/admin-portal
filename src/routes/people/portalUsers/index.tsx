@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 
 const PortalUsers = (): JSX.Element => {
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
-  // @ts-ignore
   const { t } = useTranslation();
 
   const navigate = useNavigate();
