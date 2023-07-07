@@ -128,7 +128,7 @@ const Files = (): JSX.Element => {
       itemCustomClass: "font-medium text-gray-900",
     },
     {
-      label: t("site-name"),
+      label: t("store"),
       value: "siteName",
     },
     {
@@ -136,11 +136,6 @@ const Files = (): JSX.Element => {
       value: "siteId",
       itemCustomClass: "text-gray-800",
       type: HeaderTypes.NUMBER,
-    },
-    {
-      label: t("uploaded"),
-      value: "uploaded",
-      type: HeaderTypes.DATE,
     },
     {
       label: t("status"),
@@ -169,12 +164,17 @@ const Files = (): JSX.Element => {
       },
     },
     {
-      label: t("file-size"),
+      label: t("time"),
+      value: "uploaded",
+      type: HeaderTypes.DATE,
+    },
+    {
+      label: t("size"),
       value: "fileSize",
       type: HeaderTypes.NUMBER,
     },
     {
-      label: t("file-id"),
+      label: t("id"),
       value: "fileId",
       type: HeaderTypes.NUMBER,
     },
@@ -182,31 +182,16 @@ const Files = (): JSX.Element => {
 
   return (
     <div>
-      <div>
-        <div className="flex h-20 -mt-4 items-center justify-between">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <HeadingMd label="Files"></HeadingMd>
-            </div>
-          </div>
-          <div>
-            <div className="sm:ml-6 sm:block">
-              <div className="flex space-x-4">
-                <Dropdown items={actionsDropdownItems} label="Actions"></Dropdown>
-                <PrimaryButton label="Upload file" to={"/admin/files/new"}></PrimaryButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr />
-      </div>
       <SkipTable
+        title="Files"
         items={files}
         itemKey="id"
         headers={headers}
         isLoading={isLoading}
         selectable
+        headAppend={<PrimaryButton label="Upload file" to={"/admin/files/new"}></PrimaryButton>}
         onItemClick={onRowClick}
+        actions={actionsDropdownItems}
       ></SkipTable>
     </div>
   );

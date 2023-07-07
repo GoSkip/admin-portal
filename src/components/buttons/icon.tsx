@@ -17,6 +17,7 @@ type IconBtnProps = {
   backgroundColorHover?: string;
   size?: string | number;
   srOnlyText?: string;
+  small?: boolean;
   onClick?: () => void;
 };
 
@@ -28,6 +29,7 @@ export const IconButton: FC<IconBtnProps> = ({
   backgroundColor = "",
   backgroundColorHover = "",
   size = 1,
+  small,
   srOnlyText,
   onClick,
 }) => {
@@ -58,7 +60,7 @@ export const IconButton: FC<IconBtnProps> = ({
       {typeof iconObj.icon === "string" ? (
         <Icon path={iconObj.icon} size={1} />
       ) : (
-        <iconObj.icon className="h-6 w-6" aria-hidden="true" />
+        <iconObj.icon className={small ? "h-4 w-4" : "h-6 w-6"} aria-hidden="true" />
       )}
     </button>
   );

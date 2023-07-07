@@ -8,7 +8,7 @@ export type Option = {
   value: string;
 };
 
-type SelectProps = {
+export type SelectProps = {
   selectedItem: Option | null;
   setSelectedItem: (option: Option | null) => void;
   label?: string;
