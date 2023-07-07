@@ -1,17 +1,6 @@
 import { ForwardRefExoticComponent, Fragment, SVGProps } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import {
-  ArchiveBoxIcon,
-  ArrowRightCircleIcon,
-  ChevronDownIcon,
-  DocumentDuplicateIcon,
-  HeartIcon,
-  PencilSquareIcon,
-  TrashIcon,
-  UserPlusIcon,
-  ArrowDownTrayIcon,
-  ArrowPathIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 export type DropdownItemType = {
   name: string;
@@ -49,9 +38,9 @@ const DropdownItemClasses = (isActive: boolean) => {
 
 const menuBtnBackground = (isDisabled: boolean | undefined) => {
   if (isDisabled) {
-    return "bg-gray-200 text-coolGray-400 shadow-none ring-1 ring-inset ring-gray-100";
+    return "text-coolGray-300";
   }
-  return "bg-white text-coolGray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50";
+  return "text-coolGray-700 hover:bg-gray-50";
 };
 
 const MenuItem = ({ item }: MenuItemProps): JSX.Element => {
@@ -79,7 +68,7 @@ const Dropdown = ({ label, disabled, onClick, items }: DropdownProps): JSX.Eleme
       <div>
         <Menu.Button
           disabled={disabled}
-          className={`inline-flex w-full justify-center gap-x-1.5 rounded-md px-4 py-2.5 text-sm font-medium ${menuBtnBackground(
+          className={`inline-flex w-full justify-center gap-x-1.5 rounded-md px-4 py-2.5 text-sm font-medium bg-white shadow-sm ring-1 ring-inset ring-gray-300 ${menuBtnBackground(
             disabled
           )}`}
         >

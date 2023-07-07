@@ -12,6 +12,7 @@ type SelectListProps = {
   label: string;
   items: SelectListItemType[];
   disabled?: boolean;
+  value?: string | null;
   onChange?: (v: string) => any;
 };
 
@@ -19,8 +20,8 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const SelectList = ({ label, items, disabled, onChange }: SelectListProps): JSX.Element => {
-  const [selected, setSelected] = useState<string | null>(null);
+const SelectList = ({ label, items, disabled, value = null, onChange }: SelectListProps): JSX.Element => {
+  const [selected, setSelected] = useState<string | null>(value);
 
   const handleChange = (v: string) => {
     setSelected(v);

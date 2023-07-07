@@ -40,10 +40,10 @@ export const createFile: (file: FileFromApi) => File = (file: FileFromApi) => {
   return {
     id: file.id,
     fileType: file.file_type || file.parser_module,
-    siteName: file.store_name,
+    siteName: file.business_name,
     siteId: file.store_id,
-    uploaded: new Date(file.inserted_at),
     status: file.status,
+    uploaded: new Date(file.updated_at),
     fileSize: file.size,
     fileId: file.id,
   };

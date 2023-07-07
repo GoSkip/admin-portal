@@ -1,5 +1,6 @@
 import { HeaderTypes } from "@components/data/skip-table";
 import { dateFormatter } from "./data-types";
+import { tableTimeFormat } from "./date-time-formats";
 
 export const dynamicSort = (...props: any[]) => {
   const dynamicSortInner = (property: any) => {
@@ -78,7 +79,7 @@ export const dynamicFilter = (arr: any[], filters: FilterItemType) => {
   const fns = {
     eq: (key: string, value: FilterItemValueType, originalType?: string) => (obj: FilterItemType) => {
       if (originalType === HeaderTypes.DATE) {
-        return dateFormatter.format(obj[key] as Date) === value;
+        return tableTimeFormat(obj[key] as Date) === value;
       }
       return obj[key] === value;
     },
